@@ -775,7 +775,7 @@
 
 // Delete conversation
 "meta.menu.delete_content.dialog_title" = "Verlauf löschen?";
-"meta.menu.delete_content.dialog_message" = "Der Gesprächsverlauf wird auf all deinen Geräten gelöscht.";
+"meta.menu.delete_content.dialog_message" = "Der Gesprächsverlauf wird auf all Ihren Geräten gelöscht.";
 "meta.menu.delete_content.leave_as_well_message" = "Unterhaltung verlassen";
 "meta.menu.delete_content.button_cancel" = "Abbrechen";
 "meta.menu.delete_content.button_delete" = "Löschen";
@@ -1288,7 +1288,7 @@
 
 // Landing screen
 
-"landing.header" = "Wire. Konto hinzufügen.";
+"landing.header" = "Wire. Add your Account.";
 "landing.welcome_message" = "Möchten Sie ein Pro- oder Enterprise-Konto für Ihr Unternehmen oder Ihre Organisation erstellen?";
 "landing.welcome_submessage" = "Leider ist das in der App nicht möglich – sobald Sie Ihr Team erstellt haben, können Sie sich hier anmelden";
 "landing.create_account.title" = "Erstellen Sie ein privates Wire-Konto";
@@ -1305,6 +1305,9 @@
 "landing.custom_backend.title" = "Verbunden mit \"%@\"";
 "landing.custom_backend.more_info.button.title" = "Mehr anzeigen";
 "landing.custom_backend.more_info.alert.title" = " Mit dem Server eines Drittanbieters verbunden: %@";
+"landing.custom_backend.alert.title" = "On-premise Backend";
+"landing.custom_backend.alert.message.backend-name" = "Backend-Name:";
+"landing.custom_backend.alert.message.backend-url" = "Backend-URL:";
 
 // Create team
 
@@ -1935,3 +1938,18 @@
 "security_classification.security_level" = "SICHERHEITSNIVEAU:";
 "security_classification.level.bund" = "VS-NfD";
 "security_classification.level.not_classified" = "NICHT EINGESTUFT";
+
+"proxy-credentials.title" = "Proxy-Zugangsdaten";
+// url of proxy server as backend
+"proxy-credentials.caption" = "Dieses Backend ist für die Verwendung des folgenden Proxy-Servers konfiguriert: %@.";
+"proxy-credentials.username.label" = "Proxy-E‐Mail‐Adresse oder Benutzername";
+"proxy-credentials.username.placeholder" = "E‐Mail‐Adresse oder Benutzername";
+"proxy-credentials.password.label" = "Proxy-Passwort";
+"proxy-credentials.password.placeholder" = "Passwort";
+
+"landing.alert.create-new-account.not-supported.title" = "Nicht unterstützt";
+"landing.alert.create-new-account.not-supported.message" = "Creating a new personal account on an on-premise backend with proxy support is currently not possible.";
+"landing.alert.sso.not-supported.title" = "Nicht unterstützt";
+"landing.alert.sso.not-supported.message" = "Log in via SSO on an on-premise backend with proxy support is currently not possible.";
+"credentials.general-error.alert.title" = "Ungültige Informationen";
+"credentials.general-error.alert.message" = "Diese Zugangsdaten sind nicht korrekt. Bitte überprüfen Sie Ihre Angaben und versuchen Sie es erneut.";

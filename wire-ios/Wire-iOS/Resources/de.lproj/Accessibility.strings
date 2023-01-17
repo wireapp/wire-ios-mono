@@ -207,15 +207,6 @@
 "conversationsListHeader.expandedButton.description" = "Erweitert";
 
 "conversationsList.accountButton.hint" = "Doppeltippen, um Profil und Einstellungen zu öffnen";
-"conversationsList.contactsBottomBar.description" = "Kontakte";
-"conversationsList.contactsBottomBar.hint" = "Doppeltippen, um nach Personen zu suchen und Kontaktliste zu öffnen";
-"conversationsList.recentBottomBar.description" = "Unterhaltungen";
-"conversationsList.recentBottomBar.hint" = "Doppeltippen, um Liste der letzten Unterhaltungen zu öffnen";
-"conversationsList.folderBottomBar.description" = "Ordner";
-"conversationsList.folderBottomBar.hint" = "Doppeltippen, um Liste der in Ordnern organisierten Unterhaltungen zu öffnen";
-"conversationsList.archiveBottomBar.description" = "Archiv";
-"conversationsList.archiveBottomBar.hint" = "Doppeltippen, um Liste archivierter Unterhaltungen zu öffnen";
-"conversationsList.bottomBar.value" = "Ausgewählt";
 "conversationsList.silencedStatus.value" = "Stumm geschaltet";
 "conversationsList.mentionStatus.value" = "Sie wurden erwähnt";
 "conversationsList.replyStatus.value" = "Antworten";
@@ -235,3 +226,13 @@
 "conversationAnnouncement.file.description" = "Datei %@ von %@ erhalten";
 "conversationAnnouncement.deletedMessage.description" = "%@ hat eine Nachricht gelöscht";
 "conversationAnnouncement.editedMessage.description" = "%@ hat eine Nachricht bearbeitet";
+
+"tabBar.contacts.description" = "Kontakte";
+"tabBar.contacts.hint" = "Doppeltippen, um nach Personen zu suchen und Kontaktliste zu öffnen";
+"tabBar.conversations.description" = "Liste der letzten Unterhaltungen";
+"tabBar.conversations.hint" = "Doppeltippen, um Liste der letzten Unterhaltungen zu öffnen";
+"tabBar.folders.description" = "Liste der in Ordnern organisierten Unterhaltungen";
+"tabBar.folders.hint" = "Doppeltippen, um Liste der in Ordnern organisierten Unterhaltungen zu öffnen";
+"tabBar.archived.description" = "Archiv";
+"tabBar.archived.hint" = "Doppeltippen, um Liste archivierter Unterhaltungen zu öffnen";
+"tabBar.item.value" = "Ausgewählt";

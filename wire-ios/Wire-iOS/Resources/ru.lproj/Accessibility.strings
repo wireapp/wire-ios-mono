@@ -208,15 +208,6 @@
 "conversationsListHeader.expandedButton.description" = "Развернуто";
 
 "conversationsList.accountButton.hint" = "Нажмите дважды, чтобы открыть профиль и настройки";
-"conversationsList.contactsBottomBar.description" = "Контакты";
-"conversationsList.contactsBottomBar.hint" = "Нажмите дважды, чтобы найти людей и открыть список контактов";
-"conversationsList.recentBottomBar.description" = "Беседы";
-"conversationsList.recentBottomBar.hint" = "Нажмите дважды, чтобы открыть список последних бесед";
-"conversationsList.folderBottomBar.description" = "Папки";
-"conversationsList.folderBottomBar.hint" = "Нажмите дважды, чтобы открыть список бесед, организованных по папкам";
-"conversationsList.archiveBottomBar.description" = "Архив";
-"conversationsList.archiveBottomBar.hint" = "Нажмите дважды, чтобы открыть список архивных бесед";
-"conversationsList.bottomBar.value" = "Выбрано";
 "conversationsList.silencedStatus.value" = "Без звука";
 "conversationsList.mentionStatus.value" = "Вас упомянули";
 "conversationsList.replyStatus.value" = "Ответить";
@@ -236,3 +227,13 @@
 "conversationAnnouncement.file.description" = "Файл %@ получен от %@";
 "conversationAnnouncement.deletedMessage.description" = "%@ удалил сообщение";
 "conversationAnnouncement.editedMessage.description" = "%@ изменил сообщение";
+
+"tabBar.contacts.description" = "Контакты";
+"tabBar.contacts.hint" = "Нажмите дважды, чтобы найти людей и открыть список контактов";
+"tabBar.conversations.description" = "Список недавних бесед";
+"tabBar.conversations.hint" = "Нажмите дважды, чтобы открыть список последних бесед";
+"tabBar.folders.description" = "Список бесед, организованных по папкам";
+"tabBar.folders.hint" = "Нажмите дважды, чтобы открыть список бесед, организованных по папкам";
+"tabBar.archived.description" = "Архивировать";
+"tabBar.archived.hint" = "Нажмите дважды, чтобы открыть список архивных бесед";
+"tabBar.item.value" = "Выбрано";
