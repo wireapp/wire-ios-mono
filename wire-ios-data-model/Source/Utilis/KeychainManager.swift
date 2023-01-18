@@ -72,11 +72,12 @@ public enum KeychainManager {
     }
     private static func generateSecureEnclavePublicPrivateKeyPair(identifier: String) throws -> (privateKey: SecKey, publicKey: SecKey) {
         var accessError: Unmanaged<CFError>?
-        guard let access = SecAccessControlCreateWithFlags(kCFAllocatorDefault,
-                                                           kSecAttrAccessibleWhenUnlockedThisDeviceOnly,
-                                                           [.privateKeyUsage, .userPresence],
-                                                           &accessError)
-        else {
+        guard let access = SecAccessControlCreateWithFlags(
+            kCFAllocatorDefault,
+            kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
+            [.privateKeyUsage],
+            &accessError
+        ) else {
             let error = accessError!.takeRetainedValue() as Swift.Error
             throw Error.failedToGeneratePublicPrivateKey(underlyingError: error)
         }
