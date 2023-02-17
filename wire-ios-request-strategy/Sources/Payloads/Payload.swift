@@ -243,6 +243,21 @@ enum Payload {
 
     struct ResponseFailure: Codable {
 
+        /// Endpoints involving federated calls to other domains can return some extra failure responses.
+        /// The error response contains the following extra fields:
+        struct FederationFailure: Codable {
+
+            enum FailureType: String, Codable {
+                case federation = "federation"
+                case unknown
+            }
+
+            let domain: String
+            let path: String
+            let type: FailureType
+
+        }
+
         enum Label: String, Codable {
             case notFound = "not-found"
             case noEndpoint = "no-endpoint"
@@ -251,6 +266,7 @@ enum Payload {
             case missingLegalholdConsent = "missing-legalhold-consent"
             case notConnected = "not-connected"
             case connectionLimit = "connection-limit"
+            case federationRemoteError = "federation-remote-error"
             case unknown
 
             init(from decoder: Decoder) throws {
@@ -268,6 +284,7 @@ enum Payload {
         let code: Int
         let label: Label
         let message: String
+        let data: FederationFailure?
 
     }
 

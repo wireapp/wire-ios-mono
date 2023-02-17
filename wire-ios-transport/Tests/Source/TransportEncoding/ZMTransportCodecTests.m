@@ -61,12 +61,13 @@
     XCTAssertEqualObjects(parsed, @{@"name" : @"boo"});
 }
 
--(void)testThatItReturnsNilFromANSURLResponseWithAErrorStatusCode
+/// The StatusCode check is a legacy implementation. Currently, we are trying to parse the response despite the statusCode.
+-(void)legacy_testThatItReturnsNilFromANSURLResponseWithAErrorStatusCode
 {
 
     for (int status = 500; status <= 599; ++status) {
         [[[_URLResponse expect] andReturnValue:[NSNumber numberWithInteger:status]] statusCode];
-        
+
         id<ZMTransportData> parsed = [ZMTransportCodec interpretResponse:_URLResponse data:_validJson error:nil];
         XCTAssertNil(parsed);
         [_URLResponse verify];
@@ -81,7 +82,8 @@
     XCTAssertNil(parsed);
 }
 
-- (void)testThatItReturnsNilIfItReceivesAnErrorObject
+/// The error check is a legacy implementation. Currently, we are trying to parse the response despite the error.
+- (void)legacy_testThatItReturnsNilIfItReceivesAnErrorObject
 {
 
     NSError *actualError = [NSError errorWithDomain:@"Test" code:-1 userInfo:@{}];

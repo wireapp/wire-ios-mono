@@ -214,7 +214,7 @@ class ProteusMessageSyncTests: MessagingTestBase {
                 sut.sync(message) { (_, _) in }
 
                 // when
-                let payload = Payload.ResponseFailure(code: 403, label: .unknownClient, message: "")
+                let payload = Payload.ResponseFailure(code: 403, label: .unknownClient, message: "", data: nil)
                 let payloadAsString = String(bytes: payload.payloadData()!, encoding: .utf8)!
                 let response = ZMTransportResponse(payload: payloadAsString as ZMTransportData,
                                                    httpStatus: payload.code,
@@ -229,6 +229,37 @@ class ProteusMessageSyncTests: MessagingTestBase {
                 // then
                 XCTAssertTrue(mockApplicationStatus.mockClientRegistrationStatus.deletionCalls > 0)
             }
+    }
+
+    func testThatItAssignsExpirationReasonCode_WhenResponseIsFederationRemoteError() throws {
+        var message: MockOTREntity!
+        syncMOC.performGroupedBlockAndWait { [self] in
+            // given
+            message = MockOTREntity(conversation: self.groupConversation, context: self.syncMOC)
+            sut.sync(message) { (_, _) in }
+            XCTAssertEqual(message.expirationReasonCode, 0)
+
+            // when
+            let payload = Payload.ResponseFailure(code: 533,
+                                                  label: .federationRemoteError,
+                                                  message: "",
+                                                  data: Payload.ResponseFailure.FederationFailure(domain: "foma.wire.link",
+                                                                                                  path: "/federation/api-version",
+                                                                                                  type: Payload.ResponseFailure.FederationFailure.FailureType.federation))
+            let payloadAsString = String(bytes: payload.payloadData()!, encoding: .utf8)!
+            let response = ZMTransportResponse(payload: payloadAsString as ZMTransportData,
+                                               httpStatus: payload.code,
+                                               transportSessionError: nil,
+                                               apiVersion: apiVersion.rawValue)
+
+            sut.nextRequest(for: apiVersion)?.complete(with: response)
+        }
+        XCTAssertTrue(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
+
+        syncMOC.performGroupedBlockAndWait {
+            // then
+            XCTAssertEqual(message.expirationReasonCode, 1)
+        }
     }
 
     func testThatItAssignsRequestExpirationDate_WhenAvailableOnMessage() throws {

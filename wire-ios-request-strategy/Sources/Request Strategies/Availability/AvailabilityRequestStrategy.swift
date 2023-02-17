@@ -141,6 +141,13 @@ extension AvailabilityRequestStrategy: OTREntity {
         return nil
     }
 
+    public var expirationReasonCode: NSNumber? {
+        get {
+            return nil
+        }
+        set {}
+    }
+
     public func expire() {
         // nop
     }

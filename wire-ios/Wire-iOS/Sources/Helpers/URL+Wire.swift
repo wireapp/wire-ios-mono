@@ -216,6 +216,10 @@ extension URL {
         return wr_support.appendingPathComponent("hc/articles/360000574069-Share-a-link-with-a-person-without-a-Wire-account-to-join-a-guest-room-conversation-in-my-team")
     }
 
+    static var wr_backendOfflineLearnMore: URL {
+        return wr_support.appendingPathComponent("hc/articles/9357718008093-Backend")
+    }
+
     static var selfUserProfileLink: URL? {
         guard let link = BackendEnvironment.selfUserProfileLink else {
             return nil

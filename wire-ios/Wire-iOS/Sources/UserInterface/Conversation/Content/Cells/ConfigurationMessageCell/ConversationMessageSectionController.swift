@@ -242,6 +242,10 @@ final class ConversationMessageSectionController: NSObject, ZMMessageObserver {
             add(description: ConversationMessageToolboxCellDescription(message: message, selected: selected))
         }
 
+        if isFailedParticipantsVisible(in: context) {
+            //add(description: ConversationMessageParticipantsErrorCellDescription(message: message, selected: selected))
+        }
+
         if let topCelldescription = cellDescriptions.first {
             topCelldescription.topMargin = context.spacing
         }
@@ -270,7 +274,12 @@ final class ConversationMessageSectionController: NSObject, ZMMessageObserver {
             return false
         }
 
+        print("Delivery State: \(message.deliveryState.rawValue)")
         return context.isLastMessage || selected || message.deliveryState == .failedToSend || message.hasReactions()
+    }
+
+    func isFailedParticipantsVisible(in context: ConversationMessageContext) -> Bool {
+        return false//!message.failedParticipants.isEmpty
     }
 
     func isSenderVisible(in context: ConversationMessageContext) -> Bool {

@@ -233,6 +233,20 @@ NSUInteger const ZMClientMessageByteSizeExternalThreshold = 128000;
     XCTAssertFalse(message.isExpired);
 }
 
+- (void)testThatItResetsTheExpirationReasonCodeWhenResending
+{
+    // given
+    ZMTextMessage *message = [[ZMTextMessage alloc] initWithNonce:NSUUID.createUUID managedObjectContext:self.uiMOC];
+    [message expire];
+    XCTAssertEqualObjects(message.expirationReasonCode, [NSNumber numberWithInt:0]);
+
+    // when
+    [message resend];
+
+    // then
+    XCTAssertNil(message.expirationReasonCode);
+}
+
 - (void)checkBaseMessageAttributeForClass:(Class)aClass;
 {
     [self checkAttributeForClass:aClass key:@"nonce" value:[NSUUID createUUID]];

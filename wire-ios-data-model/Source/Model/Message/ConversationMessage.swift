@@ -32,6 +32,12 @@ public enum ZMDeliveryState: UInt {
 }
 
 @objc
+public enum ExpirationReason: Int {
+    case unknown
+    case federationRemoteError
+}
+
+@objc
 public protocol ReadReceipt {
 
     @available(*, deprecated, message: "Use `userType` instead")
@@ -71,6 +77,9 @@ public protocol ZMConversationMessage: NSObjectProtocol {
 
     /// True if the message has been successfully sent to the server
     var isSent: Bool { get }
+
+    /// Reason why the message is not sent
+    var failedToSendReason: ExpirationReason { get }
 
     /// List of recipients who have read the message.
     var readReceipts: [ReadReceipt] { get }
@@ -321,6 +330,10 @@ extension ZMMessage {
 
     @objc public var deliveryState: ZMDeliveryState {
         return .delivered
+    }
+
+    @objc public var failedToSendReason: ExpirationReason {
+        return expirationReason ?? .unknown
     }
 
     @objc public var usersReaction: [String: [UserType]] {

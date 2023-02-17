@@ -46,6 +46,7 @@ public protocol ConversationLike: NSObjectProtocol {
     var firstUnreadMessage: ZMConversationMessage? { get }
 
     var areServicesPresent: Bool { get }
+    var domain: String? { get }
 }
 
 // Since ConversationLike must have @objc signature(@objc UserType has a ConversationLike property), create another protocol to abstract Swift only properties

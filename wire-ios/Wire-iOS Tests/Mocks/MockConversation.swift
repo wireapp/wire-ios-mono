@@ -69,6 +69,8 @@ class SwiftMockConversation: NSObject, Conversation {
     var firstUnreadMessage: ZMConversationMessage?
 
     var areServicesPresent: Bool = false
+
+    var domain: String? = nil
 }
 
 final class MockGroupDetailsConversation: SwiftMockConversation, GroupDetailsConversation {

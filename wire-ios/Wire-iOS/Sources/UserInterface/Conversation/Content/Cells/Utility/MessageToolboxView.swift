@@ -111,6 +111,8 @@ final class MessageToolboxView: UIView {
         return button
     }()
 
+    private let failedToSendMessageView = FailedToSendMessageView()
+
     private let statusLabel: UILabel = {
         let label = UILabel()
         label.lineBreakMode = .byTruncatingMiddle
@@ -171,6 +173,9 @@ final class MessageToolboxView: UIView {
 
         resendButton.addTarget(self, action: #selector(resendMessage), for: .touchUpInside)
         deleteButton.addTarget(self, action: #selector(deleteMessage), for: .touchUpInside)
+        failedToSendMessageView.tapHandler = { [weak self] _ in
+            self?.resendMessage()
+        }
 
         [detailsLabel,
          resendButton,
@@ -179,7 +184,7 @@ final class MessageToolboxView: UIView {
          statusLabel,
          statusSeparatorLabel,
          countdownLabel].forEach(contentStack.addArrangedSubview)
-        [likeButtonContainer, likeButton, contentStack].forEach(addSubview)
+        [likeButtonContainer, likeButton, contentStack, failedToSendMessageView].forEach(addSubview)
     }
 
     private func createConstraints() {
@@ -187,6 +192,7 @@ final class MessageToolboxView: UIView {
         likeButtonContainer.translatesAutoresizingMaskIntoConstraints = false
         likeButton.translatesAutoresizingMaskIntoConstraints = false
         contentStack.translatesAutoresizingMaskIntoConstraints = false
+        failedToSendMessageView.translatesAutoresizingMaskIntoConstraints = false
 
         heightConstraint = heightAnchor.constraint(greaterThanOrEqualToConstant: 28)
         heightConstraint.priority = UILayoutPriority(999)
@@ -208,7 +214,12 @@ final class MessageToolboxView: UIView {
             contentStack.leadingAnchor.constraint(equalTo: likeButtonContainer.trailingAnchor),
             contentStack.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -conversationHorizontalMargins.right),
             contentStack.topAnchor.constraint(equalTo: topAnchor),
-            contentStack.bottomAnchor.constraint(equalTo: bottomAnchor)
+            contentStack.bottomAnchor.constraint(equalTo: bottomAnchor),
+
+            failedToSendMessageView.leadingAnchor.constraint(equalTo: likeButtonContainer.trailingAnchor),
+            failedToSendMessageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            failedToSendMessageView.topAnchor.constraint(equalTo: topAnchor),
+            failedToSendMessageView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 
@@ -280,6 +291,7 @@ final class MessageToolboxView: UIView {
                 self.resendButton.isHidden = true
                 self.statusSeparatorLabel.isHidden = true
                 self.countdownLabel.isHidden = true
+                self.failedToSendMessageView.isHidden = true
             }
         case .reactions(let reactionsString):
             updateContentStack(to: newPosition, animated: animated) {
@@ -292,19 +304,28 @@ final class MessageToolboxView: UIView {
                 self.resendButton.isHidden = true
                 self.statusSeparatorLabel.isHidden = true
                 self.countdownLabel.isHidden = true
+                self.failedToSendMessageView.isHidden = true
             }
 
         case .sendFailure(let detailsString):
+            // add new UI
             updateContentStack(to: newPosition, animated: animated) {
-                self.detailsLabel.attributedText = detailsString
-                self.detailsLabel.isHidden = false
-                self.detailsLabel.numberOfLines = 1
+//                self.detailsLabel.attributedText = detailsString
+//                self.detailsLabel.isHidden = false
+//                self.detailsLabel.numberOfLines = 1
                 self.hideAndCleanStatusLabel()
-                self.timestampSeparatorLabel.isHidden = false
-                self.deleteButton.isHidden = false
-                self.resendButton.isHidden = false
+//                self.timestampSeparatorLabel.isHidden = false
+//                self.deleteButton.isHidden = false
+//                self.resendButton.isHidden = false
                 self.statusSeparatorLabel.isHidden = true
                 self.countdownLabel.isHidden = true
+
+                self.detailsLabel.isHidden = true
+                self.deleteButton.isHidden = true
+                self.resendButton.isHidden = true
+                self.timestampSeparatorLabel.isHidden = true
+                self.failedToSendMessageView.isHidden = false
+                self.failedToSendMessageView.setTitle(detailsString.string)
             }
 
         case .details(let timestamp, let status, let countdown):
@@ -324,6 +345,7 @@ final class MessageToolboxView: UIView {
                 self.statusSeparatorLabel.isHidden = (timestamp == nil && status == nil) || countdown == nil
                 self.countdownLabel.attributedText = countdown
                 self.countdownLabel.isHidden = countdown == nil
+                self.failedToSendMessageView.isHidden = true
             }
         }
 
@@ -386,7 +408,7 @@ final class MessageToolboxView: UIView {
     }
 
     @objc
-    private func resendMessage() {
+    func resendMessage() {
         delegate?.messageToolboxViewDidSelectResend(self)
     }
 

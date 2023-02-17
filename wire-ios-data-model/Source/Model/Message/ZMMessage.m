@@ -42,6 +42,7 @@ static NSTimeInterval ZMDefaultMessageExpirationTime = 30;
 
 NSString * const ZMMessageEventIDDataKey = @"eventID_data";
 NSString * const ZMMessageIsExpiredKey = @"isExpired";
+NSString * const ZMMessageExpirationReasonCodeKey = @"expirationReasonCode";
 NSString * const ZMMessageMissingRecipientsKey = @"missingRecipients";
 NSString * const ZMMessageServerTimestampKey = @"serverTimestamp";
 NSString * const ZMMessageImageTypeKey = @"imageType";
@@ -109,6 +110,7 @@ NSString * const ZMMessageDecryptionErrorCodeKey = @"decryptionErrorCode";
 @interface ZMMessage (CoreDataForward)
 
 @property (nonatomic) BOOL isExpired;
+@property (nonatomic) NSNumber * _Nullable expirationReasonCode;
 @property (nonatomic) NSDate *expirationDate;
 @property (nonatomic) NSDate *destructionDate;
 @property (nonatomic) BOOL isObfuscated;
@@ -127,7 +129,7 @@ NSString * const ZMMessageDecryptionErrorCodeKey = @"decryptionErrorCode";
 @implementation ZMMessage
 
 @dynamic missingRecipients;
-@dynamic isExpired;
+@dynamic expirationReasonCode;
 @dynamic expirationDate;
 @dynamic destructionDate;
 @dynamic senderClientID;
@@ -136,6 +138,8 @@ NSString * const ZMMessageDecryptionErrorCodeKey = @"decryptionErrorCode";
 @dynamic isObfuscated;
 @dynamic normalizedText;
 @dynamic delivered;
+
+@synthesize isExpired = _isExpired;
 
 - (instancetype)initWithNonce:(NSUUID *)nonce managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
@@ -217,6 +221,20 @@ NSString * const ZMMessageDecryptionErrorCodeKey = @"decryptionErrorCode";
 - (void)setExpirationDate
 {
     self.expirationDate = [NSDate dateWithTimeIntervalSinceNow:[self.class defaultExpirationTime]];
+}
+
+- (BOOL)isExpired;
+{
+    return _isExpired;
+}
+
+- (void)setIsExpired:(BOOL)isExpired;
+{
+    /// When isExpired is false, then expirationReasonCode should not contain any value.
+    if (isExpired == NO && self.expirationReasonCode != nil) {
+        self.expirationReasonCode = nil;
+    }
+    _isExpired = isExpired;
 }
 
 - (void)removeExpirationDate;
@@ -554,6 +572,7 @@ NSString * const ZMMessageDecryptionErrorCodeKey = @"decryptionErrorCode";
         NSArray *newKeys = @[
                              ZMMessageConversationKey,
                              ZMMessageExpirationDateKey,
+                             ZMMessageExpirationReasonCodeKey,
                              ZMMessageImageTypeKey,
                              ZMMessageIsAnimatedGifKey,
                              ZMMessageMediumRemoteIdentifierDataKey,

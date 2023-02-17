@@ -25,6 +25,7 @@ class MockDependencyEntity: DependencyEntity, Hashable {
     public var expirationDate: Date?
     public var isExpired: Bool = false
     fileprivate let uuid = UUID()
+    public var expirationReasonCode: NSNumber? = 0
 
     public func expire() {
          isExpired = true

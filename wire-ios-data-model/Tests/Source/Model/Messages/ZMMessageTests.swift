@@ -17,6 +17,7 @@
 //
 
 import Foundation
+import XCTest
 
 extension ZMMessageTests {
     @objc(mockEventOfType:forConversation:sender:data:)
@@ -81,6 +82,79 @@ extension ZMMessageTests {
 
         // then
         XCTAssertFalse(message!.userIsTheSender)
+    }
+
+}
+
+// MARK: Expiration reason code
+extension ZMMessageTests {
+
+    func testThatItHasExpirationReasonCodeWhenDeliveryStateIsFailedToSend() {
+        // given
+        let conversation = ZMConversation.insertNewObject(in: self.uiMOC)
+        conversation.remoteIdentifier = UUID.create()
+        let message: ZMMessage = try! conversation.appendText(content: "Hallo") as! ZMMessage
+        message.serverTimestamp = Date.init(timeIntervalSinceNow: -20)
+
+        // when
+        message.expire()
+        XCTAssertEqual(message.deliveryState, ZMDeliveryState.failedToSend)
+
+        // then
+        XCTAssertTrue(message.isExpired)
+        XCTAssertEqual(message.expirationReasonCode, 0)
+        XCTAssertEqual(message.expirationReason, .unknown)
+    }
+
+    func testThatExpirationReasonCodeIsNilWhenMessageIsSent() {
+        // given
+        let conversation = ZMConversation.insertNewObject(in: self.uiMOC)
+        conversation.remoteIdentifier = UUID.create()
+        let message: ZMClientMessage = try! conversation.appendText(content: "Hallo") as! ZMClientMessage
+        message.serverTimestamp = Date.init(timeIntervalSinceNow: -50)
+
+        // when
+        message.expire()
+        XCTAssertEqual(message.deliveryState, ZMDeliveryState.failedToSend)
+        XCTAssertTrue(message.isExpired)
+        XCTAssertEqual(message.expirationReasonCode, 0)
+
+        message.markAsSent()
+
+        // then
+        XCTAssertFalse(message.isExpired)
+        XCTAssertNil(message.expirationReasonCode)
+    }
+
+    func testExpirationReasonsParsing() {
+        // given
+        let conversation = ZMConversation.insertNewObject(in: self.uiMOC)
+        conversation.remoteIdentifier = UUID.create()
+        let message: ZMMessage = try! conversation.appendText(content: "Hallo") as! ZMMessage
+        message.serverTimestamp = Date.init(timeIntervalSinceNow: -20)
+
+        // when
+        message.expirationReasonCode = nil
+
+        // then
+        XCTAssertFalse(message.isExpired)
+        XCTAssertEqual(message.expirationReason, nil)
+
+        // when
+        message.expire()
+        message.expirationReasonCode = 0
+
+        // then
+        XCTAssertTrue(message.isExpired)
+        XCTAssertEqual(message.expirationReason, .unknown)
+
+        // when
+        message.expire()
+        message.expirationReasonCode = 1
+
+        // then
+        XCTAssertTrue(message.isExpired)
+        XCTAssertEqual(message.expirationReason, .federationRemoteError)
     }
 
 }

@@ -28,6 +28,7 @@ import XCTest
     public func expire() {
         isExpired = true
     }
+    public var expirationReasonCode: NSNumber? = 0
 
     public func missesRecipients(_ recipients: Set<UserClient>!) {
         // no-op

@@ -243,6 +243,8 @@ public enum FontScheme {
         // FontSize: ButtonSmall
         fontsByFontSpec[FontSpec(.buttonSmall, .bold, .none)] = .systemFont(ofSize: 14, contentSizeCategory: contentSizeCategory, weight: .bold)
         // FontSize: ButtonSmall
+        fontsByFontSpec[FontSpec(.buttonSmall, .semibold, .none)] = .systemFont(ofSize: 14, contentSizeCategory: contentSizeCategory, weight: .semibold)
+        // FontSize: ButtonSmall
         fontsByFontSpec[FontSpec(.body, .regular, .none)] = .systemFont(ofSize: 17, contentSizeCategory: contentSizeCategory, weight: .regular)
 
         // FontSize: ButtonBig
