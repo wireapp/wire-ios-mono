@@ -17,13 +17,15 @@
 
 import Foundation
 
-protocol EventData: Codable {
+protocol EventData {
     static var eventType: ZMUpdateEventType { get }
 }
 
+typealias CodableEventData = EventData & Codable
+
 extension Payload {
 
-    struct NewConversation: Codable {
+    struct NewConversation: EncodableAPIVersionAware {
         enum CodingKeys: String, CodingKey {
             case users
             case qualifiedUsers = "qualified_users"
@@ -40,8 +42,8 @@ extension Payload {
         let users: [UUID]?
         let qualifiedUsers: [QualifiedID]?
         let access: [String]?
-        let accessRole: String?
-        let accessRoleV2: [String]?
+        let legacyAccessRole: String?
+        let accessRoles: [String]?
         let name: String?
         let team: ConversationTeamInfo?
         let messageTimer: TimeInterval?
@@ -59,16 +61,37 @@ extension Payload {
 
             name = conversation.userDefinedName
             access = conversation.accessMode?.stringValue
-            accessRole = conversation.accessRole?.rawValue
-            accessRoleV2 = conversation.accessRoles.map(\.rawValue)
+            legacyAccessRole = conversation.accessRole?.rawValue
+            accessRoles = conversation.accessRoles.map(\.rawValue)
             conversationRole = ZMConversation.defaultMemberRoleName
             team = conversation.team?.remoteIdentifier.map({ ConversationTeamInfo(teamID: $0) })
             readReceiptMode = conversation.hasReadReceiptsEnabled ? 1 : 0
             messageTimer = nil
         }
+
+        func encode(to encoder: Encoder, apiVersion: APIVersion) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+
+            try container.encodeIfPresent(users, forKey: .users)
+            try container.encodeIfPresent(qualifiedUsers, forKey: .qualifiedUsers)
+            try container.encodeIfPresent(access, forKey: .access)
+            try container.encodeIfPresent(name, forKey: .name)
+            try container.encodeIfPresent(team, forKey: .team)
+            try container.encodeIfPresent(messageTimer, forKey: .messageTimer)
+            try container.encodeIfPresent(readReceiptMode, forKey: .readReceiptMode)
+            try container.encodeIfPresent(conversationRole, forKey: .conversationRole)
+
+            switch apiVersion {
+            case .v0, .v1, .v2:
+                try container.encodeIfPresent(legacyAccessRole, forKey: .accessRole)
+                try container.encodeIfPresent(accessRoles, forKey: .accessRoleV2)
+            case .v3:
+                try container.encodeIfPresent(accessRoles, forKey: .accessRole)
+            }
+        }
     }
 
-    struct Conversation: EventData {
+    struct Conversation: DecodableAPIVersionAware, EventData {
 
         enum CodingKeys: String, CodingKey {
             case qualifiedID = "qualified_id"
@@ -96,8 +119,8 @@ extension Payload {
         let type: Int?
         let creator: UUID?
         let access: [String]?
-        let accessRole: String?
-        let accessRoleV2: [String]?
+        let accessRoles: [String]?
+        let legacyAccessRole: String?
         let name: String?
         let members: ConversationMembers?
         let lastEvent: String?
@@ -111,8 +134,8 @@ extension Payload {
              type: Int? = nil,
              creator: UUID? = nil,
              access: [String]? = nil,
-             accessRole: String? = nil,
-             accessRoleV2: [String]? = nil,
+             legacyAccessRole: String? = nil,
+             accessRoles: [String]? = nil,
              name: String? = nil,
              members: ConversationMembers? = nil,
              lastEvent: String? = nil,
@@ -126,8 +149,8 @@ extension Payload {
             self.type = type
             self.creator = creator
             self.access = access
-            self.accessRole = accessRole
-            self.accessRoleV2 = accessRoleV2
+            self.legacyAccessRole = legacyAccessRole
+            self.accessRoles = accessRoles
             self.name = name
             self.members = members
             self.lastEvent = lastEvent
@@ -136,6 +159,44 @@ extension Payload {
             self.messageTimer = messageTimer
             self.readReceiptMode = readReceiptMode
         }
+
+        init(from decoder: Decoder, apiVersion: APIVersion) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+
+            qualifiedID = try container.decodeIfPresent(QualifiedID.self, forKey: .qualifiedID)
+            id = try container.decodeIfPresent(UUID.self, forKey: .id)
+            type = try container.decodeIfPresent(Int.self, forKey: .type)
+            creator = try container.decodeIfPresent(UUID.self, forKey: .creator)
+            access = try container.decodeIfPresent([String].self, forKey: .access)
+            name = try container.decodeIfPresent(String.self, forKey: .name)
+            members = try container.decodeIfPresent(ConversationMembers.self, forKey: .members)
+            lastEvent = try container.decodeIfPresent(String.self, forKey: .lastEvent)
+            lastEventTime = try container.decodeIfPresent(String.self, forKey: .lastEventTime)
+            teamID = try container.decodeIfPresent(UUID.self, forKey: .teamID)
+            messageTimer = try container.decodeIfPresent(TimeInterval.self, forKey: .messageTimer)
+            readReceiptMode = try container.decodeIfPresent(Int.self, forKey: .readReceiptMode)
+
+            switch apiVersion {
+            case .v0, .v1, .v2:
+                legacyAccessRole = try container.decodeIfPresent(String.self, forKey: .accessRole)
+                accessRoles = try container.decodeIfPresent([String].self, forKey: .accessRoleV2)
+            case .v3:
+
+                // v3 replaces the field "access_role_v2" with "access_role".
+                // However, since the format of update events does not depend on versioning,
+                // we may receive conversations from the `conversation.create` update event
+                // which still have both "access_role_v2" and "access_role" fields
+
+                if !container.contains(CodingKeys.accessRoleV2) {
+                    legacyAccessRole = nil
+                    accessRoles = try container.decodeIfPresent([String].self, forKey: .accessRole)
+                } else {
+                    legacyAccessRole = try container.decodeIfPresent(String.self, forKey: .accessRole)
+                    accessRoles = try container.decodeIfPresent([String].self, forKey: .accessRoleV2)
+                }
+            }
+        }
+
     }
 
     struct ConversationList: Codable {
@@ -197,7 +258,7 @@ extension Payload {
         let provider: UUID
     }
 
-    struct ConversationMember: EventData {
+    struct ConversationMember: CodableEventData {
 
         enum CodingKeys: String, CodingKey {
             case id
@@ -354,7 +415,7 @@ extension Payload {
 
     // MARK: - Events
 
-    struct ConversationEvent<T: EventData>: Codable {
+    struct ConversationEvent<T: CodableEventData>: Codable {
 
         enum CodingKeys: String, CodingKey {
             case id = "conversation"
@@ -375,7 +436,7 @@ extension Payload {
         let data: T
     }
 
-    struct UpdateConverationMemberLeave: EventData {
+    struct UpdateConverationMemberLeave: CodableEventData {
         enum CodingKeys: String, CodingKey {
             case userIDs = "user_ids"
             case qualifiedUserIDs = "qualified_user_ids"
@@ -389,7 +450,7 @@ extension Payload {
         let qualifiedUserIDs: [QualifiedID]?
     }
 
-    struct UpdateConverationMemberJoin: EventData {
+    struct UpdateConverationMemberJoin: CodableEventData {
         enum CodingKeys: String, CodingKey {
             case userIDs = "user_ids"
             case users
@@ -403,19 +464,19 @@ extension Payload {
         let users: [ConversationMember]?
     }
 
-    struct UpdateConversationConnectionRequest: EventData {
+    struct UpdateConversationConnectionRequest: CodableEventData {
         static var eventType: ZMUpdateEventType {
             return .conversationConnectRequest
         }
     }
 
-    struct UpdateConversationDeleted: EventData {
+    struct UpdateConversationDeleted: CodableEventData {
         static var eventType: ZMUpdateEventType {
             return .conversationDelete
         }
     }
 
-    struct UpdateConversationReceiptMode: EventData {
+    struct UpdateConversationReceiptMode: CodableEventData {
         enum CodingKeys: String, CodingKey {
             case readReceiptMode = "receipt_mode"
         }
@@ -427,7 +488,7 @@ extension Payload {
         let readReceiptMode: Int
     }
 
-    struct UpdateConversationMessageTimer: EventData {
+    struct UpdateConversationMessageTimer: CodableEventData {
         enum CodingKeys: String, CodingKey {
             case messageTimer = "message_timer"
         }
@@ -439,7 +500,7 @@ extension Payload {
         let messageTimer: TimeInterval?
     }
 
-    struct UpdateConversationAccess: EventData {
+    struct UpdateConversationAccess: CodableEventData {
         enum CodingKeys: String, CodingKey {
             case access
             case accessRole = "access_role"
@@ -461,7 +522,7 @@ extension Payload {
         }
     }
 
-    struct UpdateConversationName: EventData {
+    struct UpdateConversationName: CodableEventData {
         var name: String
 
         static var eventType: ZMUpdateEventType {
@@ -481,6 +542,92 @@ extension Payload {
 
         init(name: String) {
             self.name = name
+        }
+    }
+
+}
+
+// MARK: - Tests
+
+extension Payload.NewConversation: DecodableAPIVersionAware {
+
+    // Allows tests to decode `Payload.NewConversation` from a transport request
+    init(from decoder: Decoder, apiVersion: APIVersion) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        users = try container.decodeIfPresent([UUID].self, forKey: .users)
+        qualifiedUsers = try container.decodeIfPresent([QualifiedID].self, forKey: .qualifiedUsers)
+        access = try container.decodeIfPresent([String].self, forKey: .access)
+        name = try container.decodeIfPresent(String.self, forKey: .name)
+        team = try container.decodeIfPresent(Payload.ConversationTeamInfo.self, forKey: .team)
+        messageTimer = try container.decodeIfPresent(TimeInterval.self, forKey: .messageTimer)
+        readReceiptMode = try container.decodeIfPresent(Int.self, forKey: .readReceiptMode)
+        conversationRole = try container.decodeIfPresent(String.self, forKey: .conversationRole)
+
+        switch apiVersion {
+        case .v0, .v1, .v2:
+            legacyAccessRole = try container.decodeIfPresent(String.self, forKey: .accessRole)
+            accessRoles = try container.decodeIfPresent([String].self, forKey: .accessRoleV2)
+        case .v3:
+            accessRoles = try container.decodeIfPresent([String].self, forKey: .accessRole)
+            legacyAccessRole = nil
+        }
+    }
+
+    init(users: [UUID]? = nil,
+         qualifiedUsers: [QualifiedID]? = nil,
+         access: [String]? = nil,
+         legacyAccessRole: String? = nil,
+         accessRoles: [String]? = nil,
+         name: String? = nil,
+         team: Payload.ConversationTeamInfo? = nil,
+         messageTimer: TimeInterval? = nil,
+         readReceiptMode: Int? = nil,
+         conversationRole: String? = nil
+    ) {
+        self.users = users
+        self.qualifiedUsers = qualifiedUsers
+        self.access = access
+        self.legacyAccessRole = legacyAccessRole
+        self.accessRoles = accessRoles
+        self.name = name
+        self.team = team
+        self.messageTimer = messageTimer
+        self.readReceiptMode = readReceiptMode
+        self.conversationRole = conversationRole
+    }
+
+}
+
+extension Payload.Conversation: EncodableAPIVersionAware {
+
+    func encode(to encoder: Encoder, apiVersion: APIVersion) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        try container.encodeIfPresent(qualifiedID, forKey: .qualifiedID)
+        try container.encodeIfPresent(id, forKey: .id)
+        try container.encodeIfPresent(type, forKey: .type)
+        try container.encodeIfPresent(creator, forKey: .creator)
+        try container.encodeIfPresent(access, forKey: .access)
+        try container.encodeIfPresent(name, forKey: .name)
+        try container.encodeIfPresent(members, forKey: .members)
+        try container.encodeIfPresent(lastEvent, forKey: .lastEvent)
+        try container.encodeIfPresent(lastEventTime, forKey: .lastEventTime)
+        try container.encodeIfPresent(teamID, forKey: .teamID)
+        try container.encodeIfPresent(messageTimer, forKey: .messageTimer)
+        try container.encodeIfPresent(readReceiptMode, forKey: .readReceiptMode)
+
+        switch apiVersion {
+        case .v0, .v1, .v2:
+            try container.encodeIfPresent(legacyAccessRole, forKey: .accessRole)
+            try container.encodeIfPresent(accessRoles, forKey: .accessRoleV2)
+        case .v3:
+            if legacyAccessRole == nil {
+                try container.encodeIfPresent(accessRoles, forKey: .accessRole)
+            } else {
+                try container.encodeIfPresent(legacyAccessRole, forKey: .accessRole)
+                try container.encodeIfPresent(accessRoles, forKey: .accessRoleV2)
+            }
         }
     }
 

@@ -49,7 +49,6 @@
 - (void)setAccessTokenRenewalFailureHandler:(ZMCompletionHandlerBlock)handler;
 - (void)setAccessTokenRenewalSuccessHandler:(ZMAccessTokenHandlerBlock)handler;
 
-
 - (void)checkIfRequest:(ZMTransportRequest *)request needsToFetchAccessTokenInURLRequest:(NSMutableURLRequest *)URLRequest;
 - (void)checkIfRequest:(ZMTransportRequest *)request needsToAttachCookieInURLRequest:(NSMutableURLRequest *)URLRequest;
 
@@ -62,6 +61,8 @@
 - (BOOL)hasAccessToken;
 
 - (void)sendAccessTokenRequestWithURLSession:(ZMURLSession *)URLSession;
+- (void)sendAccessTokenRequestWithURLSession:(ZMURLSession *)URLSession clientID:(NSString *)clientID;
+
 - (BOOL)accessTokenIsAboutToExpire;
 - (BOOL)canStartRequestWithAccessToken;
 

@@ -119,7 +119,7 @@ class StarscreamPushChannel: NSObject, PushChannelType {
         connectionRequest.setValue("\(accessToken.type) \(accessToken.token)", forHTTPHeaderField: "Authorization")
 
         let certificatePinning = StarscreamCertificatePinning(environment: environment)
-        webSocket = WebSocket(request: connectionRequest, certPinner: certificatePinning, useCustomEngine: false)
+        webSocket = WebSocket(request: connectionRequest, certPinner: certificatePinning, useCustomEngine: environment.proxy == nil)
         webSocket?.delegate = self
 
         if let proxySettings = environment.proxy {

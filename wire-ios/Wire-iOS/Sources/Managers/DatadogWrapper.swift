@@ -19,8 +19,10 @@
 import Foundation
 #if DATADOG_IMPORT
 import Datadog
+import DatadogCrashReporting
 import WireTransport
 import UIKit
+import WireSystem
 
 public class DatadogWrapper {
 
@@ -69,6 +71,7 @@ public class DatadogWrapper {
                 .trackUIKitRUMActions()
                 .trackBackgroundEvents()
                 .trackRUMLongTasks()
+                .enableCrashReporting(using: DDCrashReportingPlugin())
                 .build()
         )
 
@@ -82,6 +85,7 @@ public class DatadogWrapper {
             .build()
 
         datadogUserId = UIDevice.current.identifierForVendor?.uuidString.sha256String ?? "none"
+        WireLogger.provider = self
     }
 
     public func startMonitoring() {
@@ -156,6 +160,34 @@ extension RemoteMonitoring.Level {
             return .critical
         }
     }
+}
+
+extension DatadogWrapper: WireSystem.LoggerProtocol {
+
+    public func debug(_ message: String, attributes: LogAttributes?) {
+        log(level: .debug, message: message, attributes: attributes)
+    }
+
+    public func info(_ message: String, attributes: LogAttributes?) {
+        log(level: .info, message: message, attributes: attributes)
+    }
+
+    public func notice(_ message: String, attributes: LogAttributes?) {
+        log(level: .notice, message: message, attributes: attributes)
+    }
+
+    public func warn(_ message: String, attributes: LogAttributes?) {
+        log(level: .warn, message: message, attributes: attributes)
+    }
+
+    public func error(_ message: String, attributes: LogAttributes?) {
+        log(level: .error, message: message, attributes: attributes)
+    }
+
+    public func critical(_ message: String, attributes: LogAttributes?) {
+        log(level: .critical, message: message, attributes: attributes)
+    }
+
 }
 
 // MARK: - Crypto helper

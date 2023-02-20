@@ -240,6 +240,10 @@ public class UserClient: ZMManagedObject, UserClientType {
         }
 
         if let client = self.fetchExistingUserClient(with: remoteIdentifier, in: context) {
+            // We already checked the user's client list but didn't find the client.
+            // But we did find the client in the database, so the user is out of date
+            // and needs to be refreshed.
+            context.refresh(user, mergeChanges: true)
             return client
         }
 

@@ -27,7 +27,7 @@ final class ObfuscationView: UIImageView {
         backgroundColor = .accentDimmedFlat
         isOpaque = true
         contentMode = .center
-        setIcon(icon, size: .tiny, color: UIColor.from(scheme: .background))
+        setIcon(icon, size: .tiny, color: SemanticColors.Icon.foregroundDefaultWhite)
 
         switch icon {
         case .locationPin:

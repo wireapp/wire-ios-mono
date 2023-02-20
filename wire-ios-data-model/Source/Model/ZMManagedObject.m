@@ -567,8 +567,10 @@ static NSString * const KeysForCachedValuesKey = @"ZMKeysForCachedValues";
 - (void)awakeFromSnapshotEvents:(NSSnapshotEventType)flags;
 {
     [super awakeFromSnapshotEvents:flags];
-    for (NSString *key in self.keysForCachedValues) {
-        [self setPrimitiveValue:nil forKey:key];
+    if(!self.isFault) {
+        for (NSString *key in self.keysForCachedValues) {
+            [self setPrimitiveValue:nil forKey:key];
+        }
     }
 }
 

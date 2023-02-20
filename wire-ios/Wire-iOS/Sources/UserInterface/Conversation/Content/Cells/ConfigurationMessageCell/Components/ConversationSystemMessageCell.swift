@@ -590,6 +590,7 @@ final class ConversationStartedSystemMessageCellDescription: NSObject, Conversat
             let conversation = message.conversationLike as? ZMConversation {
             conversationObserverToken = ConversationChangeInfo.add(observer: self, for: conversation)
         }
+        accessibilityLabel = configuration.message.string
     }
 
 }
@@ -875,7 +876,7 @@ class ConversationCannotDecryptSystemMessageCellDescription: ConversationMessage
         let string = (BaseLocalizationString + ".error_details").localized(args: errorCode, clientIdentifier)
 
         return NSAttributedString(string: string.localizedUppercase,
-                                  attributes: [.foregroundColor: UIColor.from(scheme: .textPlaceholder),
+                                  attributes: [.foregroundColor: SemanticColors.Label.textDefault,
                                                .font: UIFont.mediumFont])
     }
 

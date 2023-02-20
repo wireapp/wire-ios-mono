@@ -196,6 +196,39 @@
     XCTAssertEqual(self.delegate.delegateCallCount, 1u);
 }
 
+- (void)testThatItCreatesRequestProperlyWithoutClientID
+{
+    // given
+    NSURL *expectedURL = [NSURL URLWithString:@"https://www.example.com/access"];
+
+    [[self.urlSession expect] taskWithRequest:[OCMArg checkWithBlock:^BOOL(NSURLRequest *request) {
+        return [request.URL isEqual:expectedURL];
+    }] bodyData:[OCMArg any] transportRequest:[OCMArg any]];
+
+    // when
+    [self.sut sendAccessTokenRequestWithURLSession:self.urlSession clientID:nil];
+
+    // then
+    [self.urlSession verify];
+}
+
+- (void)testThatItCreatesRequestProperlyWithClientID
+{
+    // given
+    NSString *clientID = @"1234abc";
+    NSString *urlString = [NSString stringWithFormat:@"%@%@", @"https://www.example.com/access?client_id=", clientID];
+    NSURL *expectedURL = [NSURL URLWithString:urlString];
+
+    [[self.urlSession expect] taskWithRequest:[OCMArg checkWithBlock:^BOOL(NSURLRequest *request) {
+        return [request.URL isEqual:expectedURL];
+    }] bodyData:[OCMArg any] transportRequest:[OCMArg any]];
+
+    // when
+    [self.sut sendAccessTokenRequestWithURLSession:self.urlSession clientID:clientID];
+
+    // then
+    [self.urlSession verify];
+}
 
 - (void)testThatItRequestsTheAccessTokenOnlyOnce
 {
@@ -214,7 +247,6 @@
     [self.sut sendAccessTokenRequestWithURLSession:self.urlSession];
     XCTAssertEqual(self.sut.currentAccessTokenTask, task);
 }
-
 
 - (void)testThatItReturns_NO_ForCanStartRequestAccessToken_IfAccesToken_IsNotSet
 {

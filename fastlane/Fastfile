@@ -121,6 +121,7 @@ platform :ios do
         end
 
         build = Build.new(options: options)
+        export_method = options[:export_method] || build.export_method
 
         if build.for_simulator
             Dir.chdir("..") do
@@ -137,7 +138,7 @@ platform :ios do
             build_app(
                 scheme: "Wire-iOS",
                 configuration: build.configuration,
-                export_method: build.export_method,
+                export_method: export_method,
                 export_options: {"iCloudContainerEnvironment": "Production"},
                 derived_data_path: "DerivedData",
                 archive_path: build.archive_path(with_filename: true),
@@ -160,11 +161,12 @@ platform :ios do
         end
 
         build = Build.new(options: options)
+        export_method = options[:export_method] || build.export_method
 
         build_app(
             scheme: "Wire-iOS",
             configuration: build.configuration,
-            export_method: build.export_method,
+            export_method: export_method,
             export_options: {"iCloudContainerEnvironment": "Production"},
             derived_data_path: "DerivedData",
             archive_path: build.archive_path(with_filename: true),
@@ -180,8 +182,8 @@ platform :ios do
     desc "Upload to AppStore"
     lane :upload_app_store do |options|
         build = Build.new(options: options)
+        sh "cp ../wire-ios/Configuration/Appfile ."
 
-        sh "cp ../Configuration/Appfile ."
         deliver(
             ipa: "#{build.artifact_path(with_filename: true)}.ipa",
             submit_for_review: false,
@@ -193,6 +195,18 @@ platform :ios do
             skip_app_version_update: true,
             skip_metadata: true,
             skip_screenshots: true
+        )
+    end
+
+    desc "Upload to TestFlight"
+    lane :upload_testflight do |options|
+        build = Build.new(options: options)
+        sh "cp ../wire-ios/Configuration/Appfile ."
+
+
+        upload_to_testflight(
+            ipa: "#{build.artifact_path(with_filename: true)}.ipa",
+            skip_waiting_for_build_processing: true
         )
     end
 
@@ -307,6 +321,18 @@ platform :ios do
         )
     end
 
+    desc "Upload dsyms to Datadog"
+    lane :upload_dsyms_datadog do |options|
+        build = Build.new(options: options)
+        
+        upload_symbols_to_datadog(
+            api_key: ENV["DATADOG_API_KEY"],
+            dsym_paths: [
+            "#{build.artifact_path(with_filename: true)}.app.dSYM.zip"
+            ],
+            site: "datadoghq.eu")
+    end
+
     desc "Run post-test tasks"
     lane :post_test do
         sh "curl -s https://codecov.io/bash > codecov"
@@ -401,6 +427,10 @@ class Build
         @build_type == "RC"
     end
 
+    def beta_build
+        @build_type == "Beta"
+    end
+
     def debug_build
         @configuration == "Debug"
     end
@@ -412,10 +442,10 @@ class Build
     def export_method
         if debug_build
             "development"
-        elsif appstore_build
+        elsif appstore_build || beta_build
             "app-store"
         else 
-            "enterprise"
+            "ad-hoc"
         end
     end
 
@@ -464,6 +494,8 @@ class Build
             "avs-experimental/#{suffix}"
         when "RC"
             "release/#{suffix}"
+        when "Beta"
+            "release/testflight"
         else
             UI.user_error! "Unknown build type: #{@build_type}"
         end
@@ -541,6 +573,8 @@ class Build
             "Wire-iOS-App-Store"
         elsif rc_build
             "Wire-iOS-Release-Candidate"
+        elsif beta_build
+            "Wire-iOS-Beta"
         end
     end
 end

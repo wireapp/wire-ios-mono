@@ -1,9 +1,5 @@
 name: Run Tests
-
-on:
-  pull_request:
-    branches: [ "develop" ]
-      
+on: [pull_request]
 jobs:
   # This job will tell us which frameworks have source code changes.
   # We'll use the results to run tests only for changed frameworks.

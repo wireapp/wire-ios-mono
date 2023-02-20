@@ -24,16 +24,20 @@ typealias DismissAction = (_ completion: Completion?) -> Void
 
 final class ConversationImagesViewController: TintColorCorrectedViewController {
 
+    typealias ButtonColors = SemanticColors.Button
+
     let collection: AssetCollectionWrapper
 
-    var pageViewController: UIPageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: [:])
+    var pageViewController: UIPageViewController = UIPageViewController(transitionStyle: .scroll,
+                                                                        navigationOrientation: .horizontal,
+                                                                        options: [:])
     var buttonsBar: InputBarButtonsView!
     lazy var deleteButton = iconButton(messageAction: .delete)
     var shareButton: IconButton?
     let overlay = FeedbackOverlayView()
     let separator: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.from(scheme: .separator)
+        view.backgroundColor = SemanticColors.View.backgroundSeparatorCell
         return view
     }()
     lazy var likeButton = iconButton(messageAction: .like)
@@ -113,12 +117,8 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
 
         if let navigationBar = navigationController?.navigationBar {
             navigationBar.isTranslucent = true
-            navigationBar.barTintColor = UIColor.from(scheme: .barBackground)
+            navigationBar.barTintColor = SemanticColors.View.backgroundDefault
         }
-    }
-
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return ColorScheme.default.statusBarStyle
     }
 
     override var prefersStatusBarHidden: Bool {
@@ -127,6 +127,13 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
 
     override var preferredStatusBarUpdateAnimation: UIStatusBarAnimation {
         return .fade
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle else { return }
+        self.buttonsBar.buttons = createControlsBarButtons()
+        setupExpandRowButton()
     }
 
     override func viewDidLoad() {
@@ -141,7 +148,7 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
 
         updateBarsForPreview()
 
-        view.backgroundColor = .from(scheme: .background)
+        view.backgroundColor = SemanticColors.View.backgroundDefault
     }
 
     private func createConstraints() {
@@ -171,7 +178,10 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
     private func createPageController() {
         pageViewController.delegate = self
         pageViewController.dataSource = self
-        pageViewController.setViewControllers([self.imageController(for: self.currentMessage)], direction: .forward, animated: false, completion: .none)
+        pageViewController.setViewControllers([self.imageController(for: self.currentMessage)],
+                                              direction: .forward,
+                                              animated: false,
+                                              completion: .none)
 
         addToSelf(pageViewController)
     }
@@ -219,6 +229,8 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
             return #selector(copyCurrent(_:))
         case .save:
             return #selector(saveCurrent(_:))
+        case .forward:
+            return #selector(shareCurrent(_:))
         case .sketchDraw:
             return #selector(sketchCurrent(_:))
         case .sketchEmoji:
@@ -235,7 +247,7 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
     }
 
     private func iconButton(messageAction: MessageAction) -> IconButton {
-        let button = IconButton(style: .default)
+        let button = IconButton()
         button.setIcon(messageAction.icon, size: .tiny, for: .normal)
         button.accessibilityLabel = messageAction.accessibilityLabel
 
@@ -253,25 +265,17 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
         // if the current message is ephemeral, then it will be the only
         // message b/c ephemeral messages are excluded in the collection.
         if !currentMessage.isEphemeral {
-            let copyButton = iconButton(messageAction:
-                .copy)
+            let copyButton = iconButton(messageAction: .copy)
 
             updateLikeButton()
 
-            let saveButton = iconButton(messageAction:
-            .save)
+            let saveButton = iconButton(messageAction: .save)
 
-            let shareButton = IconButton(style: .default)
-            shareButton.setIcon(.export, size: .tiny, for: .normal)
-            shareButton.accessibilityLabel = L10n.Accessibility.MessageAction.ShareButton.description
-            shareButton.addTarget(self, action: #selector(ConversationImagesViewController.shareCurrent(_:)), for: .touchUpInside)
-            self.shareButton = shareButton
+            let shareButton = iconButton(messageAction: .forward)
 
-            let sketchButton = iconButton(messageAction:
-            .sketchDraw)
+            let sketchButton = iconButton(messageAction: .sketchDraw)
 
-            let emojiSketchButton = iconButton(messageAction:
-            .sketchEmoji)
+            let emojiSketchButton = iconButton(messageAction: .sketchEmoji)
 
             let revealButton = iconButton(messageAction: .showInConversation)
             if !MediaShareRestrictionManager(sessionRestriction: ZMUserSession.shared()).canDownloadMedia {
@@ -282,9 +286,54 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
         }
 
         buttons.append(deleteButton)
-        buttons.forEach { $0.hitAreaPadding = .zero }
+        buttons.forEach {
+            $0.hitAreaPadding = .zero
+            setupButtonStyle(button: $0)
+        }
 
         return buttons
+    }
+
+    private func setupButtonStyle(button: IconButton) {
+        button.layer.borderWidth = 1
+        button.setIconColor(ButtonColors.textInputBarItemEnabled, for: .normal)
+        button.setBackgroundImageColor(ButtonColors.backgroundInputBarItemEnabled, for: .normal)
+        button.setBorderColor(ButtonColors.borderInputBarItemEnabled, for: .normal)
+
+        button.setIconColor(ButtonColors.textInputBarItemHighlighted, for: .highlighted)
+        button.setBackgroundImageColor(ButtonColors.backgroundInputBarItemHighlighted, for: .highlighted)
+        button.setBorderColor(ButtonColors.borderInputBarItemHighlighted, for: .highlighted)
+
+        button.setIconColor(ButtonColors.textInputBarItemHighlighted, for: .selected)
+        button.setBackgroundImageColor(ButtonColors.backgroundInputBarItemHighlighted, for: .selected)
+        button.setBorderColor(ButtonColors.borderInputBarItemHighlighted, for: .selected)
+    }
+
+    private func setupExpandRowButton() {
+        buttonsBar.expandRowButton.layer.borderWidth = 1
+        buttonsBar.expandRowButton.setIconColor(ButtonColors.textInputBarItemEnabled, for: .normal)
+        buttonsBar.expandRowButton.setBackgroundImageColor(ButtonColors.backgroundInputBarItemEnabled, for: .normal)
+        buttonsBar.expandRowButton.setBorderColor(ButtonColors.borderInputBarItemEnabled, for: .normal)
+
+        buttonsBar.expandRowButton.setIconColor(ButtonColors.textInputBarItemHighlighted, for: .highlighted)
+        buttonsBar.expandRowButton.setBackgroundImageColor(ButtonColors.backgroundInputBarItemHighlighted, for: .highlighted)
+        buttonsBar.expandRowButton.setBorderColor(ButtonColors.borderInputBarItemHighlighted, for: .highlighted)
+
+        buttonsBar.expandRowButton.setIconColor(ButtonColors.textInputBarItemHighlighted, for: .selected)
+        buttonsBar.expandRowButton.setBackgroundImageColor(ButtonColors.backgroundInputBarItemHighlighted, for: .selected)
+        buttonsBar.expandRowButton.setBorderColor(ButtonColors.borderInputBarItemHighlighted, for: .selected)
+    }
+
+    private func updateLikeButtonStyle() {
+        if currentMessage.liked {
+            likeButton.setIconColor(ButtonColors.textInputBarItemHighlighted, for: .normal)
+            likeButton.setBackgroundImageColor(ButtonColors.backgroundInputBarItemHighlighted, for: .normal)
+            likeButton.setBorderColor(ButtonColors.borderInputBarItemHighlighted, for: .normal)
+        } else {
+            likeButton.setIconColor(ButtonColors.textInputBarItemEnabled, for: .normal)
+            likeButton.setBackgroundImageColor(ButtonColors.backgroundInputBarItemEnabled, for: .normal)
+            likeButton.setBorderColor(ButtonColors.borderInputBarItemEnabled, for: .normal)
+        }
     }
 
     private func createControlsBar() {
@@ -292,8 +341,8 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
 
         buttonsBar = InputBarButtonsView(buttons: buttons)
         self.buttonsBar.clipsToBounds = true
-        self.buttonsBar.expandRowButton.setIconColor(UIColor.from(scheme: .textForeground), for: .normal)
-        self.buttonsBar.backgroundColor = UIColor.from(scheme: .barBackground)
+        setupExpandRowButton()
+        self.buttonsBar.backgroundColor = SemanticColors.View.backgroundDefaultWhite
         self.view.addSubview(self.buttonsBar)
 
         self.updateButtonsForMessage()
@@ -304,6 +353,7 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
         let messageAction: MessageAction = currentMessage.liked ? .like : .unlike
 
         likeButton.setIcon(messageAction.icon, size: .tiny, for: .normal)
+        updateLikeButtonStyle()
         likeButton.accessibilityLabel = messageAction.accessibilityLabel
     }
 
@@ -332,7 +382,7 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
         guard let sender = currentMessage.senderUser, let serverTimestamp = currentMessage.serverTimestamp else {
             return
         }
-        navigationItem.titleView = TwoLineTitleView(first: (sender.name ?? "").localizedUppercase, second: serverTimestamp.formattedDate)
+        navigationItem.titleView = TwoLineTitleView(first: (sender.name ?? "").localized, second: serverTimestamp.formattedDate)
         navigationItem.titleView?.accessibilityTraits = .header
         navigationItem.titleView?.accessibilityLabel = "\(sender.name ?? ""), \(serverTimestamp.formattedDate)"
     }
@@ -342,7 +392,10 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
     }
 
     private func updateActionControllerForMessage() {
-        currentActionController = ConversationMessageActionController(responder: messageActionDelegate, message: currentMessage, context: .collection, view: view)
+        currentActionController = ConversationMessageActionController(responder: messageActionDelegate,
+                                                                      message: currentMessage,
+                                                                      context: .collection,
+                                                                      view: view)
     }
 
     var currentController: FullscreenImageViewController? {
@@ -365,19 +418,21 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
 
     @objc
     private func copyCurrent(_ sender: AnyObject!) {
-        let text = "collections.image_viewer.copied.title".localized(uppercased: true)
+        let text = L10n.Localizable.Collections.ImageViewer.Copied.title.capitalized
         overlay.show(text: text)
         perform(action: .copy, sender: sender)
     }
 
-    @objc func saveCurrent(_ sender: UIButton!) {
+    @objc
+    func saveCurrent(_ sender: UIButton!) {
         if let sender = sender {
             currentController?.performSaveImageAnimation(from: sender)
         }
         perform(action: .save, sender: sender)
     }
 
-    @objc func likeCurrent() {
+    @objc
+    func likeCurrent() {
         ZMUserSession.shared()?.enqueue({
             self.currentMessage.liked = !self.currentMessage.liked
         }, completionHandler: {
@@ -385,11 +440,13 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
         })
     }
 
-    @objc func shareCurrent(_ sender: AnyObject!) {
+    @objc
+    func shareCurrent(_ sender: AnyObject!) {
         perform(action: .forward, sender: sender)
     }
 
-    @objc func deleteCurrent(_ sender: AnyObject!) {
+    @objc
+    func deleteCurrent(_ sender: AnyObject!) {
         perform(action: .delete, sender: sender)
     }
 
@@ -398,7 +455,8 @@ final class ConversationImagesViewController: TintColorCorrectedViewController {
     }
 
     @objc
-    private func sketchCurrent(_ sender: AnyObject!) {
+    private
+    func sketchCurrent(_ sender: AnyObject!) {
         perform(action: .sketchDraw, sender: sender)
     }
 
@@ -464,8 +522,8 @@ extension ConversationImagesViewController: UIPageViewControllerDelegate, UIPage
         }
 
         guard let messageIndex = self.indexOf(message: imageController.message),
-            let nextIndex = self.logicalNextIndex(for: messageIndex) else {
-                return .none
+              let nextIndex = self.logicalNextIndex(for: messageIndex) else {
+            return .none
         }
 
         return self.imageController(for: self.imageMessages[nextIndex])
@@ -477,8 +535,8 @@ extension ConversationImagesViewController: UIPageViewControllerDelegate, UIPage
         }
 
         guard let messageIndex = self.indexOf(message: imageController.message),
-            let previousIndex = self.logicalPreviousIndex(for: messageIndex) else {
-                return .none
+              let previousIndex = self.logicalPreviousIndex(for: messageIndex) else {
+            return .none
         }
 
         return self.imageController(for: self.imageMessages[previousIndex])
@@ -486,8 +544,8 @@ extension ConversationImagesViewController: UIPageViewControllerDelegate, UIPage
 
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         if let currentController = self.currentController,
-            finished,
-            completed {
+           finished,
+           completed {
 
             self.currentMessage = currentController.message
             self.buttonsBar.buttons = createControlsBarButtons()

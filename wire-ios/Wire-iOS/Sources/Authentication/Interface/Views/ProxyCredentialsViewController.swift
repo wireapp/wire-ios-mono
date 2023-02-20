@@ -59,16 +59,19 @@ final class ProxyCredentialsViewController: UIViewController {
         textField.placeholder = Credentials.Username.placeholder.capitalized // TODO: .uppercased() when new design is implemented
         textField.addTarget(self, action: #selector(textInputDidChange), for: .editingChanged)
         textField.delegate = self
+        textField.addDoneButtonOnKeyboard()
         return textField
     }()
 
     lazy var passwordInput: ValidatedTextField = {
         let textField = ValidatedTextField(kind: .password(isNew: false), leftInset: 8, accessoryTrailingInset: 0, cornerRadius: 0, style: .default)
-        textField.showConfirmButton = false
+
         textField.placeholder = Credentials.Password.placeholder.capitalized // TODO: .uppercased() when new design is implemented
         textField.addTarget(self, action: #selector(textInputDidChange), for: .editingChanged)
         textField.delegate = self
+        textField.addDoneButtonOnKeyboard()
         textField.returnKeyType = .done
+        textField.addRevealButton(delegate: self)
         return textField
     }()
 
@@ -146,4 +149,11 @@ extension ProxyCredentialsViewController: UITextFieldDelegate {
         self.activeFieldChange(nil)
     }
 
+}
+
+extension ProxyCredentialsViewController: ValidatedTextFieldDelegate {
+    func buttonPressed(_ sender: UIButton) {
+        passwordInput.isSecureTextEntry.toggle()
+        passwordInput.updatePasscodeIcon()
+    }
 }

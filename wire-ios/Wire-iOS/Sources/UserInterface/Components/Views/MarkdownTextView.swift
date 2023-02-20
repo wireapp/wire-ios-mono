@@ -631,6 +631,7 @@ extension DownStyle {
         style.baseFont = FontSpec(.medium, .none).font!
         style.baseFontColor = SemanticColors.Label.textDefault
         style.codeFont = UIFont(name: "Menlo", size: style.baseFont.pointSize) ?? style.baseFont
+        style.codeColor = SemanticColors.Label.textDefault
         style.baseParagraphStyle = ParagraphStyleDescriptor.paragraphSpacing(CGFloat.MessageCell.paragraphSpacing).style
         style.listItemPrefixSpacing = 8
         style.renderOnlyValidLinks = false
@@ -643,6 +644,7 @@ extension DownStyle {
         style.baseFont = FontSpec.normalLightFont.font!
         style.baseFontColor = SemanticColors.Label.textDefault
         style.codeFont = UIFont(name: "Menlo", size: style.baseFont.pointSize) ?? style.baseFont
+        style.codeColor = SemanticColors.Label.textDefault
         style.baseParagraphStyle = NSParagraphStyle.default
         style.listItemPrefixSpacing = 8
         return style
@@ -654,6 +656,7 @@ extension DownStyle {
         style.baseFont = FontSpec.normalLightFont.font!
         style.baseFontColor = SemanticColors.Label.textDefault
         style.codeFont = UIFont(name: "Menlo", size: style.baseFont.pointSize) ?? style.baseFont
+        style.codeColor = SemanticColors.Label.textDefault
         style.baseParagraphStyle = NSParagraphStyle.default
         style.listItemPrefixSpacing = 8
         return style
@@ -665,6 +668,7 @@ extension DownStyle {
         style.baseFont = FontSpec.normalLightFont.font!
         style.baseFontColor = SemanticColors.Label.textDefault
         style.codeFont = UIFont(name: "Menlo", size: style.baseFont.pointSize) ?? style.baseFont
+        style.codeColor = SemanticColors.Label.textDefault
         style.baseParagraphStyle = NSParagraphStyle.default
         style.listItemPrefixSpacing = 8
 
@@ -681,6 +685,7 @@ extension DownStyle {
         style.baseFont = UIFont.systemFont(ofSize: 14, contentSizeCategory: .medium, weight: .light)
         style.baseFontColor = SemanticColors.Label.textDefault
         style.codeFont = UIFont(name: "Menlo", size: style.baseFont.pointSize) ?? style.baseFont
+        style.codeColor = SemanticColors.Label.textDefault
         style.baseParagraphStyle = NSParagraphStyle.default
         style.listItemPrefixSpacing = 8
 

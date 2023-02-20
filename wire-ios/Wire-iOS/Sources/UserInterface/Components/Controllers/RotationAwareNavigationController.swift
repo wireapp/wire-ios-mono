@@ -73,7 +73,4 @@ final class RotationAwareNavigationController: UINavigationController, PopoverPr
         return topViewController
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return ColorScheme.default.statusBarStyle
-    }
 }

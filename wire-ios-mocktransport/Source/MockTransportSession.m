@@ -383,6 +383,10 @@ static NSString* ZMLogTag ZM_UNUSED = @"MockTransportRequests";
     self->_accessTokenSuccessHandler = [handler copy];
 }
 
+- (void)renewAccessTokenWithClientID:(NSString *)clientID {
+    // no op
+}
+
 @end
 
 

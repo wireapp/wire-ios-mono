@@ -74,32 +74,40 @@ extension MessagingTestBase {
         return ZMUpdateEvent(fromEventStreamPayload: payload! as ZMTransportData, uuid: UUID())!
     }
 
-    func updateEvent<Event: EventData>(from data: Event,
-                                       conversationID: QualifiedID? = nil,
-                                       senderID: QualifiedID? = nil,
-                                       timestamp: Date? = nil) -> ZMUpdateEvent {
+    func updateEvent<Event: CodableEventData>(
+        from data: Event,
+        conversationID: QualifiedID? = nil,
+        senderID: QualifiedID? = nil,
+        timestamp: Date? = nil
+    ) -> ZMUpdateEvent {
 
-        let event  = conversationEventPayload(from: data,
-                                              conversationID: conversationID,
-                                              senderID: senderID,
-                                              timestamp: timestamp)
+        let event  = conversationEventPayload(
+            from: data,
+            conversationID: conversationID,
+            senderID: senderID,
+            timestamp: timestamp
+        )
 
         return updateEvent(from: event.payloadData()!)
     }
 
-    func conversationEventPayload<Event: EventData>(from data: Event,
-                                                    conversationID: QualifiedID? = nil,
-                                                    senderID: QualifiedID? = nil,
-                                                    timestamp: Date? = nil) -> Payload.ConversationEvent<Event> {
+    func conversationEventPayload<Event: CodableEventData>(
+        from data: Event,
+        conversationID: QualifiedID? = nil,
+        senderID: QualifiedID? = nil,
+        timestamp: Date? = nil
+    ) -> Payload.ConversationEvent<Event> {
 
-        let event = Payload.ConversationEvent<Event>(id: conversationID?.uuid,
-                                                     qualifiedID: conversationID,
-                                                     from: senderID?.uuid,
-                                                     qualifiedFrom: senderID,
-                                                     timestamp: timestamp,
-                                                     type: ZMUpdateEvent.eventTypeString(for: Event.eventType),
-                                                     data: data)
-        return event
+        return Payload.ConversationEvent<Event>(
+            id: conversationID?.uuid,
+            qualifiedID: conversationID,
+            from: senderID?.uuid,
+            qualifiedFrom: senderID,
+            timestamp: timestamp,
+            type: ZMUpdateEvent.eventTypeString(for: Event.eventType),
+            data: data
+        )
+
     }
 
 }

@@ -92,8 +92,11 @@ typedef ZMTransportResponse * _Nullable (^ZMCustomResponseGeneratorBlock)(ZMTran
 
 - (void)configurePushChannelWithConsumer:(id<ZMPushChannelConsumer>)consumer groupQueue:(id<ZMSGroupQueue>)groupQueue NS_SWIFT_NAME(configurePushChannel(consumer:groupQueue:));
 
-- (void)setAccessTokenRenewalFailureHandler:(ZMCompletionHandlerBlock)handler NS_SWIFT_NAME(setAccessTokenRenewalFailureHandler(handler:));
-- (void)setAccessTokenRenewalSuccessHandler:(ZMAccessTokenHandlerBlock)handler;
+- (void)setAccessTokenRenewalFailureHandler:(ZMCompletionHandlerBlock)handler NS_SWIFT_NAME(setAccessTokenRenewalFailureHandler(_:));
+
+- (void)setAccessTokenRenewalSuccessHandler:(ZMAccessTokenHandlerBlock)handler NS_SWIFT_NAME(setAccessTokenRenewalSuccessHandler(_:));
+
+- (void)renewAccessTokenWithClientID:(NSString *)clientID NS_SWIFT_NAME(renewAccessToken(with:));
 
 - (void)setNetworkStateDelegate:(nullable id<ZMNetworkStateDelegate>)delegate;
 

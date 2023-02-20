@@ -247,6 +247,7 @@ class AuthenticationStepController: AuthenticationStepViewController {
 
         // Fixed Constraints
         contentCenter = contentCenterYAnchor.constraint(equalTo: view.centerYAnchor)
+        contentCenter.priority = .init(999)
         contentCenter.isActive = contentCenterConstraintActivation
         contentStack.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = contentCenterConstraintActivation
 
@@ -308,6 +309,7 @@ class AuthenticationStepController: AuthenticationStepViewController {
         }
 
         let button = AuthenticationNavigationBar.makeBackButton()
+        button.accessibilityLabel = L10n.Accessibility.Authentication.BackButton.description
         button.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
     }
@@ -423,6 +425,7 @@ extension AuthenticationStepController {
             showSecondaryView(for: nil)
 
         case .error(let error, let showVisualFeedback)?:
+            UIAccessibility.post(notification: .screenChanged, argument: errorLabel)
             if !showVisualFeedback {
                 // If we do not want to show an error (eg if all the text was deleted,
                 // either use the initial info or clear the error

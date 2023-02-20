@@ -68,7 +68,6 @@ extern NSString * const ZMTransportSessionNewRequestAvailableNotification;
 
 @interface ZMTransportSession : NSObject <ZMBackgroundable>
 
-@property (nonatomic, readonly, nullable) ZMAccessToken *accessToken;
 @property (nonatomic, readonly) NSURL *baseURL;
 @property (nonatomic, readonly) NSOperationQueue *workQueue;
 @property (nonatomic, assign) NSInteger maximumConcurrentRequests;
@@ -87,12 +86,6 @@ extern NSString * const ZMTransportSessionNewRequestAvailableNotification;
                  applicationVersion:(nonnull NSString *)applicationVersion;
 
 - (void)tearDown;
-
-/// Sets the access token failure callback. This can be called only before the first request is fired
-- (void)setAccessTokenRenewalFailureHandler:(ZMCompletionHandlerBlock)handler NS_SWIFT_NAME(setAccessTokenRenewalFailureHandler(handler:)); //TODO accesstoken // move this out of here?
-
-/// Sets the access token success callback
-- (void)setAccessTokenRenewalSuccessHandler:(ZMAccessTokenHandlerBlock)handler;
 
 - (void)enqueueOneTimeRequest:(ZMTransportRequest *)searchRequest NS_SWIFT_NAME(enqueueOneTime(_:));
 
@@ -129,6 +122,21 @@ extern NSString * const ZMTransportSessionNewRequestAvailableNotification;
 @end
 
 @interface ZMTransportSession (RequestCancellation) <ZMRequestCancellation>
+
+@end
+
+@interface ZMTransportSession (AccessToken)
+
+@property (nonatomic, readonly, nullable) ZMAccessToken *accessToken;
+
+/// Sets the access token failure callback. This can be called only before the first request is fired
+- (void)setAccessTokenRenewalFailureHandler:(ZMCompletionHandlerBlock)handler NS_SWIFT_NAME(setAccessTokenRenewalFailureHandler(_:));
+
+/// Sets the access token success callback
+- (void)setAccessTokenRenewalSuccessHandler:(ZMAccessTokenHandlerBlock)handler NS_SWIFT_NAME(setAccessTokenRenewalSuccessHandler(_:));
+
+/// Renews the access token passing the client ID as query parameter
+- (void)renewAccessTokenWithClientID:(NSString *)clientID NS_SWIFT_NAME(renewAccessToken(with:));
 
 @end
 

@@ -181,11 +181,16 @@ static NSTimeInterval const GraceperiodToRenewAccessToken = 40;
 
 - (void)sendAccessTokenRequestWithURLSession:(ZMURLSession *)URLSession
 {
+    [self sendAccessTokenRequestWithURLSession:URLSession clientID:nil];
+}
+
+- (void)sendAccessTokenRequestWithURLSession:(ZMURLSession *)URLSession clientID:(NSString *)clientID;
+{
     Require(URLSession != nil);
     if (self.currentAccessTokenTask != nil) {
         return;
     }
-    
+
     ZMLogInfo(@"Requesting access token from cookie (existing token: %p).", self.accessToken);
     if(self.cookieStorage.authenticationCookieData == nil) {
         ZMLogError(@"No cookie to request access token");
@@ -194,7 +199,7 @@ static NSTimeInterval const GraceperiodToRenewAccessToken = 40;
     }
 
     self.activity = [[BackgroundActivityFactory sharedFactory] startBackgroundActivityWithName:@"Network request: POST /access"];
-    NSURL *URL = [NSURL URLWithString:@"/access" relativeToURL:self.baseURL];
+    NSURL *URL = [self accessTokenURLWithClientID:clientID];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:URL];
     [request setHTTPMethod:@"POST"];
     [request addValue:[ZMTransportCodec encodedContentType] forHTTPHeaderField:@"Content-Type"];
@@ -209,7 +214,16 @@ static NSTimeInterval const GraceperiodToRenewAccessToken = 40;
     }];
 }
 
+- (NSURL *)accessTokenURLWithClientID:(NSString *)clientID
+{
+    NSMutableString *urlString = [NSMutableString stringWithString:@"/access"];
 
+    if (clientID != nil && ![clientID isEqualToString:@""]) {
+        [urlString appendString:[NSString stringWithFormat:@"%@%@", @"?client_id=", clientID]];
+    }
+
+    return [NSURL URLWithString:urlString relativeToURL:self.baseURL];
+}
 
 - (BOOL)consumeRequestWithTask:(NSURLSessionTask *)task data:(NSData *)data session:(ZMURLSession *)session shouldRetry:(BOOL)shouldRetry apiVersion:(int)apiVersion;
 {

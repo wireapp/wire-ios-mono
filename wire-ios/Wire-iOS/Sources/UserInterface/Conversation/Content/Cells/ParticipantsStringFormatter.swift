@@ -174,7 +174,7 @@ final class ParticipantsStringFormatter {
             let learnMore = NSAttributedString(string: L10n.Localizable.Content.System.MessageLegalHold.learnMore.uppercased(),
                                                attributes: [.font: font,
                                                             .link: URL.wr_legalHoldLearnMore.absoluteString as AnyObject,
-                                                            .foregroundColor: UIColor.from(scheme: .textForeground)])
+                                                            .foregroundColor: SemanticColors.Label.textDefault])
             return result += " " + learnMore
 
         case .removed, .added(herself: false), .started(withName: .none):

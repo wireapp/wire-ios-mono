@@ -45,7 +45,7 @@ class SharingSessionTestsEncryptionAtRest: BaseSharingSessionTests {
 
     func testThatDatabaseIsLocked_BeforeUnlockingDatabase() throws {
         // given
-        enableEncryptionAtRest()
+        try enableEncryptionAtRest()
         XCTAssertTrue(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
         sharingSession.coreDataStack.clearEncryptionKeysInAllContexts()
 
@@ -55,7 +55,7 @@ class SharingSessionTestsEncryptionAtRest: BaseSharingSessionTests {
 
     func testThatDatabaseIsUnlocked_AfterUnlockingDatabase() throws {
         // given
-        enableEncryptionAtRest()
+        try enableEncryptionAtRest()
         XCTAssertTrue(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
 
         // when
@@ -69,14 +69,20 @@ class SharingSessionTestsEncryptionAtRest: BaseSharingSessionTests {
 
     // MARK: - Helpers
 
-    func enableEncryptionAtRest() {
+    func enableEncryptionAtRest() throws {
         let account = Account(userName: "", userIdentifier: accountIdentifier)
 
         try! EncryptionKeys.deleteKeys(for: account)
         sharingSession.coreDataStack.clearEncryptionKeysInAllContexts()
 
-        let encryptionKeys = try! EncryptionKeys.createKeys(for: account)
-        try! sharingSession.userInterfaceContext.enableEncryptionAtRest(encryptionKeys: encryptionKeys, skipMigration: true)
+        #if targetEnvironment(simulator) && swift(>=5.4)
+        if #available(iOS 15, *) {
+            XCTExpectFailure("Expect to fail on iOS 15 simulator. ref: https://wearezeta.atlassian.net/browse/SQCORE-1188")
+        }
+        #endif
+
+        let encryptionKeys = try EncryptionKeys.createKeys(for: account)
+        try sharingSession.userInterfaceContext.enableEncryptionAtRest(encryptionKeys: encryptionKeys, skipMigration: true)
 
         sharingSession.userInterfaceContext.saveOrRollback()
     }
