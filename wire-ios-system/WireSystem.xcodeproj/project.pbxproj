@@ -173,6 +173,7 @@
 		5473E7C61B31A95A00C6A937 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				EE08D03829A79F9B00A9AB02 /* Logging */,
 				8701221520F64171001E6342 /* Cache.swift */,
 				54180BD61F459DCF0020D2BD /* MemoryReferenceDebugger.h */,
 				54180BD71F459DCF0020D2BD /* MemoryReferenceDebugger.swift */,
@@ -188,7 +189,6 @@
 				F1670FAD22A7C5F500BC6811 /* SanitizedString.swift */,
 				F19E554422AA8748005C792D /* SafeForLoggingStringConvertible.swift */,
 				096A3A1E1B67CEF700565001 /* ZMSLog.swift */,
-				EEEE4C01297EBCF700124235 /* WireLogger.swift */,
 				54DB81621DBF66CF00AF495D /* ZMSLog+Levels.swift */,
 				54D573691DBFBAFA00D6C2C4 /* ZMSLog+Recording.swift */,
 				D59F3A1A206A448F0023474F /* DispatchQueue+ZMSDispatchGroup.swift */,
@@ -244,6 +244,14 @@
 				54C0CC421C9C7862000A9286 /* ZMSAssertionTests.m */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		EE08D03829A79F9B00A9AB02 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				EEEE4C01297EBCF700124235 /* WireLogger.swift */,
+			);
+			path = Logging;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
