@@ -133,13 +133,13 @@ extension FlowLog {
         try container.encode("start")
 
       case .checkpoint(let description):
-        try container.encode("checkpoint: \(description)")
+        try container.encode("checkpoint - \(description)")
 
       case .completion(.success):
         try container.encode("success")
 
       case .completion(.failure(let error)):
-        try container.encode("failure: \(String(describing: error))")
+        try container.encode("failure - \(String(describing: error))")
       }
     }
 
