@@ -46,6 +46,7 @@
 		8701221920F641BE001E6342 /* CacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8701221720F641A4001E6342 /* CacheTests.swift */; };
 		D59F3A1B206A448F0023474F /* DispatchQueue+ZMSDispatchGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59F3A1A206A448F0023474F /* DispatchQueue+ZMSDispatchGroup.swift */; };
 		D59F3A1D206A47E80023474F /* DispatchQueueHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D59F3A1C206A47E80023474F /* DispatchQueueHelperTests.swift */; };
+		EE08D03A29A79FCA00A9AB02 /* Flow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE08D03929A79FCA00A9AB02 /* Flow.swift */; };
 		EEEE4C02297EBCF700124235 /* WireLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEEE4C01297EBCF700124235 /* WireLogger.swift */; };
 		F1670FAE22A7C5F500BC6811 /* SanitizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1670FAD22A7C5F500BC6811 /* SanitizedString.swift */; };
 		F1670FB022A7C7D800BC6811 /* SanitizedStringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1670FAF22A7C7D800BC6811 /* SanitizedStringTests.swift */; };
@@ -113,6 +114,7 @@
 		8701221720F641A4001E6342 /* CacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheTests.swift; sourceTree = "<group>"; };
 		D59F3A1A206A448F0023474F /* DispatchQueue+ZMSDispatchGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+ZMSDispatchGroup.swift"; sourceTree = "<group>"; };
 		D59F3A1C206A47E80023474F /* DispatchQueueHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueHelperTests.swift; sourceTree = "<group>"; };
+		EE08D03929A79FCA00A9AB02 /* Flow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Flow.swift; sourceTree = "<group>"; };
 		EEEE4C01297EBCF700124235 /* WireLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireLogger.swift; sourceTree = "<group>"; };
 		F1670FAD22A7C5F500BC6811 /* SanitizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SanitizedString.swift; sourceTree = "<group>"; };
 		F1670FAF22A7C7D800BC6811 /* SanitizedStringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SanitizedStringTests.swift; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 			isa = PBXGroup;
 			children = (
 				EEEE4C01297EBCF700124235 /* WireLogger.swift */,
+				EE08D03929A79FCA00A9AB02 /* Flow.swift */,
 			);
 			path = Logging;
 			sourceTree = "<group>";
@@ -393,6 +396,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				544CFC511B70B933007AA694 /* ZMSLog.swift in Sources */,
+				EE08D03A29A79FCA00A9AB02 /* Flow.swift in Sources */,
 				8701221620F64171001E6342 /* Cache.swift in Sources */,
 				54180BD91F459DCF0020D2BD /* MemoryReferenceDebugger.swift in Sources */,
 				54F249C91BB9242900040600 /* ZMSDispatchGroup.m in Sources */,
