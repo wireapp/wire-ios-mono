@@ -78,4 +78,21 @@ final class SessionManagerTests_Proxy: IntegrationTest {
         XCTAssertNotNil(sessionManager?.unauthenticatedSession)
         XCTAssertNotNil(sessionManager?.apiVersionResolver)
     }
+
+    func test_markNetworkSessionsAsReady_sendsNotification() {
+        // GIVEN
+        XCTAssertFalse(unauthenticatedSessionFactory.readyForRequests)
+
+        // EXPECT
+        expectation(forNotification: NSNotification.Name(rawValue: ZMTransportSessionReachabilityIsEnabled), object: nil) { (_) -> Bool in
+            return true
+        }
+
+        // WHEN
+        sessionManager?.markNetworkSessionsAsReady(true)
+
+        // THEN
+        XCTAssertTrue(waitForCustomExpectations(withTimeout: 0.5))
+
+    }
 }
