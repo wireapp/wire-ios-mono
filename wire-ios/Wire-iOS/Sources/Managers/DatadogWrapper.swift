@@ -171,28 +171,28 @@ extension RemoteMonitoring.Level {
 
 extension DatadogWrapper: WireSystem.LoggerProtocol {
 
-    public func debug(_ message: String, attributes: LogAttributes?) {
-        log(level: .debug, message: message, attributes: attributes)
+    public func debug(_ message: LogConvertible, attributes: LogAttributes?) {
+        log(level: .debug, message: message.logDescription, attributes: attributes)
     }
 
-    public func info(_ message: String, attributes: LogAttributes?) {
-        log(level: .info, message: message, attributes: attributes)
+    public func info(_ message: LogConvertible, attributes: LogAttributes?) {
+        log(level: .info, message: message.logDescription, attributes: attributes)
     }
 
-    public func notice(_ message: String, attributes: LogAttributes?) {
-        log(level: .notice, message: message, attributes: attributes)
+    public func notice(_ message: LogConvertible, attributes: LogAttributes?) {
+        log(level: .notice, message: message.logDescription, attributes: attributes)
     }
 
-    public func warn(_ message: String, attributes: LogAttributes?) {
-        log(level: .warn, message: message, attributes: attributes)
+    public func warn(_ message: LogConvertible, attributes: LogAttributes?) {
+        log(level: .warn, message: message.logDescription, attributes: attributes)
     }
 
-    public func error(_ message: String, attributes: LogAttributes?) {
-        log(level: .error, message: message, attributes: attributes)
+    public func error(_ message: LogConvertible, attributes: LogAttributes?) {
+        log(level: .error, message: message.logDescription, attributes: attributes)
     }
 
-    public func critical(_ message: String, attributes: LogAttributes?) {
-        log(level: .critical, message: message, attributes: attributes)
+    public func critical(_ message: LogConvertible, attributes: LogAttributes?) {
+        log(level: .critical, message: message.logDescription, attributes: attributes)
     }
 
 }
