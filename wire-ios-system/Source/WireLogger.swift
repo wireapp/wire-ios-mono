@@ -32,63 +32,57 @@ public struct WireLogger: LoggerProtocol {
     _ message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
-    let logMessage = message.logDescription
-    guard shouldLogMessage(logMessage) else { return }
-    log(level: .debug, message: logMessage, attributes: attributes)
+    guard shouldLogMessage(message) else { return }
+    log(level: .debug, message: message, attributes: attributes)
   }
 
   public func info(
     _ message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
-    let logMessage = message.logDescription
-    guard shouldLogMessage(logMessage) else { return }
-    log(level: .info, message: logMessage, attributes: attributes)
+    guard shouldLogMessage(message) else { return }
+    log(level: .info, message: message, attributes: attributes)
   }
 
   public func notice(
     _ message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
-    let logMessage = message.logDescription
-    guard shouldLogMessage(logMessage) else { return }
-    log(level: .notice, message: logMessage, attributes: attributes)
+    guard shouldLogMessage(message) else { return }
+    log(level: .notice, message: message, attributes: attributes)
   }
 
   public func warn(
     _ message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
-    let logMessage = message.logDescription
-    guard shouldLogMessage(logMessage) else { return }
-    log(level: .warn, message: logMessage, attributes: attributes)
+    guard shouldLogMessage(message) else { return }
+    log(level: .warn, message: message, attributes: attributes)
   }
 
   public func error(
     _ message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
-    let logMessage = message.logDescription
-    guard shouldLogMessage(logMessage) else { return }
-    log(level: .error, message: logMessage, attributes: attributes)
+    guard shouldLogMessage(message) else { return }
+    log(level: .error, message: message, attributes: attributes)
   }
 
   public func critical(
     _ message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
-    let logMessage = message.logDescription
-    guard shouldLogMessage(logMessage) else { return }
-    log(level: .critical, message: logMessage, attributes: attributes)
+    guard shouldLogMessage(message) else { return }
+    log(level: .critical, message: message, attributes: attributes)
   }
 
-  private func shouldLogMessage(_ message: String) -> Bool {
-    return Self.provider != nil && !message.isEmpty
+  private func shouldLogMessage(_ message: LogConvertible) -> Bool {
+    return Self.provider != nil && !message.logDescription.isEmpty
   }
 
   private func log(
     level: LogLevel,
-    message: String,
+    message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
     var attributes = attributes ?? .init()
@@ -135,17 +129,25 @@ public typealias LogAttributes = [String: Encodable]
 
 public protocol LoggerProtocol {
 
-  func debug(_ message: String, attributes: LogAttributes?)
-  func info(_ message: String, attributes: LogAttributes?)
-  func notice(_ message: String, attributes: LogAttributes?)
-  func warn(_ message: String, attributes: LogAttributes?)
-  func error(_ message: String, attributes: LogAttributes?)
-  func critical(_ message: String, attributes: LogAttributes?)
+  func debug(_ message: LogConvertible, attributes: LogAttributes?)
+  func info(_ message: LogConvertible, attributes: LogAttributes?)
+  func notice(_ message: LogConvertible, attributes: LogAttributes?)
+  func warn(_ message: LogConvertible, attributes: LogAttributes?)
+  func error(_ message: LogConvertible, attributes: LogAttributes?)
+  func critical(_ message: LogConvertible, attributes: LogAttributes?)
 
 }
 
 public protocol LogConvertible {
 
   var logDescription: String { get }
+
+}
+
+extension String: LogConvertible {
+
+  public var logDescription: String {
+    return self
+  }
 
 }
