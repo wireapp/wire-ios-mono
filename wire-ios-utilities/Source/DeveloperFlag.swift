@@ -23,6 +23,7 @@ public enum DeveloperFlag: String, CaseIterable {
     public static var storage = UserDefaults.standard
 
     case showCreateMLSGroupToggle
+    case enableMLS
     case proteusViaCoreCrypto
     case breakMyNotifications
     case nseV2
@@ -35,6 +36,9 @@ public enum DeveloperFlag: String, CaseIterable {
         switch self {
         case .showCreateMLSGroupToggle:
             return "Turn on to show the MLS toggle when creating a new group."
+
+        case .enableMLS:
+          return "Turn on to enable MLS. This will cause the app to register an MLS client on the backend."
 
         case .proteusViaCoreCrypto:
             return "Turn on to use CoreCrypto for proteus messaging."
