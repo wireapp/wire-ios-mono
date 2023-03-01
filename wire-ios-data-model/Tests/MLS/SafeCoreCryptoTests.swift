@@ -52,4 +52,12 @@ class SafeCoreCryptoTests: ZMBaseManagedObjectTest {
         // THEN
         XCTAssertTrue(called)
     }
+
+    // MARK: - Helper
+
+    private func createTempFolder() -> URL {
+        let url = URL(fileURLWithPath: [NSTemporaryDirectory(), UUID().uuidString].joined(separator: "/"))
+        try! FileManager.default.createDirectory(at: url, withIntermediateDirectories: true, attributes: [:])
+        return url
+    }
 }
