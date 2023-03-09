@@ -93,7 +93,7 @@ final class ConversationLegalHoldCellDescription: ConversationMessageCellDescrip
             let learnMore = NSAttributedString(string: (baseTemplate + ".learn_more").localized.uppercased(),
                                                attributes: [.font: UIFont.mediumSemiboldFont,
                                                             .link: ConversationLegalHoldSystemMessageCell.legalHoldURL as AnyObject,
-                                                            .foregroundColor: UIColor.from(scheme: .textForeground)])
+                                                            .foregroundColor: SemanticColors.Label.textDefault])
 
             attributedText += " " + String.MessageToolbox.middleDot + " "
             attributedText += learnMore

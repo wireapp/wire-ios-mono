@@ -20,19 +20,15 @@ import UIKit
 
 final class TwoLineTitleView: UIView {
 
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .smallSemiboldFont
-        label.textColor = .from(scheme: .textForeground)
-
+    let titleLabel: DynamicFontLabel = {
+        let label = DynamicFontLabel(fontSpec: .headerSemiboldFont,
+                                     color: SemanticColors.Label.textDefault)
         return label
     }()
 
-    let subtitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .smallLightFont
-        label.textColor = .from(scheme: .textForeground)
-
+    let subtitleLabel: DynamicFontLabel = {
+        let label = DynamicFontLabel(fontSpec: .mediumRegularFont,
+                                     color: SemanticColors.Label.textDefault)
         return label
     }()
 
@@ -51,13 +47,13 @@ final class TwoLineTitleView: UIView {
 
         [self, titleLabel, subtitleLabel].prepareForLayout()
         NSLayoutConstraint.activate([
-          titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-          titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-          titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 4),
-          subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
-          subtitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
-          subtitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-          subtitleLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
+            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 4),
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor),
+            subtitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor),
+            subtitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
+            subtitleLabel.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 

@@ -115,6 +115,7 @@ class UserCell: SeparatorCollectionViewCell, SectionListCellType {
         // are not updating when switching appearance live in the app.
         // That's why we use the traitCollectionDidChange(_:) method.
         checkmarkIconView.layer.borderColor = IconColors.borderCheckMark.cgColor
+        updateTitleLabel()
     }
 
     override func setUp() {
@@ -145,6 +146,8 @@ class UserCell: SeparatorCollectionViewCell, SectionListCellType {
         checkmarkIconView.isHidden = true
 
         accessoryIconView.setUpIconImageView()
+        accessoryIconView.setTemplateIcon(.disclosureIndicator, size: 12)
+        accessoryIconView.tintColor = IconColors.foregroundDefault
 
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.accessibilityIdentifier = "user_cell.name"
@@ -266,15 +269,6 @@ class UserCell: SeparatorCollectionViewCell, SectionListCellType {
         } else {
             accessibilityHint = ContactsList.UserCell.hint
         }
-    }
-
-    override func applyColorScheme(_ colorSchemeVariant: ColorSchemeVariant) {
-        super.applyColorScheme(colorSchemeVariant)
-
-        accessoryIconView.setTemplateIcon(.disclosureIndicator, size: 12)
-        accessoryIconView.tintColor = IconColors.foregroundDefault
-
-        updateTitleLabel()
     }
 
     private func updateTitleLabel(selfUser: UserType? = nil) {

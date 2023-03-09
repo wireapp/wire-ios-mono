@@ -16,10 +16,8 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import  WireTesting
 @testable import WireTransport
-
 
 private class MockTask: DataTaskProtocol {
 
@@ -30,7 +28,6 @@ private class MockTask: DataTaskProtocol {
     }
 
 }
-
 
 private class MockURLSession: SessionProtocol {
 
@@ -56,20 +53,20 @@ private class MockReachability: NSObject, ReachabilityProvider, TearDownCapable 
     let isMobileConnection = true
     let oldMayBeReachable = true
     let oldIsMobileConnection = true
-    
+
     func tearDown() {}
     func add(_ observer: ZMReachabilityObserver, queue: OperationQueue?) -> Any { return NSObject() }
     func addReachabilityObserver(on queue: OperationQueue?, block: @escaping ReachabilityObserverBlock) -> Any {
         return NSObject()
     }
-    
+
 }
 
 @objcMembers
 class MockCertificateTrust: NSObject, BackendTrustProvider {
-    
+
     var isTrustingServer: Bool = true
-    
+
     func verifyServerTrust(trust: SecTrust, host: String?) -> Bool {
         return isTrustingServer
     }
@@ -85,7 +82,6 @@ final class UnauthenticatedTransportSessionTests: ZMTBaseTest {
         super.setUp()
         setupSut(readyForRequests: true)
     }
-
 
     override func tearDown() {
         sessionMock = nil
@@ -119,30 +115,29 @@ final class UnauthenticatedTransportSessionTests: ZMTBaseTest {
                                               readyForRequests: readyForRequests)
     }
 
-
     func testThatEnqueueOneTime_IncrementsTheRequestCounter() {
         // when
         (0..<3).forEach { _ in
             sut.enqueueOneTime(.init(getFromPath: "/", apiVersion: 0))
         }
-        
+
         // then
         let result = sut.enqueueRequest { .init(getFromPath: "/", apiVersion: 0) }
         XCTAssertEqual(result, .maximumNumberOfRequests)
     }
-    
+
     func testThatEnqueueOneTime_IsNotLimitedByRequestLimit() {
         // given
         (0..<3).forEach { _ in
             sut.enqueueOneTime(.init(getFromPath: "/", apiVersion: 0))
         }
-        
+
         let task = MockTask()
         sessionMock.nextMockTask = task
-        
+
         // when
         sut.enqueueOneTime(.init(getFromPath: "/", apiVersion: 0))
-        
+
         // then
         XCTAssertEqual(task.resumeCallCount, 1)
     }
@@ -251,18 +246,18 @@ final class UnauthenticatedTransportSessionTests: ZMTBaseTest {
         sessionMock.nextCompletionParameters = (nil, response, NSError.requestExpiredError())
         let completionExpectation = expectation(description: "Completion handler should be called with errors")
         let request = ZMTransportRequest(getFromPath: "/", apiVersion: 0)
-        
+
         request.add(ZMCompletionHandler(on: fakeUIContext) { response in
             // then
             XCTAssertFalse(response.rawResponse == nil)
             XCTAssertFalse(response.transportSessionError == nil)
             completionExpectation.fulfill()
         })
-        
+
         // when
         let result = sut.enqueueRequest { request }
         XCTAssert(waitForCustomExpectations(withTimeout: 0.1))
-        
+
         // then
         XCTAssertEqual(result, .success)
     }

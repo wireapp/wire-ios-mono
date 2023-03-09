@@ -132,10 +132,6 @@ final class MessageDetailsViewController: UIViewController, ModalTopBarDelegate 
         fatalError("init(coder:) has not been implemented")
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return ColorScheme.default.statusBarStyle
-    }
-
     // MARK: - Configuration
 
     override func viewDidLoad() {

@@ -19,7 +19,7 @@
 import Foundation
 
 extension FileManager {
-    
+
     /// Moves the content of the folder recursively to another folder.
     /// If the destionation folder does not exists, it creates it.
     /// If it exists, it moves files and folders from the first folder to the second, then
@@ -27,52 +27,49 @@ extension FileManager {
     @objc public func moveFolderRecursively(
         from source: URL,
         to destination: URL,
-        overwriteExistingFiles: Bool) throws
-    {
+        overwriteExistingFiles: Bool) throws {
         try self.moveOrCopyFolderRecursively(
             operation: .move,
             from: source,
             to: destination,
             overwriteExistingFiles: overwriteExistingFiles)
-        
+
         // we moved everything, now we can delete
         try self.removeItem(at: source)
     }
-    
+
     /// Copies the content of the folder recursively to another folder.
     /// If the destionation folder does not exists, it creates it.
     @objc public func copyFolderRecursively(
         from source: URL,
         to destination: URL,
-        overwriteExistingFiles: Bool) throws
-    {
+        overwriteExistingFiles: Bool) throws {
         try self.moveOrCopyFolderRecursively(
             operation: .copy,
             from: source,
             to: destination,
             overwriteExistingFiles: overwriteExistingFiles)
     }
-    
+
     private enum FileOperation {
         case move
         case copy
     }
-    
+
     private func moveOrCopyFolderRecursively(
         operation: FileOperation,
         from source: URL,
         to destination: URL,
-        overwriteExistingFiles: Bool) throws
-    {
+        overwriteExistingFiles: Bool) throws {
         self.createAndProtectDirectory(at: destination)
-        
-        var isDirectory : ObjCBool = false
+
+        var isDirectory: ObjCBool = false
         let enumerator = self.enumerator(at: source, includingPropertiesForKeys: [.nameKey, .isDirectoryKey])!
         try enumerator.forEach { item in
             let sourceItem = item as! URL
             guard self.fileExists(atPath: sourceItem.path, isDirectory: &isDirectory) else { return }
             let destinationItem = destination.appendingPathComponent(sourceItem.lastPathComponent)
-            
+
             if isDirectory.boolValue {
                 enumerator.skipDescendants() // do not descend in this directory with this forEach loop
                 try self.moveOrCopyFolderRecursively(
@@ -93,7 +90,7 @@ extension FileManager {
             }
         }
     }
-    
+
     private func apply(_ operation: FileOperation, at source: URL, to destination: URL) throws {
         switch operation {
         case .move:

@@ -254,10 +254,6 @@ final class ConversationContentViewController: UIViewController, PopoverPresente
         super.didReceiveMemoryWarning()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return ColorScheme.default.statusBarStyle
-    }
-
     func setConversationHeaderView(_ headerView: UIView) {
         headerView.frame = headerViewFrame(view: headerView)
         tableView.tableHeaderView = headerView

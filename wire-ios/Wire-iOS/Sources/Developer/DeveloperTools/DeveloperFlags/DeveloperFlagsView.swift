@@ -17,7 +17,7 @@
 //
 
 import SwiftUI
-import WireCommonComponents
+import WireUtilities
 
 @available(iOS 14, *)
 struct DeveloperFlagsView: View {

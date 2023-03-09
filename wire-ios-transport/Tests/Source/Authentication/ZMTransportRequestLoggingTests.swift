@@ -16,34 +16,30 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import XCTest
 import WireTesting
 @testable import WireTransport
 
-
 final class ZMTransportRequestLoggingTests: ZMTBaseTest {
 
-    
     func testThatItObfuscatesPasswordsInLogs() {
-        
-        //given
+
+        // given
         let password = "secret"
-        
-        let payload: [String:String] = [
-            "username":"test@test.xyz",
-            "password":password
+
+        let payload: [String: String] = [
+            "username": "test@test.xyz",
+            "password": password
         ]
-        
-        //when
+
+        // when
         let requestDescription = ZMTransportRequest(path: "/test",
                                                     method: .methodGET,
                                                     payload: payload as ZMTransportData,
                                                     apiVersion: 0).description
-        
-        //then
+
+        // then
         XCTAssertTrue(requestDescription.contains("password = \"<redacted>\""))
         XCTAssertFalse(requestDescription.contains("password = \"\(password)\""))
     }
 }
-

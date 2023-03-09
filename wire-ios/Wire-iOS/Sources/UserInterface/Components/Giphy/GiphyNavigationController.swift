@@ -20,10 +20,6 @@ import UIKit
 
 final class GiphyNavigationController: UINavigationController {
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-       return ColorScheme.default.statusBarStyle
-    }
-
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }

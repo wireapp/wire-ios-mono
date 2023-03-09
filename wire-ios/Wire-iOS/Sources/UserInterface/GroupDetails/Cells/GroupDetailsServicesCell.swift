@@ -35,19 +35,16 @@ final class GroupDetailsServicesCell: GroupDetailsDisclosureOptionsCell {
         accessibilityIdentifier = "cell.groupdetails.servicesoptions"
         title = L10n.Localizable.GroupDetails.ServicesOptionsCell.title
         accessibilityHint = L10n.Accessibility.ConversationDetails.OptionButton.hint
-    }
 
-    func configure(with conversation: GroupDetailsConversationType) {
-        isOn = conversation.allowServices
-    }
-
-    override func applyColorScheme(_ colorSchemeVariant: ColorSchemeVariant) {
-        super.applyColorScheme(colorSchemeVariant)
         iconColor = SemanticColors.Icon.foregroundDefault
         guard let iconColor = iconColor else { return }
 
         icon = StyleKitIcon.bot.makeImage(size: .tiny,
                                           color: iconColor).withRenderingMode(.alwaysTemplate)
+    }
+
+    func configure(with conversation: GroupDetailsConversationType) {
+        isOn = conversation.allowServices
     }
 
     override var isHighlighted: Bool {

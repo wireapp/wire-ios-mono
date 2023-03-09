@@ -137,3 +137,8 @@ public protocol LoggerProtocol {
   func critical(_ message: String, attributes: LogAttributes?)
 
 }
+
+public extension WireLogger {
+
+    static let proteus = WireLogger(tag: "proteus")
+}

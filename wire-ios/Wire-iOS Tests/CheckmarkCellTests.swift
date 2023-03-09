@@ -20,7 +20,7 @@ import XCTest
 import SnapshotTesting
 @testable import Wire
 
-final class CheckmarkCellTests: XCTestCase {
+final class CheckmarkCellTests: ZMSnapshotTestCase {
 
     var cell: CheckmarkCell!
     var conversation: MockConversation!
@@ -34,22 +34,18 @@ final class CheckmarkCellTests: XCTestCase {
     override func tearDown() {
         cell = nil
         conversation = nil
-        resetColorScheme()
-
         super.tearDown()
     }
 
     func testCheckmarkCell_NoCheckmark_Light() {
         cell.title = "Option A"
         cell.showCheckmark = false
-        cell.colorSchemeVariant = .light
         verify(matching: cell)
     }
 
     func testCheckmarkCell_NoCheckmark_Dark() {
         cell.title = "Option A"
         cell.showCheckmark = false
-        cell.colorSchemeVariant = .dark
         cell.overrideUserInterfaceStyle = .dark
         verify(matching: cell)
     }
@@ -57,7 +53,6 @@ final class CheckmarkCellTests: XCTestCase {
     func testCheckmarkCell_WithCheckmark_Light() {
         cell.title = "Option B"
         cell.showCheckmark = true
-        cell.colorSchemeVariant = .light
         verify(matching: cell)
 
     }
@@ -65,7 +60,6 @@ final class CheckmarkCellTests: XCTestCase {
     func testCheckmarkCell_WithCheckmark_Dark() {
         cell.title = "Option B"
         cell.showCheckmark = true
-        cell.colorSchemeVariant = .dark
         cell.overrideUserInterfaceStyle = .dark
         verify(matching: cell)
     }

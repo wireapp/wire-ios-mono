@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 public extension IteratorProtocol {
 
     mutating func any(_ predicate: (Element) throws -> Bool) rethrows -> Bool {
@@ -30,7 +29,6 @@ public extension IteratorProtocol {
     }
 
 }
-
 
 public extension Sequence {
     func any(_ predicate: (Iterator.Element) throws -> Bool) rethrows -> Bool {

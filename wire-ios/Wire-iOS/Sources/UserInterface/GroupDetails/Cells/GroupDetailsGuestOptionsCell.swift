@@ -34,18 +34,15 @@ final class GroupDetailsGuestOptionsCell: GroupDetailsDisclosureOptionsCell {
         accessibilityIdentifier = "cell.groupdetails.guestoptions"
         title = L10n.Localizable.GroupDetails.GuestOptionsCell.title
         accessibilityHint = L10n.Accessibility.ConversationDetails.OptionButton.hint
-    }
 
-    func configure(with conversation: GroupDetailsConversationType) {
-        isOn = conversation.allowGuests
-    }
-
-    override func applyColorScheme(_ colorSchemeVariant: ColorSchemeVariant) {
-        super.applyColorScheme(colorSchemeVariant)
         iconColor = SemanticColors.Icon.foregroundDefault
         guard let iconColor = iconColor else { return }
         icon = StyleKitIcon.guest.makeImage(size: .tiny,
                                             color: iconColor).withRenderingMode(.alwaysTemplate)
+    }
+
+    func configure(with conversation: GroupDetailsConversationType) {
+        isOn = conversation.allowGuests
     }
 
     override var isHighlighted: Bool {

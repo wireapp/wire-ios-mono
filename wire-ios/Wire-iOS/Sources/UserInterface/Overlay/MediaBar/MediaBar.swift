@@ -50,7 +50,7 @@ final class MediaBar: UIView {
         titleLabel.lineBreakMode = .byTruncatingMiddle
         titleLabel.accessibilityIdentifier = "playingMediaTitle"
         titleLabel.font = UIFont.smallRegularFont
-        titleLabel.textColor = UIColor.from(scheme: .textForeground)
+        titleLabel.textColor = SemanticColors.Label.textDefault
 
         contentView.addSubview(titleLabel)
     }
@@ -71,7 +71,7 @@ final class MediaBar: UIView {
 
     private func createBorderView() {
         bottomSeparatorLine = UIView()
-        bottomSeparatorLine.backgroundColor = UIColor.from(scheme: .separator)
+        bottomSeparatorLine.backgroundColor = SemanticColors.View.backgroundSeparatorCell
 
         addSubview(bottomSeparatorLine)
     }

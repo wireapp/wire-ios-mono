@@ -94,7 +94,7 @@ final class MockProxy: NSObject, ProxySettingsProvider {
         self.needsAuthentication = needsAuthentication
     }
 
-    func socks5Settings(proxyUsername: String?, proxyPassword: String?) -> [AnyHashable : Any]? {
+    func socks5Settings(proxyUsername: String?, proxyPassword: String?) -> [AnyHashable: Any]? {
         return nil
     }
 }

@@ -16,20 +16,19 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 import CryptoKit
 
 // Mapping of @c NSData helper methods to Swift 3 @c Data. See original methods for description.
 public extension Data {
-    
+
     init?(hexString: String) {
         guard let decodedData = hexString.zmHexDecodedData() else {
             return nil
         }
         self = decodedData
     }
-    
+
     func zmMD5Digest() -> Data {
         var md5Hash = Insecure.MD5()
 
@@ -41,60 +40,60 @@ public extension Data {
         let digest = md5Hash.finalize()
         return Data(digest)
     }
-    
+
     func zmHMACSHA256Digest(key: Data) -> Data {
         return (self as NSData).zmHMACSHA256Digest(withKey: key)
     }
-    
+
     func zmHexEncodedString() -> String {
         let hexDigits = Array("0123456789abcdef".utf16)
-        var characters : [unichar] = []
+        var characters: [unichar] = []
         characters.reserveCapacity(count * 2)
-        
+
         self.forEach { byte in
             characters.append(hexDigits[Int(byte / 16)])
             characters.append(hexDigits[Int(byte % 16)])
         }
-        
+
         return String(utf16CodeUnits: characters, count: characters.count)
     }
-        
+
     static func zmRandomSHA256Key() -> Data {
         return NSData.zmRandomSHA256Key()
     }
-    
+
     func zmSHA256Digest() -> Data {
         return (self as NSData).zmSHA256Digest()
     }
-    
+
     func base64String() -> String {
         return (self as NSData).base64String()
     }
-    
+
     func zmEncryptPrefixingIV(key: Data) -> Data {
         return (self as NSData).zmEncryptPrefixingIV(withKey: key)
     }
-    
+
     func zmDecryptPrefixedIV(key: Data) -> Data {
         return (self as NSData).zmDecryptPrefixedIV(withKey: key)
     }
-    
+
     func zmEncryptPrefixingPlainTextIV(key: Data) -> Data {
         return (self as NSData).zmEncryptPrefixingPlainTextIV(withKey: key)
     }
-    
+
     func zmDecryptPrefixedPlainTextIV(key: Data) -> Data? {
         return (self as NSData).zmDecryptPrefixedPlainTextIV(withKey: key)
     }
-    
+
     static func secureRandomData(length: UInt) -> Data {
         return NSData.secureRandomData(ofLength: length)
     }
-    
+
     static func randomEncryptionKey() -> Data {
         return NSData.randomEncryptionKey()
     }
-    
+
 }
 
 private extension Range where Index == Int {

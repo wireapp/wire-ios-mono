@@ -572,6 +572,12 @@ extension IntegrationTest {
         XCTAssertTrue(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
     }
 
+    func performQuickSync() {
+        userSession?.applicationStatusDirectory?.syncStatus.forceQuickSync()
+        RequestAvailableNotification.notifyNewRequestsAvailable(nil)
+        XCTAssertTrue(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
+    }
+
     func closePushChannelAndWaitUntilClosed() {
         mockTransportSession.performRemoteChanges { session in
             self.mockTransportSession.pushChannel.keepOpen = false

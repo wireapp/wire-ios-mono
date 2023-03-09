@@ -175,7 +175,7 @@ func generateFromCartfileResolved(_ content: String, checkoutsDir: URL) -> [Depe
 
         let licenseText = String(decoding: data, as: UTF8.self).removingColumns
 
-        //3) Create the item
+        // 3) Create the item
         let item = Dependency(name: name, licenseText: licenseText, projectURL: url)
         items.append(item)
     }
@@ -188,7 +188,7 @@ func generateFromCartfileResolved(_ content: String, checkoutsDir: URL) -> [Depe
 let (cartfileURL, checkoutsURL, embeddedDependencies) = (URL(fileURLWithPath: "../Cartfile.resolved"),
                                                          URL(fileURLWithPath: "../Carthage/Checkouts"),
                                                          URL(fileURLWithPath: "EmbeddedDependencies.plist"))
-let outputURL = URL(fileURLWithPath:"Wire-iOS/Resources/Licenses.generated.plist")
+let outputURL = URL(fileURLWithPath: "Wire-iOS/Resources/Licenses.generated.plist")
 
 // 1) Decode the Cartfile
 

@@ -17,7 +17,7 @@
 //
 
 import UIKit
-import WireCommonComponents
+import WireUtilities
 
 final class PinnableThumbnailViewController: UIViewController {
 

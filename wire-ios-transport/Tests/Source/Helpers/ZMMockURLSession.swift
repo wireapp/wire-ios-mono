@@ -20,7 +20,7 @@ import WireTransport
 
 @objc class ZMMockURLSession: ZMURLSession {
 
-    @objc var cancellationHandler: (() -> Void)? = nil
+    @objc var cancellationHandler: (() -> Void)?
 
     @objc static func createMockSession() -> ZMMockURLSession {
         return ZMMockURLSession(configuration: .ephemeral, trustProvider: MockEnvironment(), delegate: ZMMockURLSessionDelegate(), delegateQueue: OperationQueue(), identifier: "ZMMockURLSession", userAgent: "Test UserAgent")
@@ -51,7 +51,7 @@ import WireTransport
     func urlSessionDidReceiveData(_ URLSession: ZMURLSession) {
         // no-op
     }
-    
+
     func urlSession(_ URLSession: ZMURLSession, didDetectUnsafeConnectionToHost host: String) {
         // no-op
     }

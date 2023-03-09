@@ -63,11 +63,10 @@ final class ShareContactsViewController: UIViewController {
     var notNowButtonHidden = false
     private(set) var showingAddressBookAccessDeniedViewController = false
 
-    private lazy var notNowButton: UIButton = {
-        let notNowButton = UIButton(type: .custom)
-        notNowButton.titleLabel?.font = UIFont.smallLightFont
-        notNowButton.setTitleColor(UIColor.from(scheme: .buttonFaded, variant: .dark), for: .normal)
-        notNowButton.setTitleColor(UIColor.from(scheme: .buttonFaded, variant: .dark).withAlphaComponent(0.2), for: .highlighted)
+    private lazy var notNowButton: Button = {
+        let notNowButton = Button(style: .secondaryTextButtonStyle,
+                                  cornerRadius: 16,
+                                  fontSpec: .normalSemiboldFont)
         notNowButton.setTitle(RegistrationShareContacts.SkipButton.title.capitalized, for: .normal)
         notNowButton.addTarget(self, action: #selector(shareContactsLater(_:)), for: .touchUpInside)
 

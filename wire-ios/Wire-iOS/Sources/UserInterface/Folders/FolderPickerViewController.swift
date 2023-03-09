@@ -65,10 +65,6 @@ final class FolderPickerViewController: UIViewController {
         super.viewWillAppear(animated)
     }
 
-    override public var preferredStatusBarStyle: UIStatusBarStyle {
-        return overrideUserInterfaceStyle == .light ? .compatibleDarkContent : .lightContent
-    }
-
     private func configureNavbar() {
         let navigationTitleLabel = DynamicFontLabel(
             text: L10n.Localizable.Folder.Picker.title.capitalized,

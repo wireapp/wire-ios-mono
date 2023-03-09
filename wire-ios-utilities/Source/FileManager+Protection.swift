@@ -16,21 +16,19 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 import WireSystem
 
 extension FileManager {
-    
+
     /// Creates a new directory if needed, sets the file protection 
     /// to `completeUntilFirstUserAuthentication` and excludes the URL from backups
     public func createAndProtectDirectory(at url: URL) {
-        
+
         if !fileExists(atPath: url.path) {
             do {
                 try createDirectory(at: url, withIntermediateDirectories: true, attributes: [.posixPermissions: 0o700])
-            }
-            catch let error as NSError {
+            } catch let error as NSError {
                 // Only when building on simulator
                 #if arch(i386) || arch(x86_64)
                 if error.code == CocoaError.fileWriteUnknown.rawValue {
@@ -43,10 +41,10 @@ extension FileManager {
                 fatal("Failed to create directory: \(url), error: \(error)")
             }
         }
-        
+
         // Make sure it's not accessible until first unlock
         self.setProtectionUntilFirstUserAuthentication(url)
-        
+
         // Make sure this is not backed up:
         try? url.excludeFromBackup()
     }
@@ -56,8 +54,7 @@ extension FileManager {
         do {
             let attributes = [FileAttributeKey.protectionKey: FileProtectionType.completeUntilFirstUserAuthentication]
             try self.setAttributes(attributes, ofItemAtPath: url.path)
-        }
-        catch let error {
+        } catch let error {
             fatal("Failed to set protection until first user authentication: \(url), error: \(error)")
         }
     }
@@ -65,7 +62,7 @@ extension FileManager {
 }
 
 public extension URL {
-    
+
     /// Sets the resource value to exclude this entry from backups
     func excludeFromBackup() throws {
         var mutableCopy = self
@@ -77,7 +74,7 @@ public extension URL {
             throw error
         }
     }
-    
+
     func excludeFromBackupIfExists() throws {
         if FileManager.default.fileExists(atPath: path) {
             try excludeFromBackup()
@@ -85,7 +82,7 @@ public extension URL {
     }
 
     /// Returns whether the item is excluded from backups
-    var isExcludedFromBackup : Bool {
+    var isExcludedFromBackup: Bool {
         guard let values = try? resourceValues(forKeys: Set(arrayLiteral: .isExcludedFromBackupKey)) else { return false }
         return values.isExcludedFromBackup ?? false
     }

@@ -19,11 +19,12 @@
 import Foundation
 import WireCommonComponents
 import UserNotifications
+import WireUtilities
 #if DATADOG_IMPORT
 import Datadog
 #endif
 
-public class NotificationService: UNNotificationServiceExtension{
+public class NotificationService: UNNotificationServiceExtension {
 
     // MARK: - Properties
 

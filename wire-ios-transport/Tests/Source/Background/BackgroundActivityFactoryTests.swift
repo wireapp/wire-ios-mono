@@ -122,12 +122,12 @@ class BackgroundActivityFactoryTests: XCTestCase {
         XCTAssertTrue(factory.activities.isEmpty)
         XCTAssertEqual(activityManager.numberOfTasks, 0)
     }
-    
+
     func testItNotifiesThatAllBackgroundActivitiesEnded_WhenTaskExpires() {
         // GIVEN
         let endHandlerExpectation = expectation(description: "The end handler is called.")
         let activity = factory.startBackgroundActivity(withName: "Activity 1") {}
-        
+
         factory.notifyWhenAllBackgroundActivitiesEnd {
             endHandlerExpectation.fulfill()
         }
@@ -142,12 +142,12 @@ class BackgroundActivityFactoryTests: XCTestCase {
         XCTAssertTrue(factory.activities.isEmpty)
         XCTAssertEqual(activityManager.numberOfTasks, 0)
     }
-    
+
     func testItNotifiesThatAllBackgroundActivitiesEnded_WhenTaskEnds() throws {
         // GIVEN
         let endHandlerExpectation = expectation(description: "The end handler is called.")
         let activity = try XCTUnwrap(factory.startBackgroundActivity(withName: "Activity 1") {})
-        
+
         factory.notifyWhenAllBackgroundActivitiesEnd {
             endHandlerExpectation.fulfill()
         }
@@ -161,12 +161,12 @@ class BackgroundActivityFactoryTests: XCTestCase {
         XCTAssertTrue(factory.activities.isEmpty)
         XCTAssertEqual(activityManager.numberOfTasks, 0)
     }
-    
+
     func testItDoesntNotifyThatAllBackgroundActivitiesEnded_WhenTaskEndsIfThereAreMoreTasks() throws {
         // GIVEN
         let activity1 = try XCTUnwrap(factory.startBackgroundActivity(withName: "Activity 1") {})
         _ = try XCTUnwrap(factory.startBackgroundActivity(withName: "Activity 2") {})
-        
+
         factory.notifyWhenAllBackgroundActivitiesEnd {
             XCTFail()
         }
@@ -182,7 +182,7 @@ class BackgroundActivityFactoryTests: XCTestCase {
 
     func testItEndsActivities_WhenTheCustomTimeoutHasExpiredInTheBackground() {
         // GIVEN
-        let _ = factory.startBackgroundActivity(withName: "Activity 1")!
+        _ = factory.startBackgroundActivity(withName: "Activity 1")!
         let expirationExpectation = expectation(description: "The expiration handler is called.")
         factory.notifyWhenAllBackgroundActivitiesEnd {
             expirationExpectation.fulfill()
@@ -200,7 +200,7 @@ class BackgroundActivityFactoryTests: XCTestCase {
 
     func testItDoesNotEndActivities_WhenApplicationComesToTheForeground() {
         // GIVEN
-        let _ = factory.startBackgroundActivity(withName: "Activity 1")!
+        _ = factory.startBackgroundActivity(withName: "Activity 1")!
         factory.notifyWhenAllBackgroundActivitiesEnd {
             XCTFail()
         }

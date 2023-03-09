@@ -41,13 +41,12 @@ extension Unicode.Scalar {
         }
     }
 
-
     var isEmoji: Bool {
-        //Unicode General Category S* contains Sc, Sk, Sm & So, we just interest on So(5855 items)
+        // Unicode General Category S* contains Sc, Sk, Sm & So, we just interest on So(5855 items)
         return (CharacterSet.symbols.contains(self) && !CharacterSet.asciiPrintableSet.contains(self)) ||
             self.isEmojiComponentOrMiscSymbol
     }
-    
+
 }
 
 extension Character {

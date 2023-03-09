@@ -27,6 +27,12 @@ final class GroupDetailsNotificationOptionsCell: GroupDetailsDisclosureOptionsCe
         accessibilityIdentifier = "cell.groupdetails.notificationsoptions"
         title = L10n.Localizable.GroupDetails.NotificationOptionsCell.title
         accessibilityHint = L10n.Accessibility.ConversationDetails.OptionButton.hint
+
+        iconColor = SemanticColors.Icon.foregroundDefault
+        guard let iconColor = iconColor else { return }
+
+        icon = StyleKitIcon.alerts.makeImage(size: .tiny,
+                                             color: iconColor).withRenderingMode(.alwaysTemplate)
     }
 
     func configure(with conversation: GroupDetailsConversationType) {
@@ -35,15 +41,6 @@ final class GroupDetailsNotificationOptionsCell: GroupDetailsDisclosureOptionsCe
         }
 
         status = key.localized
-    }
-
-    override func applyColorScheme(_ colorSchemeVariant: ColorSchemeVariant) {
-        super.applyColorScheme(colorSchemeVariant)
-        iconColor = SemanticColors.Icon.foregroundDefault
-        guard let iconColor = iconColor else { return }
-
-        icon = StyleKitIcon.alerts.makeImage(size: .tiny,
-                                             color: iconColor).withRenderingMode(.alwaysTemplate)
     }
 
     override var isHighlighted: Bool {

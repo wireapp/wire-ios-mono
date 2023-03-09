@@ -26,10 +26,11 @@ final class BuildTypeTests: ZMTBaseTest {
     func testThatItParsesKnownBundleIDs() {
         // GIVEN
         let bundleIdsToTypes: [String: WireSyncEngine.BuildType] = ["com.wearezeta.zclient.ios": .production,
-                                                                    "com.wearezeta.zclient-alpha": .alpha,
-                                                                    "com.wearezeta.zclient.ios-development": .development,
-                                                                    "com.wearezeta.zclient.ios-release": .releaseCandidate,
-                                                                    "com.wearezeta.zclient.ios-internal": .internal]
+                                                                    "com.wearezeta.zclient.alpha": .alpha,
+                                                                    "com.wearezeta.zclient.development": .development,
+                                                                    "com.wearezeta.zclient.rc": .releaseCandidate,
+                                                                    "com.wearezeta.zclient.internal": .internal,
+                                                                    "com.wearezeta.zclient.ios.beta": .beta]
 
         bundleIdsToTypes.forEach { bundleId, expectedType in
             // WHEN
@@ -48,20 +49,32 @@ final class BuildTypeTests: ZMTBaseTest {
         XCTAssertEqual(buildType, WireSyncEngine.BuildType.custom(bundleID: someBundleId))
     }
 
-    func testThatItReturnsTheCertName() {
+    func testThatInternalAppsReturnsBundleIdsForTheCertName() {
         // GIVEN
-        let suts: [(BuildType, String)] = [(.alpha, "com.wire.ent"),
-                                           (.internal, "com.wire.int.ent"),
-                                           (.releaseCandidate, "com.wire.rc.ent"),
-                                           (.development, "com.wire.dev.ent")]
+        let suts: [BuildType] = [.alpha,
+                                 .beta,
+                                 .internal,
+                                 .releaseCandidate,
+                                 .development]
 
-        suts.forEach { (type, certName) in
+        suts.forEach { type in
 
             // WHEN
             let certName = type.certificateName
             // THEN
-            XCTAssertEqual(certName, certName)
+            XCTAssertEqual(certName, type.bundleID)
         }
+    }
+
+    func testThatProductionAppReturnsTheCertName() {
+        // GIVEN
+        let sut: BuildType = .production
+
+        // WHEN
+        let certName = sut.certificateName
+
+        // THEN
+        XCTAssertEqual(certName, "com.wire")
     }
 
     func testThatItReturnsBundleIdForCertNameIfCustom() {

@@ -82,10 +82,6 @@ final class SettingsClientViewController: UIViewController,
         return [.portrait]
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return ColorScheme.default.statusBarStyle
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -119,7 +115,7 @@ final class SettingsClientViewController: UIViewController,
             self.navigationItem.rightBarButtonItem == nil {
             self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(SettingsClientViewController.onDonePressed(_:)))
             if fromConversation {
-                let barColor = Settings.shared.colorSchemeVariant == .light ? UIColor.white : UIColor.clear
+                let barColor = SemanticColors.View.backgroundDefault
                 navController.navigationBar.barTintColor = barColor
             }
         }

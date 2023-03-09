@@ -16,11 +16,9 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 
-
-public func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+public func < <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?): return l < r
     case (nil, _?): return true
@@ -28,7 +26,7 @@ public func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
     }
 }
 
-public func > <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+public func > <T: Comparable>(lhs: T?, rhs: T?) -> Bool {
     switch (lhs, rhs) {
     case let (l?, r?): return l > r
     default: return rhs < lhs

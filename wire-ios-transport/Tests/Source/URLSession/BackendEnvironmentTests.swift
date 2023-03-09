@@ -148,7 +148,7 @@ class BackendEnvironmentTests: XCTestCase {
 
         guard let environment = BackendEnvironment(
             userDefaults: defaultsProd,
-            configurationBundle:backendBundle
+            configurationBundle: backendBundle
         ) else {
             XCTFail("Could not read environment data from Backend.bundle")
             return
@@ -209,4 +209,3 @@ class BackendEnvironmentTests: XCTestCase {
     }
 
 }
-

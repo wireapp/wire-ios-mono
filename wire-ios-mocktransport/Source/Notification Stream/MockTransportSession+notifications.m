@@ -39,7 +39,19 @@
     if ([request matchesWithPath:@"/notifications" method:ZMMethodGET]) {
         
         NSUUID *since = [request.queryParameters optionalUuidForKey:@"since"];
-        
+        if (self.overrideNextSinceParameter != nil) {
+            since = self.overrideNextSinceParameter;
+            self.overrideNextSinceParameter = nil;
+        }
+
+        if ([since.UUIDString isEqualToString:[self invalidSinceParameter400].UUIDString]) {
+            return [ZMTransportResponse responseWithPayload:nil HTTPStatus:400 transportSessionError:nil apiVersion:request.apiVersion];
+        }
+
+        if ([since.UUIDString isEqualToString:[self unknownSinceParameter404].UUIDString]) {
+            return [ZMTransportResponse responseWithPayload:nil HTTPStatus:404 transportSessionError:nil apiVersion:request.apiVersion];
+        }
+
         NSArray *eventsToSend;
         BOOL notFound = NO;
         if(since != nil) {

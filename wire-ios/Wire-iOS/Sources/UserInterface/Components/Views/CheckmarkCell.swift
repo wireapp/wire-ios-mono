@@ -21,19 +21,21 @@ import WireCommonComponents
 
 final class CheckmarkCell: RightIconDetailsCell {
 
+    // MARK: - Properties
     typealias BackgroundColors = SemanticColors.View
 
     var showCheckmark: Bool = false {
         didSet {
-            updateCheckmark(forColor: ColorScheme.default.variant)
+            updateCheckmark()
 
             titleBolded = showCheckmark
         }
     }
 
+    // MARK: - Override methods
     override var disabled: Bool {
         didSet {
-            updateCheckmark(forColor: ColorScheme.default.variant)
+            updateCheckmark()
         }
     }
 
@@ -47,20 +49,23 @@ final class CheckmarkCell: RightIconDetailsCell {
         accessibilityTraits = .button
     }
 
-    override func applyColorScheme(_ colorSchemeVariant: ColorSchemeVariant) {
-        super.applyColorScheme(colorSchemeVariant)
-        updateCheckmark(forColor: colorSchemeVariant)
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle else { return }
+        updateCheckmark()
     }
 
     override var isHighlighted: Bool {
         didSet {
             backgroundColor = isHighlighted
             ? BackgroundColors.backgroundUserCellHightLighted
-                : BackgroundColors.backgroundUserCell
+            : BackgroundColors.backgroundUserCell
         }
     }
 
-    private func updateCheckmark(forColor colorSchemeVariant: ColorSchemeVariant) {
+    // MARK: - Setup Checkmark
+    /// Updates the color of the checkmark based on the state of the cell
+    private func updateCheckmark() {
 
         guard showCheckmark else {
             accessory = nil
@@ -69,18 +74,14 @@ final class CheckmarkCell: RightIconDetailsCell {
 
         let color: UIColor
 
-        switch (colorSchemeVariant, disabled) {
-        case (.light, false):
+        if disabled {
+            color = SemanticColors.Icon.foregroundPlaceholder
+        } else {
             color = SemanticColors.Icon.foregroundPlainCheckMark
-        case (.light, true):
-            color = UIColor.from(scheme: .textPlaceholder, variant: colorSchemeVariant)
-        case (.dark, false):
-            color = SemanticColors.Icon.foregroundPlainCheckMark
-        case (.dark, true):
-            color = UIColor.from(scheme: .textPlaceholder, variant: colorSchemeVariant)
         }
 
-        accessory = StyleKitIcon.checkmark.makeImage(size: .tiny, color: color).withRenderingMode(.alwaysTemplate)
+        accessory = StyleKitIcon.checkmark.makeImage(size: .tiny,
+                                                     color: color).withRenderingMode(.alwaysTemplate)
         accessoryColor = color
     }
 

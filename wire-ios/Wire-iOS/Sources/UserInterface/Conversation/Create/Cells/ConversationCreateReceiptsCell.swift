@@ -25,14 +25,16 @@ final class ConversationCreateReceiptsCell: IconToggleCell {
     override func setUp() {
         super.setUp()
         accessibilityIdentifier = "toggle.newgroup.allowreceipts"
-        title = "conversation.create.receipts.title".localized
+        title = L10n.Localizable.Conversation.Create.Receipts.title
+        setupIconForCell()
         showSeparator = false
     }
 
-    override func applyColorScheme(_ colorSchemeVariant: ColorSchemeVariant) {
-        super.applyColorScheme(colorSchemeVariant)
+    private func setupIconForCell() {
         let color = SemanticColors.Icon.foregroundDefault
-        icon = StyleKitIcon.eye.makeImage(size: .tiny, color: color).withRenderingMode(.alwaysTemplate)
+        icon = StyleKitIcon.eye.makeImage(
+            size: .tiny,
+            color: color).withRenderingMode(.alwaysTemplate)
         iconColor = color
     }
 }

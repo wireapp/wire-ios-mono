@@ -157,10 +157,6 @@ final class ProfileViewController: UIViewController {
         presentAlert(controller, targetView: targetView)
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return ColorScheme.default.statusBarStyle
-    }
-
     override func loadView() {
         super.loadView()
 

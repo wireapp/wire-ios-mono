@@ -17,7 +17,7 @@
 //
 
 import XCTest
-import WireCommonComponents
+import WireUtilities
 @testable import Wire
 
 final class UserCellTests: ZMSnapshotTestCase {

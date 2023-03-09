@@ -22,6 +22,7 @@ import Datadog
 import DatadogCrashReporting
 import WireTransport
 import UIKit
+import WireSystem
 
 public class DatadogWrapper {
 
@@ -44,6 +45,8 @@ public class DatadogWrapper {
     /// SHA256 string to identify current Device across app and extensions.
 
     public var datadogUserId: String
+
+    private let bundleVersion: String?
 
     var logger: Logger?
     var defaultLevel: LogLevel
@@ -74,6 +77,8 @@ public class DatadogWrapper {
                 .build()
         )
 
+        bundleVersion = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String
+
         defaultLevel = level
         logger = Logger.builder
             .sendNetworkInfo(true)
@@ -84,6 +89,7 @@ public class DatadogWrapper {
             .build()
 
         datadogUserId = UIDevice.current.identifierForVendor?.uuidString.sha256String ?? "none"
+        WireLogger.provider = self
     }
 
     public func startMonitoring() {
@@ -108,6 +114,9 @@ public class DatadogWrapper {
         error: Error? = nil,
         attributes: [String: Encodable]? = nil
     ) {
+        var attributes = attributes ?? .init()
+        attributes["build_number"] = bundleVersion
+
         logger?.log(
             level: level,
             message: message,
@@ -158,6 +167,34 @@ extension RemoteMonitoring.Level {
             return .critical
         }
     }
+}
+
+extension DatadogWrapper: WireSystem.LoggerProtocol {
+
+    public func debug(_ message: String, attributes: LogAttributes?) {
+        log(level: .debug, message: message, attributes: attributes)
+    }
+
+    public func info(_ message: String, attributes: LogAttributes?) {
+        log(level: .info, message: message, attributes: attributes)
+    }
+
+    public func notice(_ message: String, attributes: LogAttributes?) {
+        log(level: .notice, message: message, attributes: attributes)
+    }
+
+    public func warn(_ message: String, attributes: LogAttributes?) {
+        log(level: .warn, message: message, attributes: attributes)
+    }
+
+    public func error(_ message: String, attributes: LogAttributes?) {
+        log(level: .error, message: message, attributes: attributes)
+    }
+
+    public func critical(_ message: String, attributes: LogAttributes?) {
+        log(level: .critical, message: message, attributes: attributes)
+    }
+
 }
 
 // MARK: - Crypto helper

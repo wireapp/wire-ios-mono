@@ -25,14 +25,16 @@ final class ConversationCreateGuestsCell: IconToggleCell {
     override func setUp() {
         super.setUp()
         accessibilityIdentifier = "toggle.newgroup.allowguests"
-        title = "conversation.create.guests.title".localized
+        title = L10n.Localizable.Conversation.Create.Guests.title
+        setupIconForCell()
         showSeparator = false
     }
 
-    override func applyColorScheme(_ colorSchemeVariant: ColorSchemeVariant) {
-        super.applyColorScheme(colorSchemeVariant)
+    private func setupIconForCell() {
         let color = SemanticColors.Icon.foregroundDefault
-        icon = StyleKitIcon.guest.makeImage(size: .tiny, color: color).withRenderingMode(.alwaysTemplate)
+        icon = StyleKitIcon.guest.makeImage(
+            size: .tiny,
+            color: color).withRenderingMode(.alwaysTemplate)
         iconColor = color
     }
 }

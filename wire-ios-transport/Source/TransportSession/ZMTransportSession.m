@@ -43,6 +43,7 @@
 static NSString* ZMLogTag ZM_UNUSED = ZMT_LOG_TAG_NETWORK;
 
 NSString * const ZMTransportSessionNewRequestAvailableNotification = @"ZMTransportSessionNewRequestAvailable";
+NSString * const ZMTransportSessionReachabilityIsEnabled = @"ZMTransportSessionReachabilityIsEnabled";
 
 static NSString * const TaskTimerKey = @"task";
 static NSString * const SessionTimerKey = @"session";
@@ -289,6 +290,7 @@ static NSInteger const DefaultMaximumRequests = 6;
         }];
 
         self.remoteMonitoring = [[RemoteMonitoring alloc] initWithLevel: LevelInfo];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(renewReachabilityObserverToken) name:ZMTransportSessionReachabilityIsEnabled object:self.reachability];
     }
     return self;
 }
@@ -626,6 +628,11 @@ static NSInteger const DefaultMaximumRequests = 6;
     else {
         [networkStateDelegate didGoOffline];
     }
+}
+
+- (void)renewReachabilityObserverToken
+{
+    self.reachabilityObserverToken = [self.reachability addReachabilityObserver:self queue:self.workQueue];
 }
 
 @end

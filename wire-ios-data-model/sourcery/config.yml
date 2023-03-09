@@ -1,0 +1,10 @@
+sources:
+  - ../Source
+templates:
+  - ./AutoMockable.stencil
+output:
+  ./generated
+args:
+  autoMockableTestableImports: ["WireDataModel"]
+  autoMockableImports: []
+ 

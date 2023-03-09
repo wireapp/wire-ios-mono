@@ -19,6 +19,7 @@
 import Foundation
 import UIKit
 import WireCommonComponents
+import WireUtilities
 
 final class CallParticipantDetailsView: RoundedBlurView {
     private let nameLabel: UILabel

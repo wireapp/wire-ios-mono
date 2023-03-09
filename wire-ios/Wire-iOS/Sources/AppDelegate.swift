@@ -52,6 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private let pushTokenService = PushTokenService()
 
     private var launchOperations: [LaunchSequenceOperation] = [
+        DeveloperFlagOperation(),
         BackendEnvironmentOperation(),
         TrackingOperation(),
         AppCenterOperation(),
@@ -122,7 +123,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         voIPPushManager.registerForVoIPPushes()
-
         ZMSLog.switchCurrentLogToPrevious()
 
         zmLog.info("application:didFinishLaunchingWithOptions START \(String(describing: launchOptions)) (applicationState = \(application.applicationState.rawValue))")

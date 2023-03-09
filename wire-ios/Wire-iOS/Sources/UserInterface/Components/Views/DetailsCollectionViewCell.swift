@@ -86,6 +86,8 @@ class DetailsCollectionViewCell: SeparatorCollectionViewCell, DynamicTypeCapable
     override func setUp() {
         super.setUp()
 
+        backgroundColor = SemanticColors.View.backgroundUserCell
+
         leftIconView.translatesAutoresizingMaskIntoConstraints = false
         leftIconView.contentMode = .scaleAspectFit
         leftIconView.setContentHuggingPriority(.required, for: .horizontal)
@@ -133,9 +135,12 @@ class DetailsCollectionViewCell: SeparatorCollectionViewCell, DynamicTypeCapable
         setupAccessibility()
     }
 
-    override func applyColorScheme(_ colorSchemeVariant: ColorSchemeVariant) {
-        super.applyColorScheme(colorSchemeVariant)
-        backgroundColor = SemanticColors.View.backgroundUserCell
+    override var isHighlighted: Bool {
+        didSet {
+            backgroundColor = isHighlighted
+            ? SemanticColors.View.backgroundUserCellHightLighted
+            : SemanticColors.View.backgroundUserCell
+        }
     }
 
     // MARK: - Layout

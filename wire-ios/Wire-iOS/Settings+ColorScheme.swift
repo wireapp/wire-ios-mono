@@ -20,7 +20,7 @@ import WireSystem
 import UIKit
 
 enum SettingsColorScheme: Int, CaseIterable {
-    
+
     case light = 0
     case dark = 1
     case system = 2

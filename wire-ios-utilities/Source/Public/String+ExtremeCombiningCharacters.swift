@@ -51,32 +51,31 @@ private let extremeDiacriticsViewWindowSize: Int = 10
 private let extremeDiacriticsViewMinWindowSize: Int = 3
 private let diacriticsPerCharMaxRatio: Float = 0.5
 
-
 public extension String {
-    
+
     // Sanitizes the string from excessive use of diacritic combining characters.
     // @warning the return value would still contain some amount of diacritic combining characters. The algorithm
     // implemented in the way that the text with valid diacritics should not be sanitized.
     var removingExtremeCombiningCharacters: String {
-        
+
         if self.unicodeScalars.count < extremeDiacriticsViewWindowSize {
             return self
         }
-        
+
         let isDiacriticsMap = self.unicodeScalars.map {
             $0.isDiacritics
         }
-        
+
         var newUnicodeScalars = "".unicodeScalars
-        
+
         // With moving window from the end to the start
         var currentWindowPosition: Int = -1
         for scalar in unicodeScalars {
             currentWindowPosition = currentWindowPosition + 1
-            
+
             let endOfRange = min(isDiacriticsMap.endIndex, currentWindowPosition + extremeDiacriticsViewWindowSize)
             let range = currentWindowPosition..<endOfRange
-            
+
             // If the character coming into the window is not diacritic one the ratio is not affected
             // Or if the window is smaller than desired extremeDiacriticsViewMinWindowSize
             if !isDiacriticsMap[currentWindowPosition] ||
@@ -84,10 +83,10 @@ public extension String {
                 newUnicodeScalars.append(scalar)
                 continue
             }
-        
+
             let diacriticsCount = isDiacriticsMap[range].filter { $0 }.count
             let regularCharactersCount = extremeDiacriticsViewWindowSize - diacriticsCount
-            
+
             // verify current diacritics to characters ratio
             // if ratio is not satisfying (higher than @c diacriticsPerCharMaxRatio) the character has to be removed
             if regularCharactersCount != 0 &&
@@ -95,7 +94,7 @@ public extension String {
                 newUnicodeScalars.append(scalar)
             }
         }
-        
+
         return String(newUnicodeScalars)
     }
 }

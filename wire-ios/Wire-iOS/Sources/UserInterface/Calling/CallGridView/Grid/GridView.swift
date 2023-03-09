@@ -17,7 +17,7 @@
 //
 
 import UIKit
-import WireCommonComponents
+import WireUtilities
 
 protocol GridViewDelegate: AnyObject {
     func gridView(_ gridView: GridView, didChangePageTo page: Int)

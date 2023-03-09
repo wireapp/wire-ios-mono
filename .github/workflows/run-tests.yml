@@ -1,13 +1,11 @@
 name: Run Tests
+on: [pull_request]
 
-on:
-  pull_request:
-    branches: [ "develop" ]
-      
 jobs:
   # This job will tell us which frameworks have source code changes.
   # We'll use the results to run tests only for changed frameworks.
   detect-changes:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
     # Set job outputs to values from filter step
     outputs:

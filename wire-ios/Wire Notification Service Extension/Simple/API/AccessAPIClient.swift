@@ -88,7 +88,7 @@ struct AccessTokenEndpoint: Endpoint, Loggable {
 
     func parseResponse(_ response: NetworkResponse) -> Swift.Result<Output, Failure> {
         logger.trace("parsing reponse: \(response, privacy: .public)")
-        
+
         switch response {
         case .success(let response) where response.status == 200:
             do {

@@ -32,6 +32,13 @@ protocol LaunchSequenceOperation {
     func execute()
 }
 
+// MARK: - DeveloperFlagOperation
+final class DeveloperFlagOperation: LaunchSequenceOperation {
+    func execute() {
+        DeveloperFlag.storage = .applicationGroup
+    }
+}
+
 // MARK: - BackendEnvironmentOperation
 final class BackendEnvironmentOperation: LaunchSequenceOperation {
     func execute() {

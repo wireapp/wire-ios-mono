@@ -19,7 +19,7 @@
 import Foundation
 
 extension Array {
-    
+
     /// Shifts the array by the given amount
     /// Negatives shift left, positives shift right
     ///
@@ -31,19 +31,19 @@ extension Array {
         // - addition: results in the positive equivalent of amount to shift
         // - modulo: ensures we stay in range
         let rightShiftAmount = (count + amount) % count
-        
+
         // no operation if shift is 0
         guard rightShiftAmount != 0 else { return self }
-        
+
         // get index for the split
         guard let i = index(endIndex, offsetBy: -rightShiftAmount, limitedBy: startIndex) else {
             return self
         }
-        
+
         // split
         let front = self[i..<endIndex]
         let back = self[startIndex..<i]
-        
+
         return Array(front + back)
     }
 }

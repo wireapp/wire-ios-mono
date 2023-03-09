@@ -18,7 +18,7 @@
 
 import Foundation
 import UIKit
-import WireCommonComponents
+import WireUtilities
 
 enum BitRateStatus: String {
     case constant

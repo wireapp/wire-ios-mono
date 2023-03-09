@@ -27,19 +27,16 @@ final class GroupDetailsTimeoutOptionsCell: GroupDetailsDisclosureOptionsCell {
         accessibilityIdentifier = "cell.groupdetails.timeoutoptions"
         title = L10n.Localizable.GroupDetails.TimeoutOptionsCell.title
         accessibilityHint = L10n.Accessibility.ConversationDetails.OptionButton.hint
+
+        iconColor = SemanticColors.Icon.foregroundDefault
+        guard let iconColor = iconColor else { return }
+        icon = StyleKitIcon.hourglass.makeImage(size: .tiny,
+                                                color: iconColor).withRenderingMode(.alwaysTemplate)
     }
 
     func configure(with conversation: GroupDetailsConversationType) {
         let timeout = MessageDestructionTimeoutValue(rawValue: conversation.syncedMessageDestructionTimeout)
         status = timeout.displayString
-    }
-
-    override func applyColorScheme(_ colorSchemeVariant: ColorSchemeVariant) {
-        super.applyColorScheme(colorSchemeVariant)
-        iconColor = SemanticColors.Icon.foregroundDefault
-        guard let iconColor = iconColor else { return }
-        icon = StyleKitIcon.hourglass.makeImage(size: .tiny,
-                                                color: iconColor).withRenderingMode(.alwaysTemplate)
     }
 
     override var isHighlighted: Bool {

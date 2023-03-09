@@ -16,20 +16,19 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 
 @objcMembers
-public class SelfUnregisteringNotificationCenterToken : NSObject {
-    
-    private let token : Any
-    
+public class SelfUnregisteringNotificationCenterToken: NSObject {
+
+    private let token: Any
+
     deinit {
         NotificationCenter.default.removeObserver(token)
     }
-    
-    public init(_ token : Any) {
+
+    public init(_ token: Any) {
         self.token = token
     }
-    
+
 }

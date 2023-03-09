@@ -34,7 +34,7 @@ final class OverflowSeparatorView: UIView {
     }
 
     private func applyStyle() {
-        self.backgroundColor = UIColor.from(scheme: .separator)
+        self.backgroundColor = SemanticColors.View.backgroundSeparatorCell
         self.alpha = 0
     }
 

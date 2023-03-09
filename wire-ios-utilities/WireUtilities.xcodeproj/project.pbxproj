@@ -98,6 +98,7 @@
 		5EE020C7214A9FC5001669F0 /* ZMAtomicInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EE020C5214A9FC5001669F0 /* ZMAtomicInteger.m */; };
 		6323786A2508D34D00AD4346 /* Array+Shift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 632378692508D34D00AD4346 /* Array+Shift.swift */; };
 		6323786C2508D51C00AD4346 /* ArrayShiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6323786B2508D51C00AD4346 /* ArrayShiftTests.swift */; };
+		63DFEAD129A3845600FCA830 /* DeveloperFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63DFEAD029A3845600FCA830 /* DeveloperFlag.swift */; };
 		7C358075231E534600D994FD /* ZMAccentColorValidatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C358072231E524A00D994FD /* ZMAccentColorValidatorTests.m */; };
 		7C35807A231E5DA000D994FD /* ZMEmailAddressValidatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C358077231E5D9300D994FD /* ZMEmailAddressValidatorTests.m */; };
 		7C35807F231E5F5B00D994FD /* ZMPhoneNumberValidatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C35807C231E5ED300D994FD /* ZMPhoneNumberValidatorTests.m */; };
@@ -333,6 +334,7 @@
 		5EE020C5214A9FC5001669F0 /* ZMAtomicInteger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZMAtomicInteger.m; sourceTree = "<group>"; };
 		632378692508D34D00AD4346 /* Array+Shift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Shift.swift"; sourceTree = "<group>"; };
 		6323786B2508D51C00AD4346 /* ArrayShiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayShiftTests.swift; sourceTree = "<group>"; };
+		63DFEAD029A3845600FCA830 /* DeveloperFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeveloperFlag.swift; sourceTree = "<group>"; };
 		7C358072231E524A00D994FD /* ZMAccentColorValidatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZMAccentColorValidatorTests.m; sourceTree = "<group>"; };
 		7C358077231E5D9300D994FD /* ZMEmailAddressValidatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZMEmailAddressValidatorTests.m; sourceTree = "<group>"; };
 		7C35807C231E5ED300D994FD /* ZMPhoneNumberValidatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZMPhoneNumberValidatorTests.m; sourceTree = "<group>"; };
@@ -575,6 +577,7 @@
 				632378692508D34D00AD4346 /* Array+Shift.swift */,
 				EE16270F250BA12900D35062 /* VolatileData.swift */,
 				A9C6EDE326B32E9D007F61C5 /* UTIHelper.swift */,
+				63DFEAD029A3845600FCA830 /* DeveloperFlag.swift */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -1024,6 +1027,7 @@
 				5E4BC1BC2189E6A400A8682E /* AnyProperty.swift in Sources */,
 				7C8BFFE722FD612900B3C8A5 /* ZMPhoneNumberValidator.swift in Sources */,
 				54CA313B1B74F36B00B820C0 /* Sets.swift in Sources */,
+				63DFEAD129A3845600FCA830 /* DeveloperFlag.swift in Sources */,
 				D5D65A13207631A100D7F3C3 /* NSManagedObjectContext+PerformGrouped.swift in Sources */,
 				A9CDCDC4237D9A14008A9BC6 /* UIColor+Mixing.swift in Sources */,
 				87ECBDD51E78457C00596836 /* ExtremeCombiningCharactersValidator.swift in Sources */,

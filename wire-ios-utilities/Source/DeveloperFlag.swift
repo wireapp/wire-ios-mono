@@ -20,7 +20,7 @@ import Foundation
 
 public enum DeveloperFlag: String, CaseIterable {
 
-    private static let storage = UserDefaults.applicationGroup
+    public static var storage = UserDefaults.standard
 
     case showCreateMLSGroupToggle
     case breakMyNotifications
@@ -65,14 +65,6 @@ public enum DeveloperFlag: String, CaseIterable {
         allCases.forEach {
             storage.set(nil, forKey: $0.rawValue)
         }
-    }
-
-}
-
-public extension DeveloperFlag {
-
-    static var isUpdatedCallingUI: Bool {
-        return !(DeveloperFlag.deprecatedCallingUI.isOn || AutomationHelper.sharedHelper.deprecatedCallingUI)
     }
 
 }

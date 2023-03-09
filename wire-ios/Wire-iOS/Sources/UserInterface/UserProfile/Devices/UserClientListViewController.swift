@@ -32,10 +32,6 @@ final class UserClientListViewController: UIViewController, UICollectionViewDele
         return wr_supportedInterfaceOrientations
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return ColorScheme.default.statusBarStyle
-    }
-
     init(user: UserType) {
         self.user = user
         self.clients = UserClientListViewController.clientsSortedByRelevance(for: user)

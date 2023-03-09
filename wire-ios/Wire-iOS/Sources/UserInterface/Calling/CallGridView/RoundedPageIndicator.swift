@@ -18,7 +18,7 @@
 
 import Foundation
 import UIKit
-import WireCommonComponents
+import WireUtilities
 
 class RoundedPageIndicator: RoundedBlurView {
     private let selectedPageIndicator = UIImage.circle(filled: true)

@@ -19,8 +19,10 @@
 import WireSystem
 
 enum BuildType: Equatable {
+
     case production
     case alpha
+    case beta
     case development
     case `internal`
     case releaseCandidate
@@ -28,12 +30,26 @@ enum BuildType: Equatable {
 
     init(bundleID: String) {
         switch bundleID {
-        case BuildType.production.bundleID: self = .production
-        case BuildType.alpha.bundleID: self = .alpha
-        case BuildType.development.bundleID: self = .development
-        case BuildType.internal.bundleID: self = .internal
-        case BuildType.releaseCandidate.bundleID: self = .releaseCandidate
-        default: self = .custom(bundleID: bundleID)
+        case BuildType.production.bundleID:
+            self = .production
+
+        case BuildType.alpha.bundleID:
+            self = .alpha
+
+        case BuildType.beta.bundleID:
+            self = .beta
+
+        case BuildType.development.bundleID:
+            self = .development
+
+        case BuildType.internal.bundleID:
+            self = .internal
+
+        case BuildType.releaseCandidate.bundleID:
+            self = .releaseCandidate
+
+        default:
+            self = .custom(bundleID: bundleID)
         }
     }
 
@@ -41,14 +57,10 @@ enum BuildType: Equatable {
         switch self {
         case .production:
             return "com.wire"
-        case .alpha:
-            return "com.wire.ent"
-        case .development:
-            return "com.wire.dev.ent"
-        case .internal:
-            return "com.wire.int.ent"
-        case .releaseCandidate:
-            return "com.wire.rc.ent"
+
+        case .alpha, .beta, .development, .internal, .releaseCandidate:
+            return bundleID
+
         case .custom(let bundleID):
             return bundleID
         }
@@ -58,17 +70,25 @@ enum BuildType: Equatable {
         switch self {
         case .production:
             return "com.wearezeta.zclient.ios"
+
         case .alpha:
-            return "com.wearezeta.zclient-alpha"
+            return "com.wearezeta.zclient.alpha"
+
+        case .beta:
+            return "com.wearezeta.zclient.ios.beta"
+
         case .development:
-            return "com.wearezeta.zclient.ios-development"
+            return "com.wearezeta.zclient.development"
+
         case .internal:
-            return "com.wearezeta.zclient.ios-internal"
+            return "com.wearezeta.zclient.internal"
+
         case .releaseCandidate:
-            return "com.wearezeta.zclient.ios-release"
+            return "com.wearezeta.zclient.rc"
+
         case .custom(let bundleID):
             return bundleID
         }
-
     }
+
 }

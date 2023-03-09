@@ -227,7 +227,7 @@ class ConversationRequestStrategyTests: MessagingTestBase {
             }
 
             let qualifiedConversationID = QualifiedID(uuid: self.groupConversation.remoteIdentifier!,
-                                                                  domain: self.groupConversation.domain!)
+                                                      domain: self.groupConversation.domain!)
             XCTAssertEqual(fetchPayload.qualifiedIDs.count, 1)
             XCTAssertEqual(fetchPayload.qualifiedIDs, [qualifiedConversationID])
         }
@@ -304,8 +304,8 @@ class ConversationRequestStrategyTests: MessagingTestBase {
         // then
         try syncMOC.performGroupedAndWait { syncMOC in
             let conversation = try XCTUnwrap(ZMConversation.fetch(with: conversationID.uuid,
-                                                              domain: conversationID.domain,
-                                                              in: syncMOC))
+                                                                  domain: conversationID.domain,
+                                                                  in: syncMOC))
             XCTAssertTrue(conversation.needsToBeUpdatedFromBackend)
         }
     }
@@ -436,7 +436,7 @@ class ConversationRequestStrategyTests: MessagingTestBase {
             "time": NSDate().transportString(),
             "data": ["receipt_mode": enabled ? 1 : 0],
             "type": "conversation.receipt-mode-update"
-            ] as [String: Any]
+        ] as [String: Any]
         return ZMUpdateEvent(fromEventStreamPayload: payload as ZMTransportData, uuid: nil)!
     }
 
@@ -520,7 +520,7 @@ class ConversationRequestStrategyTests: MessagingTestBase {
                                          dataPayload: [
                                             "access": newAccessMode.stringValue,
                                             "access_role_v2": newAccessRole.map(\.rawValue)
-                                        ])
+                                         ])
 
             // WHEN
             self.sut.processEvents([event], liveEvents: true, prefetchResult: nil)
@@ -539,14 +539,15 @@ class ConversationRequestStrategyTests: MessagingTestBase {
             let legacyAccessRole: ConversationAccessRole = .team
 
             // GIVEN
-            let event = self.updateEvent(type: "conversation.access-update",
-                                         senderID: self.otherUser.remoteIdentifier!,
-                                         conversationID: self.groupConversation.remoteIdentifier!,
-                                         timestamp: Date(),
-                                         dataPayload: [
-                                            "access": newAccessMode.stringValue,
-                                            "access_role": legacyAccessRole.rawValue
-                                        ])
+            let event = self.updateEvent(
+                type: "conversation.access-update",
+                senderID: self.otherUser.remoteIdentifier!,
+                conversationID: self.groupConversation.remoteIdentifier!,
+                timestamp: Date(),
+                dataPayload: [
+                    "access": newAccessMode.stringValue,
+                    "access_role": legacyAccessRole.rawValue
+                ])
 
             // WHEN
             self.sut.processEvents([event], liveEvents: true, prefetchResult: nil)
@@ -894,8 +895,8 @@ class ConversationRequestStrategyTests: MessagingTestBase {
             // THEN
             guard let participant = self.groupConversation.participantRoles
                     .first(where: {$0.user?.remoteIdentifier == userId}) else {
-                return XCTFail("No user in convo")
-            }
+                        return XCTFail("No user in convo")
+                    }
             XCTAssertEqual(participant.role?.name, "new")
         }
     }
@@ -939,8 +940,8 @@ class ConversationRequestStrategyTests: MessagingTestBase {
             // THEN
             guard let participant = self.groupConversation.participantRoles
                     .first(where: {$0.user == user}) else {
-                return XCTFail("No user in convo")
-            }
+                        return XCTFail("No user in convo")
+                    }
             XCTAssertEqual(participant.role, newRole)
         }
     }
@@ -979,8 +980,8 @@ class ConversationRequestStrategyTests: MessagingTestBase {
             // THEN
             guard let participant = self.groupConversation.participantRoles
                     .first(where: {$0.user == selfUser}) else {
-                return XCTFail("No user in convo")
-            }
+                        return XCTFail("No user in convo")
+                    }
             XCTAssertEqual(participant.role, newRole)
         }
     }
@@ -991,7 +992,7 @@ class ConversationRequestStrategyTests: MessagingTestBase {
         var qualifiedID: QualifiedID!
         syncMOC.performGroupedBlockAndWait {
             qualifiedID = QualifiedID(uuid: conversation.remoteIdentifier!,
-                                                  domain: conversation.domain!)
+                                      domain: conversation.domain!)
         }
         return qualifiedID
     }
@@ -1018,7 +1019,7 @@ class ConversationRequestStrategyTests: MessagingTestBase {
     func fetchConversationListDuringSlowSync() {
         syncMOC.performGroupedBlockAndWait {
             let qualifiedConversationID = QualifiedID(uuid: self.groupConversation.remoteIdentifier!,
-                                                                  domain: self.groupConversation.domain!)
+                                                      domain: self.groupConversation.domain!)
 
             let listRequest = self.sut.nextRequest(for: self.apiVersion)!
             guard let listPayload = Payload.PaginationStatus(listRequest) else {
@@ -1104,8 +1105,8 @@ class ConversationRequestStrategyTests: MessagingTestBase {
                                     type: type.rawValue,
                                     creator: nil,
                                     access: nil,
-                                    accessRole: nil,
-                                    accessRoleV2: nil,
+                                    legacyAccessRole: nil,
+                                    accessRoles: nil,
                                     name: nil,
                                     members: nil,
                                     lastEvent: nil,

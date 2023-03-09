@@ -75,10 +75,6 @@ final class FolderCreationController: UIViewController {
         }
     }
 
-    override public var preferredStatusBarStyle: UIStatusBarStyle {
-        return overrideUserInterfaceStyle == .light ? .compatibleDarkContent : .lightContent
-    }
-
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         nameSection.becomeFirstResponder()
@@ -129,7 +125,7 @@ final class FolderCreationController: UIViewController {
             systemImage: false,
             target: self,
             action: #selector(tryToProceed)
-       )
+        )
         nextButtonItem.accessibilityIdentifier = "button.newfolder.create"
         nextButtonItem.tintColor = UIColor.accent()
         nextButtonItem.isEnabled = false

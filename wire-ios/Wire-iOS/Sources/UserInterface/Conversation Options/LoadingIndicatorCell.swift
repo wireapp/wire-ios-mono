@@ -43,7 +43,7 @@ final class LoadingIndicatorCell: UITableViewCell, CellConfigurationConfigurable
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(with configuration: CellConfiguration, variant: ColorSchemeVariant) {
+    func configure(with configuration: CellConfiguration) {
         spinner.color = SemanticColors.Label.textDefault
         spinner.isAnimating = false
         spinner.isAnimating = true

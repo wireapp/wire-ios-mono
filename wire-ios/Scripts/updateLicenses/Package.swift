@@ -9,6 +9,6 @@ let package = Package(
         .target(
             name: "update_licenses",
             dependencies: [],
-            path: "."),
+            path: ".")
     ]
 )

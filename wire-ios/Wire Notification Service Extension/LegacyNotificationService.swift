@@ -23,6 +23,7 @@ import WireNotificationEngine
 import WireCommonComponents
 import WireDataModel
 import WireSyncEngine
+import WireUtilities
 import UIKit
 import CallKit
 

@@ -57,7 +57,9 @@ import Foundation
     }
     
     fileprivate var pathComponents : [String] {
-        return self.URL.path.components(separatedBy: "/").filter { !$0.isEmpty }
+        var components = self.URL.path.components(separatedBy: "/").filter { !$0.isEmpty }
+        components.removeAPIVersionComponent()
+        return components
     }
 
 }
@@ -91,5 +93,15 @@ public extension ZMTransportRequest {
 
     static func ~=(path: String, request: ZMTransportRequest) -> Bool {
         return request.matches(path: path)
+    }
+}
+
+
+private extension Array where Element == String {
+    mutating func removeAPIVersionComponent() {
+        let versions = APIVersion.allCases.map { "v\($0.rawValue)" }
+        if let version = self.first, versions.contains(version) {
+            self.removeFirst()
+        }
     }
 }

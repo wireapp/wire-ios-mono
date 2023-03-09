@@ -21,13 +21,13 @@ import WireTransport
 import WireTesting
 
 @objcMembers public class FakeReachability: NSObject, ReachabilityProvider, TearDownCapable {
-    
+
     public var observerCount = 0
     public func add(_ observer: ZMReachabilityObserver, queue: OperationQueue?) -> Any {
         observerCount += 1
         return NSObject()
     }
-    
+
     public func addReachabilityObserver(on queue: OperationQueue?, block: @escaping ReachabilityObserverBlock) -> Any {
         return NSObject()
     }
@@ -36,7 +36,7 @@ import WireTesting
     public var isMobileConnection: Bool = true
     public var oldMayBeReachable: Bool = true
     public var oldIsMobileConnection: Bool = true
-    
+
     public func tearDown() { }
 }
 
@@ -44,13 +44,13 @@ import WireTesting
     public var foregroundSession: ZMURLSession
     public var backgroundSession: ZMURLSession
     public var allSessions: [ZMURLSession]
-    
+
     public init(foregroundSession: ZMURLSession, backgroundSession: ZMURLSession? = nil) {
         self.foregroundSession = foregroundSession
         self.backgroundSession = backgroundSession ?? foregroundSession
-        allSessions = [foregroundSession, backgroundSession].compactMap{ $0 }
+        allSessions = [foregroundSession, backgroundSession].compactMap { $0 }
     }
-    
+
     var tearDownCalled = false
     public func tearDown() {
         tearDownCalled = true
@@ -68,7 +68,7 @@ class ZMTransportSessionTests_Initialization: ZMTBaseTest {
     var reachability: FakeReachability!
     var sut: ZMTransportSession!
     var environment: MockEnvironment!
-    
+
     override func setUp() {
         super.setUp()
         userIdentifier = UUID()
@@ -88,7 +88,7 @@ class ZMTransportSessionTests_Initialization: ZMTBaseTest {
                                  applicationGroupIdentifier: containerIdentifier,
                                  applicationVersion: "1.0")
     }
-    
+
     override func tearDown() {
         userIdentifier = nil
         containerIdentifier = nil
@@ -101,19 +101,19 @@ class ZMTransportSessionTests_Initialization: ZMTBaseTest {
         sut = nil
         super.tearDown()
     }
-    
+
     func check(identifier: String?, contains items: [String], file: StaticString = #file, line: UInt = #line) {
         guard let identifier = identifier else { XCTFail("identifier should not be nil", file: file, line: line); return }
         for item in items {
             XCTAssert(identifier.contains(item), "[\(identifier)] should contain [\(item)]", file: file, line: line)
         }
     }
-    
+
     func testThatBackgorundSessionIsBackground() {
         XCTAssertTrue(sut.sessionsDirectory.backgroundSession.isBackgroundSession)
         XCTAssertFalse(sut.sessionsDirectory.foregroundSession.isBackgroundSession)
     }
-    
+
     func testThatItConfiguresSessionsCorrectly() {
         // given
         let userID = userIdentifier.transportString()
@@ -122,14 +122,13 @@ class ZMTransportSessionTests_Initialization: ZMTBaseTest {
 
         // then
         check(identifier: foregroundSession.identifier, contains: [ZMURLSessionForegroundIdentifier, userID])
-        
+
         check(identifier: backgroundSession.identifier, contains: [ZMURLSessionBackgroundIdentifier, userID])
         let backgroundConfiguration = backgroundSession.configuration
         check(identifier: backgroundConfiguration.identifier, contains: [userID])
         XCTAssertEqual(backgroundConfiguration.sharedContainerIdentifier, containerIdentifier)
-        
+
         XCTAssertEqual(Set<String>([foregroundSession.identifier, backgroundSession.identifier]).count, 2, "All identifiers should be unique")
     }
-    
-}
 
+}

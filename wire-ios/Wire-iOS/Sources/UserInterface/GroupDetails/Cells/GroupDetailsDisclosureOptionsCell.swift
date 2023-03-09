@@ -28,8 +28,8 @@ protocol ConversationOptionsConfigurable {
 typealias GroupDetailsDisclosureOptionsCell = ConversationOptionsConfigurable & DisclosureCell
 
 class DisclosureCell: RightIconDetailsCell {
-    override func applyColorScheme(_ colorSchemeVariant: ColorSchemeVariant) {
-        super.applyColorScheme(colorSchemeVariant)
+    override func setUp() {
+        super.setUp()
         accessoryColor = SemanticColors.Icon.foregroundDefault
         accessory = StyleKitIcon.disclosureIndicator.makeImage(size: 12, color: accessoryColor).withRenderingMode(.alwaysTemplate)
     }

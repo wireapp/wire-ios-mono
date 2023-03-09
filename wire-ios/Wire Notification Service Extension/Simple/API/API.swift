@@ -46,4 +46,3 @@ extension Endpoint {
     typealias Result = Swift.Result<Output, Failure>
 
 }
-

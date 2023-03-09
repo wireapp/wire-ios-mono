@@ -19,6 +19,8 @@
 import UIKit
 
 class IconToggleCell: DetailsCollectionViewCell {
+
+    // MARK: - Properties
     var isOn: Bool {
         get {
             return toggle.isOn
@@ -29,6 +31,10 @@ class IconToggleCell: DetailsCollectionViewCell {
         }
     }
 
+    let toggle = Switch(style: .default)
+    var action: ((Bool) -> Void)?
+
+    // MARK: - Override accessibility properties
     override var accessibilityLabel: String? {
         get {
             return title
@@ -58,9 +64,13 @@ class IconToggleCell: DetailsCollectionViewCell {
         }
     }
 
-    let toggle = Switch(style: .default)
-    var action: ((Bool) -> Void)?
+    override func accessibilityActivate() -> Bool {
+        isOn = !isOn
 
+        return true
+    }
+
+    // MARK: - Override setUp
     override func setUp() {
         super.setUp()
         isAccessibilityElement = true
@@ -68,13 +78,10 @@ class IconToggleCell: DetailsCollectionViewCell {
         toggle.addTarget(self, action: #selector(toggleChanged), for: .valueChanged)
     }
 
-    @objc func toggleChanged(_ sender: UISwitch) {
+    // MARK: Action method
+    @objc
+    func toggleChanged(_ sender: UISwitch) {
         action?(sender.isOn)
     }
 
-    override func accessibilityActivate() -> Bool {
-        isOn = !isOn
-
-        return true
-    }
 }

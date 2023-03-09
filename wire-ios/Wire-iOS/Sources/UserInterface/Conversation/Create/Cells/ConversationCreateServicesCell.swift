@@ -26,15 +26,18 @@ final class ConversationCreateServicesCell: IconToggleCell {
         super.setUp()
         accessibilityIdentifier = "toggle.newgroup.allowservices"
         title = L10n.Localizable.Conversation.Create.Services.title
+        setupIconForCell()
         showSeparator = false
     }
 
-    override func applyColorScheme(_ colorSchemeVariant: ColorSchemeVariant) {
-        super.applyColorScheme(colorSchemeVariant)
+    private func setupIconForCell() {
         let color = SemanticColors.Icon.foregroundDefault
-        icon = StyleKitIcon.bot.makeImage(size: .tiny, color: color).withRenderingMode(.alwaysTemplate)
+        icon = StyleKitIcon.bot.makeImage(
+            size: .tiny,
+            color: color).withRenderingMode(.alwaysTemplate)
         iconColor = color
     }
+
 }
 
 extension ConversationCreateServicesCell: ConversationCreationValuesConfigurable {

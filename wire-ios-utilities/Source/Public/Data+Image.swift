@@ -16,19 +16,18 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 import ImageIO
 
 extension Data {
-    
+
     /// get MIME type of given image data. Returns nil if the data is not a image
     public var mimeType: String? {
         guard let source = (self as NSData).imageSource,
               let type = CGImageSourceGetType(source) as String? else {
             return nil
         }
-        
+
         return UTIHelper.convertToMime(uti: type)
     }
 }
@@ -38,10 +37,10 @@ extension NSData {
         guard length > 0 else {
             return nil
         }
-        
+
         return CGImageSourceCreateWithData(self as CFData, nil)
     }
-    
+
     /// Returns whether the data represents animated GIF
     /// - Parameter data: image data
     /// - Returns: returns turn if the data is GIF and number of images > 1

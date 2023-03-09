@@ -21,28 +21,28 @@ import Foundation
 /// A wrapper class to simplify observation of Darwin Notifications.
 ///
 public class DarwinNotificationCenter {
-    
+
     public static var shared = DarwinNotificationCenter()
-    
+
     public typealias Handler = () -> Void
-    
-    private var handlers = [DarwinNotification : [Handler]]()
-    
+
+    private var handlers = [DarwinNotification: [Handler]]()
+
     private init() {}
-    
+
     /// Invokes the given handler when the given notification is fired.
     public func observe(notification: DarwinNotification, using handler: @escaping Handler) {
         defer { handlers[notification, default: []].append(handler) }
-        
+
         // we only want to internally observe each notification once
         guard handlers[notification] == nil else { return }
-        
+
         notification.observe { (_, _, name, _, _) in
             guard let name = name else { return }
             DarwinNotificationCenter.shared.forward(notification: name.rawValue as String)
         }
     }
-    
+
     /// `CFNotificationCallback`s can't capture the environment, so instead we
     /// forward the fired notification name and then invoke the relevant handlers.
     func forward(notification name: String) {
@@ -58,11 +58,11 @@ public class DarwinNotificationCenter {
 ///
 public enum DarwinNotification: String {
     case shareExtDidSaveNote = "darwin-notification.share-ext-did-save-note"
-    
+
     var name: CFNotificationName {
         return CFNotificationName(rawValue: self.rawValue as CFString)
     }
-    
+
     func observe(using block: @escaping CFNotificationCallback) {
         // The use of Darwin Notification Center means some arguments will
         // be ignored.
@@ -76,7 +76,7 @@ public enum DarwinNotification: String {
             .deliverImmediately                 // suspension behaviour (ignored)
         )
     }
-    
+
     public func post() {
         // The use of Darwin Notification Center means some arguments will
         // be ignored.

@@ -20,8 +20,6 @@ import Foundation
 import WireDataModel
 import WireSyncEngine
 
-private let zmLog = ZMSLog(tag: "Analytics")
-
 final class Analytics: NSObject {
 
     var provider: AnalyticsProvider?
@@ -33,7 +31,6 @@ final class Analytics: NSObject {
     static var shared: Analytics!
 
     required init(optedOut: Bool) {
-        zmLog.info("Analytics initWithOptedOut: \(optedOut)")
         provider = optedOut ? nil : AnalyticsProviderFactory.shared.analyticsProvider()
 
         super.init()

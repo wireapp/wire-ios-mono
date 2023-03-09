@@ -145,18 +145,18 @@ final class IconToggleSubtitleCell: UITableViewCell, CellConfigurationConfigurab
         action?(sender.isOn, self)
     }
 
-    func configure(with configuration: CellConfiguration, variant: ColorSchemeVariant) {
+    func configure(with configuration: CellConfiguration) {
         guard case let .iconToggle(title,
                                    subtitle,
                                    identifier,
                                    titleIdentifier,
                                    icon,
-                                   color,
+                                   _,
                                    isEnabled,
                                    get,
                                    set) = configuration else { preconditionFailure() }
 
-        let mainColor = variant.mainColor(color: color)
+        let mainColor = SemanticColors.Label.textDefault
 
         if let icon = icon {
             tintColor = SemanticColors.Label.textDefault
@@ -189,6 +189,5 @@ final class IconToggleSubtitleCell: UITableViewCell, CellConfigurationConfigurab
         titleLabel.accessibilityIdentifier = titleIdentifier
         toggle.isOn = get()
         toggle.isEnabled = isEnabled
-        self.variant = variant
     }
 }

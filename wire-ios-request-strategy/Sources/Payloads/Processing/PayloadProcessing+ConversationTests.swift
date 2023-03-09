@@ -211,10 +211,13 @@ class PayloadProcessing_ConversationTests: MessagingTestBase {
             let accessRole: Set<ConversationAccessRoleV2> = [.teamMember]
             let qualifiedID = self.groupConversation.qualifiedID!
 
-            let conversationPayload = Payload.Conversation(qualifiedID: qualifiedID,
-                                                           type: BackendConversationType.group.rawValue,
-                                                           access: accessMode.stringValue,
-                                                           accessRoleV2: accessRole.map(\.rawValue))
+            let conversationPayload = Payload.Conversation(
+                qualifiedID: qualifiedID,
+                type: BackendConversationType.group.rawValue,
+                access: accessMode.stringValue,
+                accessRoles: accessRole.map(\.rawValue)
+            )
+
             // when
             conversationPayload.updateOrCreate(in: self.syncMOC)
 
@@ -231,10 +234,12 @@ class PayloadProcessing_ConversationTests: MessagingTestBase {
             let accessRoleV2: Set<ConversationAccessRoleV2> = [.teamMember, .nonTeamMember, .guest]
             let qualifiedID = self.groupConversation.qualifiedID!
 
-            let conversationPayload = Payload.Conversation(qualifiedID: qualifiedID,
-                                                           type: BackendConversationType.group.rawValue,
-                                                           access: accessMode.stringValue,
-                                                           accessRoleV2: accessRoleV2.map(\.rawValue))
+            let conversationPayload = Payload.Conversation(
+                qualifiedID: qualifiedID,
+                type: BackendConversationType.group.rawValue,
+                access: accessMode.stringValue,
+                accessRoles: accessRoleV2.map(\.rawValue)
+            )
 
             // WHEN
             conversationPayload.updateOrCreate(in: self.syncMOC)
@@ -252,10 +257,13 @@ class PayloadProcessing_ConversationTests: MessagingTestBase {
             let accessMode: ConversationAccessMode = .teamOnly
             let qualifiedID = self.groupConversation.qualifiedID!
 
-            let conversationPayload = Payload.Conversation(qualifiedID: qualifiedID,
-                                                           type: BackendConversationType.group.rawValue,
-                                                           access: accessMode.stringValue,
-                                                           accessRole: accessRole.rawValue)
+            let conversationPayload = Payload.Conversation(
+                qualifiedID: qualifiedID,
+                type: BackendConversationType.group.rawValue,
+                access: accessMode.stringValue,
+                legacyAccessRole: accessRole.rawValue
+            )
+
             // WHEN
             conversationPayload.updateOrCreate(in: self.syncMOC)
 
