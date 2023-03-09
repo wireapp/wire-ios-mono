@@ -120,7 +120,6 @@ final class PasscodeSetupViewController: UIViewController {
 
     /// init with parameters
     /// - Parameters:
-    ///   - variant: color variant for this screen. When it is nil, apply app's current scheme
     ///   - useCompactLayout: Set this to true for reduce font size and spacing for iPhone 4 inch screen. Set to nil to follow current window's height
     ///   - context: context  for this screen. Depending on the context, there are a different title and info message.
     ///   - callback: callback for storing passcode result.
@@ -235,8 +234,7 @@ final class PasscodeSetupViewController: UIViewController {
 
     // MARK: - keyboard avoiding
 
-    static func createKeyboardAvoidingFullScreenView(variant: ColorSchemeVariant = ColorScheme.default.variant,
-                                                     context: Context,
+    static func createKeyboardAvoidingFullScreenView(context: Context,
                                                      delegate: PasscodeSetupViewControllerDelegate? = nil) -> KeyboardAvoidingAuthenticationCoordinatedViewController {
         let passcodeSetupViewController = PasscodeSetupViewController(context: context,
                                                                       callback: nil)

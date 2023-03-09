@@ -42,7 +42,6 @@ final class AnalyticsDecryptionFailedObserver: NSObject {
                 trackingInfo[$0] = value
             }
         }
-
         analytics.tagCannotDecryptMessage(withAttributes: trackingInfo, conversation: note?.object as? ZMConversation)
     }
 }

@@ -2,6 +2,24 @@ opt_out_usage
 default_platform(:ios)
 
 platform :ios do
+    before_all do |lane|
+        lanes_with_api_key = [:upload_app_store, :upload_testflight, :create_version, :submit_review]
+        if lanes_with_api_key.include?(lane)
+            create_api_key
+        end
+    end
+
+    lane :create_api_key do
+        @api_key ||= app_store_connect_api_key(
+          key_id: ENV['KEY_ID'],
+          issuer_id: ENV['KEY_ID_ISSUER'],
+          key_filepath: ENV['KEY_FILE_PATH'],
+          duration: 1200, # optional(maximum 1200)
+          in_house: false # optional but may be required if using match / sigh
+        )
+    end
+    
+
     desc "Fetch dependencies"
     lane :prepare do |options|
         xcode_version = options[:xcode_version]
@@ -185,6 +203,7 @@ platform :ios do
         sh "cp ../wire-ios/Configuration/Appfile ."
 
         deliver(
+            api_key: @api_key,
             ipa: "#{build.artifact_path(with_filename: true)}.ipa",
             submit_for_review: false,
             automatic_release: false,
@@ -205,6 +224,7 @@ platform :ios do
 
 
         upload_to_testflight(
+            api_key: @api_key,
             ipa: "#{build.artifact_path(with_filename: true)}.ipa",
             skip_waiting_for_build_processing: true
         )
@@ -213,6 +233,7 @@ platform :ios do
     desc "Create a new version but not submit for review. Usage: Create release_note.txt in fastlane/metadata/en-US & de-DE folders. Then call $fastlane create_version app_version:X.XX"
     lane :create_version do |options|
         deliver(
+            api_key: @api_key,
             app_version: options[:app_version],
             submit_for_review: false,
             automatic_release: false,
@@ -227,6 +248,7 @@ platform :ios do
     desc "Submit for review with release note. Usage: Create release_note.txt in fastlane/metadata/en-US & de-DE folders. Then call $fastlane submit_review app_version:X.XX"
     lane :submit_review do |options|
         deliver(
+            api_key: @api_key,
             app_version: options[:app_version],
             submit_for_review: true,
             automatic_release: false,
@@ -539,7 +561,7 @@ class Build
             prefix = "AVS:#{@avs_version}-"
         end
         if rc_build
-            version = IO.foreach('../Wire-iOS/Resources/Configuration/Version.xcconfig').grep(/WIRE_SHORT_VERSION/).first.split(" = ")[1].chomp
+            version = IO.foreach('../wire-ios/Wire-iOS/Resources/Configuration/Version.xcconfig').grep(/WIRE_SHORT_VERSION/).first.split(" = ")[1].chomp
             prefix = "#{version}-"
         end
 

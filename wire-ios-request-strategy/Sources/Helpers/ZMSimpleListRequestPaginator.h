@@ -66,5 +66,10 @@
 @optional
 - (BOOL)shouldParseErrorForResponse:(ZMTransportResponse*)response;
 
+@optional
+- (void)startSlowSync;
+
+@optional
+- (BOOL)shouldStartSlowSync:(ZMTransportResponse *)response;
 @end
 

@@ -85,6 +85,8 @@ typedef ZMTransportResponse * _Nullable (^ZMCustomResponseGeneratorBlock)(ZMTran
 
 @property (nonatomic,  readonly, nullable) NSString *generatedEmailVerificationCode;
 
+@property (nonatomic, strong, nullable) NSUUID* overrideNextSinceParameter;
+
 + (NSString *)binaryDataTypeAsMIME:(NSString *)type;
 
 - (void)addPushToken:(NSString *)token payload:(NSDictionary *)payload;
@@ -225,6 +227,7 @@ typedef ZMTransportResponse * _Nullable (^ZMCustomResponseGeneratorBlock)(ZMTran
 @property (nonatomic, readonly) NSString *invalidPhoneVerificationCode;
 
 @end
+
 
 
 NS_ASSUME_NONNULL_END

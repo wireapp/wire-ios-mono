@@ -164,5 +164,34 @@ extension MockTransportSession: TransportSessionType {
     public func addCompletionHandlerForBackgroundSession(identifier: String, handler: @escaping () -> Void) {
         
     }
-        
+
+}
+
+public extension MockTransportSession {
+
+    @objc var invalidSinceParameter400: UUID {
+        return UUID(uuidString: "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB")!
+    }
+
+    @objc var unknownSinceParameter404: UUID {
+        return UUID(uuidString: "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA")!
+    }
+}
+
+
+public extension NSString {
+
+    @objc
+    func removingAPIVersion() -> NSString {
+        for version in APIVersion.allCases {
+            if version == .v0 {
+                continue
+            }
+            let prefix = "/v\(version.rawValue)"
+            if self.hasPrefix(prefix) {
+                return self.replacingOccurrences(of: prefix, with: "") as NSString
+            }
+        }
+        return self
+    }
 }

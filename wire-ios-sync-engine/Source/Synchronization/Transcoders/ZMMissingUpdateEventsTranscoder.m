@@ -347,7 +347,10 @@ NSUInteger const ZMMissingUpdateEventsTranscoderListPageSize = 500;
 - (BOOL)shouldParseErrorForResponse:(ZMTransportResponse *)response
 {
     [self.pushNotificationStatus didFailToFetchEvents];
-    
+
+    if (response.apiVersion >= APIVersionV3) {
+        return NO;
+    }
     if (response.HTTPStatus == 404) {
         return YES;
     }
@@ -355,4 +358,18 @@ NSUInteger const ZMMissingUpdateEventsTranscoderListPageSize = 500;
     return NO;
 }
 
+- (BOOL)shouldStartSlowSync:(ZMTransportResponse *)response
+{
+    return self.operationStatus.operationState == SyncEngineOperationStateForeground &&
+            response.apiVersion >= APIVersionV3 &&
+            (response.HTTPStatus == 404 || response.HTTPStatus == 400);
+}
+
+- (void)startSlowSync
+{
+    self.lastUpdateEventID = nil;
+    SyncStatus* status = self.syncStatus;
+    [status removeLastUpdateEventID];
+    [status forceSlowSync];
+}
 @end

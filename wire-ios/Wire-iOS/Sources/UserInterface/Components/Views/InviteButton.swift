@@ -21,7 +21,7 @@ import UIKit
 import WireCommonComponents
 
 final class InviteButton: IconButton {
-    init(variant: ColorSchemeVariant = ColorScheme.default.variant) {
+    init() {
         super.init()
 
         clipsToBounds = true

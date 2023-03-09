@@ -431,6 +431,7 @@ extension GenericMessage {
         } else if client.failedToEstablishSession {
             // If the session is corrupted, we will send a special payload.
             let data = ZMFailedToCreateEncryptedMessagePayloadString.data(using: String.Encoding.utf8)!
+            WireLogger.proteus.error("Failed to encrypt payload: session is not established with client: \(client.remoteIdentifier)", attributes: nil)
             return Proteus_ClientEntry(withClient: client, data: data)
 
         }
@@ -493,6 +494,7 @@ extension GenericMessage {
 
             guard let sender = message.sender else {
                 zmLog.error("sender of deleted ephemeral message \(String(describing: self.deleted.messageID)) is already cleared \n ConvID: \(String(describing: conversation.remoteIdentifier)) ConvType: \(conversation.conversationType.rawValue)")
+                WireLogger.proteus.error("sender of deleted ephemeral message \(String(describing: self.deleted.messageID)) is already cleared \n ConvID: \(String(describing: conversation.remoteIdentifier)) ConvType: \(conversation.conversationType.rawValue)", attributes: nil)
                 return Set(arrayLiteral: selfUser)
             }
 

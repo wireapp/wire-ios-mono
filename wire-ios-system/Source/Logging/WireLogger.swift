@@ -151,3 +151,8 @@ extension String: LogConvertible {
   }
 
 }
+
+public extension WireLogger {
+
+    static let proteus = WireLogger(tag: "proteus")
+}

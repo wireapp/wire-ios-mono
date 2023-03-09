@@ -179,6 +179,13 @@ extension SyncStatus {
         zmLog.debug("persist last eventID: \(lastUpdateEventID)")
         managedObjectContext.zm_lastNotificationID = lastUpdateEventID
     }
+
+    public func removeLastUpdateEventID() {
+        lastUpdateEventID = nil
+        zmLog.debug("remove last eventID")
+        managedObjectContext.zm_lastNotificationID = nil
+        managedObjectContext.enqueueDelayedSave()
+    }
 }
 
 // MARK: Quick Sync

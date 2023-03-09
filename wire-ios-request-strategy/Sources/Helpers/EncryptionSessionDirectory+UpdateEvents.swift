@@ -63,6 +63,7 @@ extension EncryptionSessionsDirectory {
             fail(error: error)
             return nil
         } catch {
+            WireLogger.proteus.critical(("Unknown error in decrypting payload, \(error)"), attributes: nil)
             fatalError("Unknown error in decrypting payload, \(error)")
         }
 
@@ -84,6 +85,7 @@ extension EncryptionSessionsDirectory {
     fileprivate func appendFailedToDecryptMessage(after error: CBoxResult?, for event: ZMUpdateEvent, sender: UserClient, in moc: NSManagedObjectContext) {
         zmLog.safePublic("Failed to decrypt message with error: \(error), client id <\(sender.safeRemoteIdentifier))>")
         zmLog.error("event debug: \(event.debugInformation)")
+        WireLogger.proteus.error("Failed to decrypt message with error: \(error.debugDescription), client id <\(sender.safeRemoteIdentifier))>", attributes: nil)
         if error == CBOX_OUTDATED_MESSAGE || error == CBOX_DUPLICATE_MESSAGE {
             return // do not notify the user if the error is just "duplicated"
         }
@@ -122,6 +124,7 @@ extension EncryptionSessionsDirectory {
         /// Check if it's the "bomb" message (gave encrypting on the sender)
         guard encryptedData != ZMFailedToCreateEncryptedMessagePayloadString.data(using: .utf8) else {
             zmLog.safePublic("Received 'failed to encrypt for your client' special payload (bomb) from \(sessionIdentifier). Current device might have invalid prekeys on the BE.")
+            WireLogger.proteus.error("Received 'failed to encrypt for your client' special payload (bomb) from \(sessionIdentifier). Current device might have invalid prekeys on the BE.", attributes: nil)
             return nil
         }
 

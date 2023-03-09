@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		01300E62296838CE00D18B2E /* SessionManagerTests+Proxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01300E61296838CE00D18B2E /* SessionManagerTests+Proxy.swift */; };
+		017ABBB62995278C0004C243 /* SlowSyncTests+NotificationsV3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 017ABBB52995278C0004C243 /* SlowSyncTests+NotificationsV3.swift */; };
 		0601900B2678750D0043F8F8 /* DeepLinkURLActionProcessorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161ACB3E23F6E4C200ABFF33 /* DeepLinkURLActionProcessorTests.swift */; };
 		06025664248E5BC700E060E1 /* (null) in Sources */ = {isa = PBXBuildFile; };
 		06239126274DB73A0065A72D /* StartLoginURLActionProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06239125274DB73A0065A72D /* StartLoginURLActionProcessor.swift */; };
@@ -678,6 +679,7 @@
 
 /* Begin PBXFileReference section */
 		01300E61296838CE00D18B2E /* SessionManagerTests+Proxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SessionManagerTests+Proxy.swift"; sourceTree = "<group>"; };
+		017ABBB52995278C0004C243 /* SlowSyncTests+NotificationsV3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SlowSyncTests+NotificationsV3.swift"; sourceTree = "<group>"; };
 		06239125274DB73A0065A72D /* StartLoginURLActionProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartLoginURLActionProcessor.swift; sourceTree = "<group>"; };
 		0625690E264AE6560041C17B /* CallClosedReason.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallClosedReason.swift; sourceTree = "<group>"; };
 		063AFA3E264B30C400DCBCED /* BuildType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildType.swift; sourceTree = "<group>"; };
@@ -2112,6 +2114,7 @@
 				54FC8A0F192CD55000D3C016 /* LoginFlowTests.m */,
 				85D85D997334755E841D13EA /* SlowSyncTests.m */,
 				16519D7C2320087100C9D76D /* SlowSyncTests+ExistingData.swift */,
+				017ABBB52995278C0004C243 /* SlowSyncTests+NotificationsV3.swift */,
 				BF1F52CB1ECDD778002FB553 /* SlowSyncTests+Teams.swift */,
 				F190E0DB1E8E7BA1003E81F8 /* SlowSyncTests+Swift.swift */,
 				545643D41C62C1A800A2129C /* ConversationTestsBase.h */,
@@ -2950,6 +2953,7 @@
 				169BA23725ED102500374343 /* NotificationObservers.m in Sources */,
 				169BA22825ED0FDB00374343 /* ConversationTests+Guests.swift in Sources */,
 				169BA20225ED0F0600374343 /* UserRichProfileIntegrationTests.swift in Sources */,
+				017ABBB62995278C0004C243 /* SlowSyncTests+NotificationsV3.swift in Sources */,
 				169BA20925ED0F4A00374343 /* IsTypingTests.swift in Sources */,
 				169BA20A25ED0F5000374343 /* BackgroundTests.m in Sources */,
 				169BA22225ED0FC100374343 /* ConversationTests+Reactions.swift in Sources */,
