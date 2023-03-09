@@ -82,10 +82,6 @@ final class SettingsClientViewController: UIViewController,
         return [.portrait]
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return ColorScheme.default.statusBarStyle
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
 

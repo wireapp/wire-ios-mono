@@ -19,25 +19,8 @@
 import Foundation
 import UIKit
 
-extension UIStatusBarStyle {
-    static var compatibleDarkContent: UIStatusBarStyle {
-        return .darkContent
-    }
-}
-
 extension ColorScheme {
-
-    var statusBarStyle: UIStatusBarStyle {
-        switch variant {
-        case .light:
-            return .compatibleDarkContent
-        case .dark:
-            return .lightContent
-        }
-    }
-
     func isCurrentAccentColor(_ accentColor: UIColor) -> Bool {
         return self.accentColor == accentColor
     }
-
 }

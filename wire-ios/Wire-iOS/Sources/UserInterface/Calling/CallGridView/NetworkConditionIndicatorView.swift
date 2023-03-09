@@ -37,7 +37,7 @@ final class NetworkConditionIndicatorView: UIView, RoundedViewProtocol {
         isAccessibilityElement = true
         shouldGroupAccessibilityChildren = true
 
-        backgroundColor = UIColor.nameColor(for: .brightOrange, variant: .light)
+        backgroundColor = UIColor.accent()
         shape = .relative(multiplier: 1, dimension: .height)
         label.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
@@ -46,7 +46,7 @@ final class NetworkConditionIndicatorView: UIView, RoundedViewProtocol {
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
         ])
-        backgroundColor = UIColor.nameColor(for: .brightOrange, variant: .light)
+        backgroundColor = UIColor.accent()
     }
 
     @available(*, unavailable)
@@ -56,7 +56,7 @@ final class NetworkConditionIndicatorView: UIView, RoundedViewProtocol {
 
     var networkQuality: NetworkQuality = .normal {
         didSet {
-            label.attributedText = networkQuality.attributedString(color: .white)
+            label.attributedText = networkQuality.attributedString(color: SemanticColors.Label.textWhite)
             accessibilityLabel = "conversation.status.poor_connection".localized
             layoutIfNeeded()
         }

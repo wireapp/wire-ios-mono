@@ -39,10 +39,6 @@ final class GroupDetailsViewController: UIViewController, ZMConversationObserver
         return wr_supportedInterfaceOrientations
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return ColorScheme.default.statusBarStyle
-    }
-
     init(conversation: GroupDetailsConversationType) {
         self.conversation = conversation
         collectionViewController = SectionCollectionViewController()

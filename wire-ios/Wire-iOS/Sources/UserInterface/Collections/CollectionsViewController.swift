@@ -261,10 +261,6 @@ final class CollectionsViewController: UIViewController {
         return false
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return ColorScheme.default.statusBarStyle
-    }
-
     fileprivate func updateNoElementsState() {
         contentView.noItemsInLibrary = fetchingDone && inOverviewMode && totalNumberOfElements() == 0
     }
