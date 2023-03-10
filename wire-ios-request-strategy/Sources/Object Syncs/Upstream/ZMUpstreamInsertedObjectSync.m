@@ -151,6 +151,7 @@ static NSString* ZMLogTag = @"Network";
         } else if (newDependency == existingDependency) {
             return NO;
         } else {
+            NSLog(@"SHARING: ZMUpstreamInsertedObjectSync check for updated dependency adding dependency %@ for dependent %@ on %@", newDependency, mo, self);
             [self.insertedObjectsWithDependencies addDependentObject:mo dependency:newDependency];
             return YES;
         }
@@ -175,6 +176,7 @@ static NSString* ZMLogTag = @"Network";
         }
 
         if (dependency != nil) {
+            NSLog(@"SHARING: ZMUpstreamInsertedObjectSync add inserted object adding dependency %@ for dependent %@ on %@", dependency, mo, self);
             [self.insertedObjectsWithDependencies addDependentObject:mo dependency:dependency];
             return NO;
         }

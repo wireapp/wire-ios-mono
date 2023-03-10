@@ -223,10 +223,17 @@ extension ZMConversation {
         let asset = WireProtos.Asset(imageSize: imageSize,
                                      mimeType: mimeType,
                                      size: UInt64(imageData.count))
+        
+        print("SHARING: Appending image to conversation")
 
-        return try append(asset: asset, nonce: nonce, expires: true, prepareMessage: { message in
+        var conversationMesage = try append(asset: asset, nonce: nonce, expires: true, prepareMessage: { message in
+            print("SHARING: Storing asset data in cache for message \(String(describing: message))")
             moc.zm_fileAssetCache.storeAssetData(message, format: .original, encrypted: false, data: imageData)
         })
+        
+        print("SHARING: Conversatin message with appended image: \(conversationMesage)")
+        
+        return conversationMesage
     }
 
     /// Append a file message.

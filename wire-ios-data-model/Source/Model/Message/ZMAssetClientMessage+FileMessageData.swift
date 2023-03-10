@@ -349,6 +349,7 @@ extension ZMAssetClientMessage: ZMFileMessageData {
 extension ZMAssetClientMessage {
 
     public func cancelTransfer() {
+        print("SHARING: Cancel transfering asset \(String(describing: self)) with transfer state: \(transferState.name)")
 
         switch transferState {
         case .uploading:

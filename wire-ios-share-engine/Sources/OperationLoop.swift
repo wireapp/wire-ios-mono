@@ -43,7 +43,9 @@ final class RequestGeneratorStore {
                 for requestGenerator in requestGeneratorSource.requestGenerators {
                     requestGenerators.append({
                         guard let apiVersion = BackendInfo.apiVersion else { return nil }
-                        return requestGenerator.nextRequest(for: apiVersion)
+                        let request = requestGenerator.nextRequest(for: apiVersion)
+                        print("SHARING: generated request from strategy \(String(describing: requestGenerator)), request: \(String(describing: request))")
+                        return request
                     })
                 }
             }
@@ -59,7 +61,9 @@ final class RequestGeneratorStore {
             if let requestStrategy = strategy as? RequestStrategy {
                 requestGenerators.append({
                     guard let apiVersion = BackendInfo.apiVersion else { return nil }
-                    return requestStrategy.nextRequest(for: apiVersion)
+                    let request = requestStrategy.nextRequest(for: apiVersion)
+                    print("SHARING: generated request from strategy \(String(describing: requestStrategy)), request: \(String(describing: request))")
+                    return request
                 })
             }
         }
@@ -130,6 +134,7 @@ final class OperationLoop: NSObject, RequestAvailableObserver {
     private unowned let userContext: NSManagedObjectContext
     private let callBackQueue: OperationQueue
     private var tokens: [NSObjectProtocol] = []
+    let logger = WireLogger(tag: "share extension")
 
     public var changeClosure: ChangeClosure?
     public var requestAvailableClosure: RequestAvailableClosure?
@@ -143,10 +148,14 @@ final class OperationLoop: NSObject, RequestAvailableObserver {
 
         RequestAvailableNotification.addObserver(self)
 
+        print("SHARING: OperationLoop syncContext object: \(syncContext) and userContext object: \(userContext)")
+        logger.info("SHARING: OperationLoop - setting-up observers")
         tokens.append(setupObserver(for: userContext) { [weak self] (note, inserted, updated) in
+            print("SHARING: tokens user context observer")
             self?.userInterfaceContextDidSave(notification: note, insertedObjects: inserted, updatedObjects: updated)
         })
         tokens.append(setupObserver(for: syncContext) { [weak self] (note, inserted, updated) in
+            print("SHARING: tokens sync context observer")
             self?.syncContextDidSave(notification: note, insertedObjects: inserted, updatedObjects: updated)
         })
     }
@@ -157,10 +166,16 @@ final class OperationLoop: NSObject, RequestAvailableObserver {
     }
 
     func setupObserver(for context: NSManagedObjectContext, onSave: @escaping SaveClosure) -> NSObjectProtocol {
-        return NotificationCenter.default.addObserver(forName: .NSManagedObjectContextDidSave, object: context, queue: callBackQueue) { note in
-            if let insertedObjects = note.userInfo?[NSInsertedObjectsKey] as? Set<NSManagedObject>, let updatedObjects = note.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject> {
-                onSave(note, insertedObjects, updatedObjects)
-            }
+        print("SHARING: settingup observer for context \(context)")
+        return NotificationCenter.default.addObserver(forName: .NSManagedObjectContextDidSave, object: context, queue: callBackQueue) { [weak self] note in
+            self?.logger.info("SHARING: OperationLoop - .NSManagedObjectContextDidSave")
+            print("SHARING: Operation loop context updated \(context)")
+            print("SHARING: Operation note user info: \(String(describing: note.userInfo))")
+
+            let insertedObjects = note.userInfo?[NSInsertedObjectsKey] as? Set<NSManagedObject> ?? Set<NSManagedObject>()
+            let updatedObjects = note.userInfo?[NSUpdatedObjectsKey] as? Set<NSManagedObject> ?? Set<NSManagedObject>()
+            print("SHARING: Has inserted and updated objects \(context)")
+            onSave(note, insertedObjects, updatedObjects)
         }
     }
 
@@ -177,20 +192,26 @@ final class OperationLoop: NSObject, RequestAvailableObserver {
     }
 
     func syncContextDidSave(notification: Notification, insertedObjects: Set<NSManagedObject>, updatedObjects: Set<NSManagedObject>) {
+        logger.info("SHARING: OperationLoop - syncContextDidSave")
+        print("SHARING: syncContextDidSave with inserted objects \(insertedObjects) and updated objects \(updatedObjects)")
         merge(changes: notification, intoContext: userContext)
 
         syncContext.performGroupedBlock {
+            print("SHARING: syncContextDidSave syncing context on group block with \(insertedObjects) and updated objects \(updatedObjects)")
             self.changeClosure?(Set(insertedObjects).union(updatedObjects))
         }
     }
 
     func userInterfaceContextDidSave(notification: Notification, insertedObjects: Set<NSManagedObject>, updatedObjects: Set<NSManagedObject>) {
+        logger.info("SHARING: OperationLoop - userInterfaceContextDidSave")
+        print("SHARING: userInterfaceContextDidSave with inserted objects \(insertedObjects) and updated objects \(updatedObjects)")
         merge(changes: notification, intoContext: syncContext)
 
         let insertedObjectsIds = insertedObjects.map({ $0.objectID })
         let updatedObjectsIds  =  updatedObjects.map({ $0.objectID })
 
         syncContext.performGroupedBlock {
+            print("SHARING: userInterfaceContextDidSave syncing context on group block with \(insertedObjects) and updated objects \(updatedObjects)")
             let insertedObjects = insertedObjectsIds.compactMap(self.syncContext.object)
             let updatedObjects = updatedObjectsIds.compactMap(self.syncContext.object)
 

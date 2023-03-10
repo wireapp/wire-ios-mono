@@ -29,55 +29,55 @@ public struct WireLogger: LoggerProtocol {
   }
 
   public func debug(
-    _ message: String,
+    _ message: LogMessage,
     attributes: LogAttributes? = nil
   ) {
     guard shouldLogMessage(message) else { return }
-    log(level: .debug, message: message, attributes: attributes)
+    log(level: .debug, message: message.logDescription, attributes: attributes)
   }
 
   public func info(
-    _ message: String,
+    _ message: LogMessage,
     attributes: LogAttributes? = nil
   ) {
     guard shouldLogMessage(message) else { return }
-    log(level: .info, message: message, attributes: attributes)
+    log(level: .info, message: message.logDescription, attributes: attributes)
   }
 
   public func notice(
-    _ message: String,
+    _ message: LogMessage,
     attributes: LogAttributes? = nil
   ) {
     guard shouldLogMessage(message) else { return }
-    log(level: .notice, message: message, attributes: attributes)
+    log(level: .notice, message: message.logDescription, attributes: attributes)
   }
 
   public func warn(
-    _ message: String,
+    _ message: LogMessage,
     attributes: LogAttributes? = nil
   ) {
     guard shouldLogMessage(message) else { return }
-    log(level: .warn, message: message, attributes: attributes)
+    log(level: .warn, message: message.logDescription, attributes: attributes)
   }
 
   public func error(
-    _ message: String,
+    _ message: LogMessage,
     attributes: LogAttributes? = nil
   ) {
     guard shouldLogMessage(message) else { return }
-    log(level: .error, message: message, attributes: attributes)
+    log(level: .error, message: message.logDescription, attributes: attributes)
   }
 
   public func critical(
-    _ message: String,
+    _ message: LogMessage,
     attributes: LogAttributes? = nil
   ) {
     guard shouldLogMessage(message) else { return }
-    log(level: .critical, message: message, attributes: attributes)
+    log(level: .critical, message: message.logDescription, attributes: attributes)
   }
 
-  private func shouldLogMessage(_ message: String) -> Bool {
-    return Self.provider != nil && !message.isEmpty
+  private func shouldLogMessage(_ message: LogMessage) -> Bool {
+    return Self.provider != nil && !message.shouldLogMessage
   }
 
   private func log(
@@ -125,16 +125,35 @@ public struct WireLogger: LoggerProtocol {
 
 }
 
+public protocol LogMessage {
+
+  var shouldLogMessage: Bool { get }
+  var logDescription: String { get }
+
+}
+
+public extension LogMessage {
+
+  var shouldLogMessage: Bool { return logDescription.isEmpty }
+
+}
+
+extension String: LogMessage {
+
+  public var logDescription: String { self }
+
+}
+
 public typealias LogAttributes = [String: Encodable]
 
 public protocol LoggerProtocol {
 
-  func debug(_ message: String, attributes: LogAttributes?)
-  func info(_ message: String, attributes: LogAttributes?)
-  func notice(_ message: String, attributes: LogAttributes?)
-  func warn(_ message: String, attributes: LogAttributes?)
-  func error(_ message: String, attributes: LogAttributes?)
-  func critical(_ message: String, attributes: LogAttributes?)
+  func debug(_ message: LogMessage, attributes: LogAttributes?)
+  func info(_ message: LogMessage, attributes: LogAttributes?)
+  func notice(_ message: LogMessage, attributes: LogAttributes?)
+  func warn(_ message: LogMessage, attributes: LogAttributes?)
+  func error(_ message: LogMessage, attributes: LogAttributes?)
+  func critical(_ message: LogMessage, attributes: LogAttributes?)
 
 }
 

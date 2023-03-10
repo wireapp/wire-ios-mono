@@ -17,6 +17,7 @@
 //
 
 import Foundation
+import WireSystem
 
 /// The `AssetClientMessageRequestStrategy` for creating requests to insert the genericMessage of a
 /// `ZMAssetClientMessage` remotely. This is only necessary for the `/assets/v3' endpoint as we
@@ -27,6 +28,7 @@ public final class AssetClientMessageRequestStrategy: AbstractRequestStrategy, Z
 
     let insertedObjectSync: InsertedObjectSync<AssetClientMessageRequestStrategy>
     let messageSync: ProteusMessageSync<ZMAssetClientMessage>
+    let logger: WireLogger = WireLogger(tag: "sharing extension")
 
     public override init(withManagedObjectContext managedObjectContext: NSManagedObjectContext, applicationStatus: ApplicationStatus) {
 
@@ -41,7 +43,9 @@ public final class AssetClientMessageRequestStrategy: AbstractRequestStrategy, Z
     }
 
     public override func nextRequestIfAllowed(for apiVersion: APIVersion) -> ZMTransportRequest? {
-        return messageSync.nextRequest(for: apiVersion)
+        let request = messageSync.nextRequest(for: apiVersion)
+        logger.info("SHARING: AssetClientMessageRequestStrategy - is request allowed: \(request==nil)")
+        return request
     }
 
     public var contextChangeTrackers: [ZMContextChangeTracker] {
@@ -64,13 +68,20 @@ extension AssetClientMessageRequestStrategy: InsertedObjectSyncTranscoder {
     typealias Object = ZMAssetClientMessage
 
     func insert(object: ZMAssetClientMessage, completion: @escaping () -> Void) {
+        logger.info("SHARING: AssetClientMessageRequestSrategy - inseting object to sync")
+
+        print("SHARING AssetClientMessageRequestStrategy insert object")
         messageSync.sync(object) { [weak self] (result, response) in
             switch result {
             case .success:
+                print("SHARING AssetClientMessageRequestStrategy insert object: success")
+                self?.logger.info("SHARING: AssetClientMessageRequestStrategy - Syncing object after marking sent object")
                 object.markAsSent()
             case .failure(let error):
+                print("SHARING AssetClientMessageRequestStrategy insert object: error: \(String(describing: error))")
                 switch error {
                 case .expired, .gaveUpRetrying:
+                    print("SHARING AssetClientMessageRequestStrategy insert object: error expiring object")
                     object.expire()
 
                     let payload = Payload.ResponseFailure(response, decoder: .defaultDecoder)
@@ -80,6 +91,7 @@ extension AssetClientMessageRequestStrategy: InsertedObjectSyncTranscoder {
                             NotificationInContext(name: ZMConversation.failedToSendMessageNotificationName, context: context).post()
                         }
                     }
+                    self?.logger.info("SHARING: AssetClientMessageRequestStrategy - Syncing object expired")
                 }
             }
         }

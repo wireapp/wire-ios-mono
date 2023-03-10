@@ -27,6 +27,8 @@ public final class AssetV3UploadRequestStrategy: AbstractRequestStrategy, ZMCont
     internal var upstreamSync: ZMUpstreamModifiedObjectSync!
     internal var preprocessor: AssetsPreprocessor
 
+    let logger = WireLogger(tag: "share extension")
+
     public override init(withManagedObjectContext managedObjectContext: NSManagedObjectContext, applicationStatus: ApplicationStatus) {
         preprocessor = AssetsPreprocessor(managedObjectContext: managedObjectContext)
 
@@ -67,6 +69,10 @@ extension AssetV3UploadRequestStrategy: ZMContextChangeTracker {
     // WHEN the user cancels a file upload
     public func objectsDidChange(_ object: Set<NSManagedObject>) {
         let assetClientMessages = object.compactMap { object -> ZMAssetClientMessage? in
+            if let message = object as? ZMAssetClientMessage {
+                print("SHARING: Objects did change on request strategy for message: \(String(describing: message)) with transfer state: \(message.transferState.name)")
+            }
+
             guard let message = object as? ZMAssetClientMessage,
                 message.version >= 3,
                 message.transferState == .uploadingCancelled
@@ -86,7 +92,9 @@ extension AssetV3UploadRequestStrategy: ZMContextChangeTracker {
     }
 
     fileprivate func cancelOutstandingUploadRequests(forMessage message: ZMAssetClientMessage) {
+        print("SHARING: Trying to cancel outstaning upload requests for message \(String(describing: message))")
         guard let identifier = message.associatedTaskIdentifier else { return }
+        print("SHARING: Canceling outstaning upload requests for message \(String(describing: message)) with identifier \(identifier)")
         applicationStatus?.requestCancellation.cancelTask(with: identifier)
         message.associatedTaskIdentifier = nil
     }
@@ -100,7 +108,13 @@ extension AssetV3UploadRequestStrategy: ZMUpstreamTranscoder {
     }
 
     public func dependentObjectNeedingUpdate(beforeProcessingObject dependant: ZMManagedObject) -> Any? {
-        return (dependant as? ZMMessage)?.dependentObjectNeedingUpdateBeforeProcessing
+        print("SHARING: dependent object needitn update? \(dependant)")
+        logger.info("SHARING: dependent object needitn update? \(dependant)")
+        var needsUpdate = (dependant as? ZMMessage)?.dependentObjectNeedingUpdateBeforeProcessing
+
+        print("SHARING: needs update? \(String(describing: needsUpdate))")
+        logger.info("SHARING: needs update? \(String(describing: needsUpdate))")
+        return needsUpdate
     }
 
     public func updateInsertedObject(_ managedObject: ZMManagedObject, request upstreamRequest: ZMUpstreamRequest, response: ZMTransportResponse) {
@@ -108,6 +122,9 @@ extension AssetV3UploadRequestStrategy: ZMUpstreamTranscoder {
     }
 
     public func request(forUpdating managedObject: ZMManagedObject, forKeys keys: Set<String>, apiVersion: APIVersion) -> ZMUpstreamRequest? {
+        print("SHARING: Request is called")
+        logger.info("SHARING: Request is called")
+
         guard let message = managedObject as? AssetMessage else { fatal("Could not cast to ZMAssetClientMessage, it is \(type(of: managedObject)))") }
         guard let asset = message.assets.first(where: { !$0.isUploaded}) else { return nil } // TODO jacob are we sure we only have one upload per message active?
 
@@ -115,6 +132,9 @@ extension AssetV3UploadRequestStrategy: ZMUpstreamTranscoder {
     }
 
     private func requestForUploadingAsset(_ asset: AssetType, for message: ZMAssetClientMessage, apiVersion: APIVersion) -> ZMUpstreamRequest {
+        // add log
+        print("SHARING: Request for uploading Asset is called")
+        logger.info("SHARING: Request for uploading Asset is called")
         guard let data = asset.encrypted else { fatal("Encrypted data not available") }
         guard let retention = message.conversation.map(AssetRequestFactory.Retention.init) else { fatal("Trying to send message that doesn't have a conversation") }
 
@@ -132,6 +152,7 @@ extension AssetV3UploadRequestStrategy: ZMUpstreamTranscoder {
     }
 
     public func updateUpdatedObject(_ managedObject: ZMManagedObject, requestUserInfo: [AnyHashable: Any]? = nil, response: ZMTransportResponse, keysToParse: Set<String>) -> Bool {
+        print("SHARING: Update updated object \(String(describing: managedObject))")
 
         guard response.result == .success else { return false }
         guard let message = managedObject as? ZMAssetClientMessage else { return false }
@@ -145,8 +166,13 @@ extension AssetV3UploadRequestStrategy: ZMUpstreamTranscoder {
         let domain = payload["domain"] as? String
 
         asset.updateWithAssetId(assetId, token: token, domain: domain)
+        
+        print("SHARING: Checking processing state of message \(String(describing: message)), state \(message.processingState.name)")
+        logger.info("SHARING: Checking processing state of message, state \(message.processingState.name)")
 
         if message.processingState == .done {
+            print("SHARING: Setting message \(String(describing: message)) to uploaded state")
+            logger.info("SHARING: Setting message to uploaded state")
             message.updateTransferState(.uploaded, synchronize: false)
             return false
         } else {

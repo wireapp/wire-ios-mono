@@ -142,8 +142,10 @@ ZM_EMPTY_ASSERTING_INIT();
 
 - (void)addTrackedObjects:(NSSet *)objects;
 {
+    NSLog(@"SHARING: adding tracked objects in sync %@", objects);
     for (ZMManagedObject *mo in objects) {
         if ([self objectPassesTrackingFilter:mo]) {
+            NSLog(@"SHARING: Add tracked object (add updated object) %@", mo);
             [self addUpdatedObject:mo];
         }
     }
@@ -151,11 +153,14 @@ ZM_EMPTY_ASSERTING_INIT();
 
 - (void)objectsDidChange:(NSSet *)objects
 {
+    NSLog(@"SHARING: objects did changed in syncs %@ on transcoder %@", objects, self.transcoder);
     for(ZMManagedObject* obj in objects) {
         BOOL isTrackedObject = ([obj isKindOfClass:[NSManagedObject class]] && obj.entity == self.trackedEntity);
         if (isTrackedObject && [self objectShouldBeSynced:obj]) {
+            NSLog(@"SHARING: Objects did change (tracked & synced, add updated object) %@", obj);
             [self addUpdatedObject:obj];
         }
+        NSLog(@"SHARING: Objects did change - check for updated dependency %@", obj);
         [self checkForUpdatedDependency:obj];
     }
 }
@@ -163,8 +168,10 @@ ZM_EMPTY_ASSERTING_INIT();
 - (BOOL)objectShouldBeSynced:(ZMManagedObject *)object
 {
     if ([self.updatePredicate evaluateWithObject:object] && [self objectPassesTrackingFilter:object]) {
+        NSLog(@"SHARING: Object %@ should be synced", object);
         return YES;
     }
+    NSLog(@"SHARING: Object %@ should NOT be synced", object);
     return NO;
 }
 
@@ -177,14 +184,19 @@ ZM_EMPTY_ASSERTING_INIT();
 
 - (void)checkForUpdatedDependency:(ZMManagedObject *)existingDependency;
 {
+    NSLog(@"SHARING: Checking for update dependency %@", existingDependency);
     [self.updatedObjectsWithDependencies enumerateAndRemoveObjectsForDependency:existingDependency usingBlock:^BOOL(ZMManagedObject *mo) {
+        NSLog(@"SHARING: Enumerating and removing objects for dependency");
         id newDependency = [self.transcoder dependentObjectNeedingUpdateBeforeProcessingObject:mo];
         if (newDependency == nil) {
+            NSLog(@"SHARING: No dependency detected");
             [self addUpdatedObjectWithoutDependency:mo];
             return YES;
         } else if (newDependency == existingDependency) {
-            return NO;
+            NSLog(@"SHARING: Same dependency as the existing one %@ for object %@", newDependency, mo);
+            return NO; // todo: it stays with dependency forever?
         } else {
+            NSLog(@"SHARING: ZMUpstreamModifiedObjectSync checkForUpdatedDependency adding dependency %@ dependent %@ on %@", newDependency, mo, self);
             [self.updatedObjectsWithDependencies addDependentObject:mo dependency:newDependency];
             return YES;
         }
@@ -203,14 +215,17 @@ ZM_EMPTY_ASSERTING_INIT();
 
 - (void)addUpdatedObject:(ZMManagedObject *)mo
 {
+    NSLog(@"SHARING: Adding updated object %@", mo);
     if (self.updatedObjectsWithDependencies) {
+        NSLog(@"SHARING: Updated object has dependencies %@", mo);
         id dependency = [self.transcoder dependentObjectNeedingUpdateBeforeProcessingObject:mo];
         if (dependency != nil) {
+            NSLog(@"SHARING: ZMUpstreamModifiedObjectSync addUpdatedObject adding dependency %@ dependent %@ on %@", dependency, mo, self);
             [self.updatedObjectsWithDependencies addDependentObject:mo dependency:dependency];
             return;
         }
     }
-
+    NSLog(@"SHARING: Adding updated object without %@", mo);
     [self addUpdatedObjectWithoutDependency:mo];
 }
 
@@ -239,18 +254,22 @@ ZM_EMPTY_ASSERTING_INIT();
 
 - (ZMTransportRequest *)processNextUpdateWithAPIVersion:(APIVersion)apiVersion
 {
+    NSLog(@"SHARING process next update");
     ZMObjectWithKeys *objectWithKeys = [self nextObjectToSync];
     if (objectWithKeys == nil) {
+        NSLog(@"SHARING process next update: returning early");
         return nil;
     }
 
+    NSLog(@"SHARING will ask if should create request");
     id<ZMUpstreamTranscoder> transcoder = self.transcoder;
     if ([transcoder respondsToSelector:@selector(shouldCreateRequestToSyncObject:forKeys:withSync:)]) {
         if (![transcoder shouldCreateRequestToSyncObject:objectWithKeys.object forKeys:objectWithKeys.keysToSync withSync:self]) {
+            NSLog(@"SHARING should not create request");
             return nil;
         }
     }
-
+    NSLog(@"SHARING will ask for request");
     ZMUpstreamRequest *request = [transcoder requestForUpdatingObject:objectWithKeys.object forKeys:objectWithKeys.keysToSync apiVersion:apiVersion];
     [request.transportRequest setDebugInformationTranscoder:transcoder];
     

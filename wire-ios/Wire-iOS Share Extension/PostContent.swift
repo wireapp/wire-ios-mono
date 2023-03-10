@@ -84,8 +84,10 @@ final class PostContent {
             switch $0 {
             case .done:
                 conversationObserverToken.tearDown()
+                print("SHARING: Teardown")
             case .startingSending:
                 allMessagesEnqueuedGroup.leave()
+                print("SHARING: Leave")
             default: break
             }
 

@@ -41,6 +41,7 @@ extension ZMConversation: Conversation {
             return try appendImage(from: data) as? Sendable
         } catch {
             Self.logger.warn("Failed to append image message from Share Ext. Reason: \(error.localizedDescription)")
+            print("Failed to append image message from Share Ext. Reason: \(error.localizedDescription)")
             return nil
         }
     }

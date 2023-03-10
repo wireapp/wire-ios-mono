@@ -320,6 +320,7 @@ extension ZMMessage {
     }
 
     @objc public var deliveryState: ZMDeliveryState {
+        print("SHARING: ZMMessage delivery state check")
         return .delivered
     }
 

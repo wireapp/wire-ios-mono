@@ -31,6 +31,7 @@ public class DependentObjects<Object: Hashable, Dependency: Hashable> {
 
     /// Adds a Dependency to an
     public func add(dependency: Dependency, for dependent: Object) {
+        print("SHARING: DependentObjects adding dependency \(dependency) on object \(dependent) on \(self)")
         zmLog.debug("Adding dependency \(toPtr(dependency)) to object \(toPtr(dependent)), object is: \(dependent)")
         let toDependents = self.dependenciesToDependents[dependency] ?? Set()
         self.dependenciesToDependents[dependency] = toDependents.union([dependent])
@@ -46,8 +47,13 @@ public class DependentObjects<Object: Hashable, Dependency: Hashable> {
 
     /// Removes from dependencies those objects for which the `block` returns true
     public func enumerateAndRemoveObjects(for dependency: Dependency, block: (Object) -> Bool) {
+        print("SHARING: enumerateAndRemoveObjects for dependency: \(dependency) on \(self)")
+        print("SHARING: enumerateAndRemoveObjects dependenciesToDependents: \(self.dependenciesToDependents)")
+        print("SHARING: enumerateAndRemoveObjects dependentsToDependencies: \(self.dependentsToDependencies)")
         guard let objects = self.dependenciesToDependents[dependency] else { return }
+        print("SHARING: enumerateAndRemoveObjects for dependency: \(dependency) found dependenciesToDependents: \(objects)")
         let objectsToRemove = objects.filter { block($0) }
+        print("SHARING: enumerateAndRemoveObjects for dependency: \(dependency) removing for dependents: \(objectsToRemove)")
         guard !objectsToRemove.isEmpty else { return }
         objectsToRemove.forEach {
             self.remove(dependency: dependency, for: $0)
@@ -76,6 +82,7 @@ public class DependentObjects<Object: Hashable, Dependency: Hashable> {
     }
 
     private func updateDependencies(dependency: Dependency, removing dependent: Object) {
+        print("SHARING: update dependencies for dependency: \(dependency) remove dependent \(dependent) on \(self)")
         guard let currentSet = dependenciesToDependents[dependency] else { return }
         if currentSet.contains(dependent) {
             zmLog.debug("Removing dependency \(toPtr(dependency)) from object \(toPtr(dependent))")
@@ -89,6 +96,7 @@ public class DependentObjects<Object: Hashable, Dependency: Hashable> {
     }
 
     private func updateDependents(dependent: Object, removing dependency: Dependency) {
+        print("SHARING: update dependents for dependency: \(dependency) remove dependent \(dependent) on \(self)")
         guard let currentSet = dependentsToDependencies[dependent] else { return }
         let newSet = currentSet.subtracting([dependency])
         if currentSet.contains(dependency) {

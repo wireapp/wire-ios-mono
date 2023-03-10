@@ -174,6 +174,7 @@ public class ZMClientMessage: ZMOTRMessage {
 
     public override func markAsSent() {
         super.markAsSent()
+        print("SHARING: Marked ZMClientMessage as sent")
 
         if linkPreviewState == ZMLinkPreviewState.uploaded {
             linkPreviewState = ZMLinkPreviewState.done

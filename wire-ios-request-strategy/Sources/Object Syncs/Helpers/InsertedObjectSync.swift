@@ -54,12 +54,14 @@ class InsertedObjectSync<Transcoder: InsertedObjectSyncTranscoder>: NSObject, ZM
     init(insertPredicate: NSPredicate? = nil) {
         self.insertPredicate = insertPredicate ?? Transcoder.Object.predicateForObjectsThatNeedToBeInsertedUpstream()!
     }
-
+    //swiftlint: disable line_length
     func objectsDidChange(_ objects: Set<NSManagedObject>) {
+        print("SHARING: InsertedObjectSync objectsDidChange, transcoder: \(String(describing: transcoder)), objects: \(String(describing: objects))")
         var trackedObjects = objects.compactMap({ $0 as? Transcoder.Object})
         let indexOfSecondPartition = trackedObjects.partition(by: insertPredicate.evaluate)
         let insertedObjects = trackedObjects[indexOfSecondPartition...]
         let removedObjects = trackedObjects[..<indexOfSecondPartition]
+        // We never  insert any objects on the AssetClientMessageRequestStrategy (transcoder) why?
         addInsertedObjects(Array(insertedObjects))
         removeNoLongerMatchingObjects(Array(removedObjects))
     }
@@ -69,16 +71,22 @@ class InsertedObjectSync<Transcoder: InsertedObjectSyncTranscoder>: NSObject, ZM
     }
 
     func addTrackedObjects(_ objects: Set<NSManagedObject>) {
+        print("SHARING: InsertedObjectSync addTrackedObjects, count: \(objects.count)")
         let insertedObjects = objects.compactMap({ $0 as? Transcoder.Object})
-
+        print("SHARING: InsertedObjectSync addInsertedObjects, caseted count: \(insertedObjects.count)")
         addInsertedObjects(insertedObjects)
     }
 
     func addInsertedObjects(_ objects: [Transcoder.Object]) {
+        print("SHARING: InsertedObjectSync addInsertedObjects, object count: \(objects.count)")
         for insertedObject in objects {
-            guard !pending.contains(insertedObject) else { continue }
+            guard !pending.contains(insertedObject) else {
+                print("SHARING: InsertedObjectSync addInsertedObjects: skipping object: \(String(describing: insertedObject)) on transcoder: \(String(describing: transcoder))")
+                continue
+            }
 
             pending.insert(insertedObject)
+            print("SHARING: InsertedObjectSync addInsertedObjects, inserting object \(String(describing: insertedObject)) on transcoder: \(String(describing: transcoder))")
             transcoder?.insert(object: insertedObject, completion: {
                 self.pending.remove(insertedObject)
             })

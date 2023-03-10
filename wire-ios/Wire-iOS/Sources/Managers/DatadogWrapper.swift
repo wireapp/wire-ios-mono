@@ -50,12 +50,14 @@ public class DatadogWrapper {
 
     var logger: Logger?
     var defaultLevel: LogLevel
+    private let payloadEncoder: JSONEncoder
 
     private init(
         appID: String,
         clientToken: String,
         environment: BackendEnvironmentProvider = BackendEnvironment.shared,
-        level: LogLevel = .debug
+        level: LogLevel = .debug,
+        payloadEncoder: JSONEncoder = JSONEncoder()
     ) {
         Datadog.initialize(
             appContext: .init(),
@@ -89,6 +91,7 @@ public class DatadogWrapper {
             .build()
 
         datadogUserId = UIDevice.current.identifierForVendor?.uuidString.sha256String ?? "none"
+        self.payloadEncoder = payloadEncoder
         WireLogger.provider = self
     }
 
@@ -110,7 +113,7 @@ public class DatadogWrapper {
 
     public func log(
         level: LogLevel,
-        message: String,
+        message: LogMessage,
         error: Error? = nil,
         attributes: [String: Encodable]? = nil
     ) {
@@ -119,7 +122,7 @@ public class DatadogWrapper {
 
         logger?.log(
             level: level,
-            message: message,
+            message: message.logDescription,
             error: error,
             attributes: attributes
         )
@@ -171,27 +174,27 @@ extension RemoteMonitoring.Level {
 
 extension DatadogWrapper: WireSystem.LoggerProtocol {
 
-    public func debug(_ message: String, attributes: LogAttributes?) {
+    public func debug(_ message: LogMessage, attributes: LogAttributes?) {
         log(level: .debug, message: message, attributes: attributes)
     }
 
-    public func info(_ message: String, attributes: LogAttributes?) {
+    public func info(_ message: LogMessage, attributes: LogAttributes?) {
         log(level: .info, message: message, attributes: attributes)
     }
 
-    public func notice(_ message: String, attributes: LogAttributes?) {
+    public func notice(_ message: LogMessage, attributes: LogAttributes?) {
         log(level: .notice, message: message, attributes: attributes)
     }
 
-    public func warn(_ message: String, attributes: LogAttributes?) {
+    public func warn(_ message: LogMessage, attributes: LogAttributes?) {
         log(level: .warn, message: message, attributes: attributes)
     }
 
-    public func error(_ message: String, attributes: LogAttributes?) {
+    public func error(_ message: LogMessage, attributes: LogAttributes?) {
         log(level: .error, message: message, attributes: attributes)
     }
 
-    public func critical(_ message: String, attributes: LogAttributes?) {
+    public func critical(_ message: LogMessage, attributes: LogAttributes?) {
         log(level: .critical, message: message, attributes: attributes)
     }
 

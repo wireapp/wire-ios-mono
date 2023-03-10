@@ -226,6 +226,7 @@ NSString * const ZMMessageDecryptionErrorCodeKey = @"decryptionErrorCode";
 
 - (void)markAsSent
 {
+    NSLog(@"SHARING: Marked ZMMessage as sent");
     self.isExpired = NO;
     [self removeExpirationDate];
 }

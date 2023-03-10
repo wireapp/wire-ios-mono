@@ -57,15 +57,22 @@ extension ZMMessage {
 
     /// Which object this message depends on when sending
     @objc public var dependentObjectNeedingUpdateBeforeProcessing: NSObject? {
+        print("SHARING: zm message needing update check")
 
         // conversation not created yet on the BE?
         guard let conversation = self.conversation else { return nil }
 
+        print("SHARING: zm message needing update check (has conversation)")
+
+
         if conversation.remoteIdentifier == nil {
+            print("SHARING: no remote identifier")
             zmLog.debug("conversation has no remote identifier")
             return conversation
 
         }
+
+        print("SHARING: has remote identifier")
 
         // Messages should time out within 1 minute. But image messages never time out. In case there is a bug
         // and one image message gets stuck in a non-sent state (but not expired), that message will block any future
@@ -87,26 +94,32 @@ extension ZMMessage {
         var selfMessageFound = false
 
         for previousMessage in conversation.lastMessages() {
+            print("SHARING: Previous message: \(previousMessage)")
             if let currentTimestamp = self.serverTimestamp,
                 let previousTimestamp = previousMessage.serverTimestamp {
-
+                print("SHARING: Checking server timestamp of previous message")
                 // to old?
                 let tooOld = currentTimestamp.timeIntervalSince(previousTimestamp) > MaxDelayToConsiderForBlockingObject
                 if tooOld {
+                    print("SHARING: Previous message to old")
                     break
                 }
             }
 
             let sameMessage = previousMessage === self || previousMessage.nonce == self.nonce
             if sameMessage {
+                print("SHARING: Same message: \(sameMessage)")
                 selfMessageFound = true
             }
 
             if selfMessageFound && !sameMessage && previousMessage.shouldBlockFurtherMessages {
                 blockingMessage = previousMessage
+                print("SHARING: Blocking message: \(String(describing: blockingMessage))")
                 break
             }
         }
+
+        print("SHARING: Has blocking message? \(String(describing: blockingMessage))")
         return blockingMessage
     }
 
@@ -115,6 +128,7 @@ extension ZMMessage {
 extension ZMMessage: BlockingMessage {
 
     var shouldBlockFurtherMessages: Bool {
+        print("SHARING: shouldBlockFurtherMessages \(self.deliveryState)")
         return self.deliveryState == .pending && !self.isExpired
     }
 }

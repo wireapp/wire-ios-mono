@@ -113,7 +113,7 @@
 		8701221720F641A4001E6342 /* CacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheTests.swift; sourceTree = "<group>"; };
 		D59F3A1A206A448F0023474F /* DispatchQueue+ZMSDispatchGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+ZMSDispatchGroup.swift"; sourceTree = "<group>"; };
 		D59F3A1C206A47E80023474F /* DispatchQueueHelperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueHelperTests.swift; sourceTree = "<group>"; };
-		EEEE4C01297EBCF700124235 /* WireLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireLogger.swift; sourceTree = "<group>"; };
+		EEEE4C01297EBCF700124235 /* WireLogger.swift */ = {isa = PBXFileReference; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = WireLogger.swift; sourceTree = "<group>"; tabWidth = 4; };
 		F1670FAD22A7C5F500BC6811 /* SanitizedString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SanitizedString.swift; sourceTree = "<group>"; };
 		F1670FAF22A7C7D800BC6811 /* SanitizedStringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SanitizedStringTests.swift; sourceTree = "<group>"; };
 		F19E554422AA8748005C792D /* SafeForLoggingStringConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafeForLoggingStringConvertible.swift; sourceTree = "<group>"; };

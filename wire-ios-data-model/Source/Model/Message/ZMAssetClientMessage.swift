@@ -88,6 +88,7 @@ import Foundation
     @NSManaged public internal(set) var transferState: AssetTransferState
 
     public func updateTransferState(_ transferState: AssetTransferState, synchronize: Bool) {
+        print("SHARING: Updating transfer state of \(String(describing: self)) from \(self.transferState.name)) to \(transferState.name)")
         self.transferState = transferState
 
         if synchronize {
@@ -175,8 +176,10 @@ import Foundation
 
     public override func expire() {
         super.expire()
+        print("SHARING: Expiring asset \(String(describing: self))")
 
         if transferState != .uploaded {
+            print("SHARING: Changing asset transfer state from \(transferState.name) to uploadingFailed")
             transferState = .uploadingFailed
         }
     }
@@ -208,7 +211,9 @@ import Foundation
     }
 
     public override func resend() {
+        print("SHARING: Resending asset \(String(describing: self))")
         if transferState != .uploaded {
+            print("SHARING: Chaning asset transfer state from \(transferState.name) to uploading")
             transferState = .uploading
         }
 
@@ -306,12 +311,29 @@ extension ZMAssetClientMessage {
     case uploaded
     case uploadingFailed
     case uploadingCancelled
+
+    public var name: String {
+        switch self {
+            case .uploading: return "uploading"
+            case .uploaded: return "uploaded"
+            case .uploadingFailed: return "uploadingFailed"
+            case .uploadingCancelled: return "uploadingCancelled"
+        }
+    }
 }
 
 @objc public enum AssetProcessingState: Int16 {
     case done = 0
     case preprocessing
     case uploading
+    
+    public var name: String {
+        switch self {
+            case .done: return "done"
+            case .preprocessing: return "prepocessing"
+            case .uploading: return "uploading"
+        }
+    }
 }
 
 struct CacheAsset: AssetType {

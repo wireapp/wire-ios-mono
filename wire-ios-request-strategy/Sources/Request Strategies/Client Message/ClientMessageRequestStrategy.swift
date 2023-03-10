@@ -25,6 +25,7 @@ public class ClientMessageRequestStrategy: AbstractRequestStrategy, ZMContextCha
     let messageExpirationTimer: MessageExpirationTimer
     let linkAttachmentsPreprocessor: LinkAttachmentsPreprocessor
     let localNotificationDispatcher: PushMessageHandler
+    let logger = WireLogger(tag: "share extension")
 
     static func shouldBeSentPredicate(context: NSManagedObjectContext) -> NSPredicate {
         let notDelivered = NSPredicate(format: "%K == FALSE", DeliveredKey)
@@ -76,10 +77,15 @@ extension ClientMessageRequestStrategy: InsertedObjectSyncTranscoder {
     typealias Object = ZMClientMessage
 
     func insert(object: ZMClientMessage, completion: @escaping () -> Void) {
+        logger.info("SHARING: ClientMessageRequestStrategy - inseting object to sync")
+
         messageSync.sync(object) { [weak self] (result, response) in
             switch result {
             case .success:
                 object.markAsSent()
+                print("SHARING: Syncing object after marking sent object: \(object)")
+                self?.logger.info("SHARING: ClientMessageRequestStrategy - Syncing object after marking sent object")
+
                 self?.deleteMessageIfNecessary(object)
             case .failure(let error):
                 switch error {
@@ -94,6 +100,8 @@ extension ClientMessageRequestStrategy: InsertedObjectSyncTranscoder {
                             NotificationInContext(name: ZMConversation.failedToSendMessageNotificationName, context: context).post()
                         }
                     }
+
+                    self?.logger.info("SHARING: ClientMessageRequestStrategy - Syncing object expired")
                 }
             }
         }

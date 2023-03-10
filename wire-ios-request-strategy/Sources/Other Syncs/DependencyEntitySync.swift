@@ -52,9 +52,14 @@ class DependencyEntitySync<Transcoder: EntityTranscoder>: NSObject, ZMContextCha
     }
 
     public func synchronize(entity: Transcoder.Entity, completion: EntitySyncHandler? = nil) {
-        completionHandlers[entity] = completion
+        print("SHARING: DependencyEntitySync synchronising object: \(entity) on entity sync: \(self)")
+        completionHandlers[entity] = { object, request in
+            print("SHARING: completed request for \(entity)")
+            completion?(object, request)
+        }
 
         if let dependency = entity.dependentObjectNeedingUpdateBeforeProcessing {
+            print("SHARING: DependencyEntitySync Adding dependency: \(dependency) on entity \(entity) on sync: \(self)")
             entitiesWithDependencies.add(dependency: dependency, for: entity)
         } else {
             entitiesWithoutDependencies.append(entity)
@@ -62,11 +67,13 @@ class DependencyEntitySync<Transcoder: EntityTranscoder>: NSObject, ZMContextCha
     }
 
     public func objectsDidChange(_ objects: Set<NSManagedObject>) {
+        print("SHARING: DependencyEntitySync objects did change: \(objects) on entity sync: \(self)")
         for object in objects {
             for entity in entitiesWithDependencies.dependents(on: object) {
                 let newDependency = entity.dependentObjectNeedingUpdateBeforeProcessing
 
                 if let newDependency = newDependency, newDependency != object {
+                    print("SHARING: DependencyEntitySync Adding dependency: \(newDependency) on entity \(entity) on sync: \(self)")
                     entitiesWithDependencies.add(dependency: newDependency, for: entity)
                 } else if newDependency == nil {
                     entitiesWithDependencies.removeAllDependencies(for: entity)
@@ -75,9 +82,11 @@ class DependencyEntitySync<Transcoder: EntityTranscoder>: NSObject, ZMContextCha
             }
         }
     }
-
+    
     public func nextRequest(for apiVersion: APIVersion) -> ZMTransportRequest? {
+        print("SHARING: DependencyEntitySync CHECKING FOR NEW REQUEST on entity sync: \(self)")
         guard let entity = entitiesWithoutDependencies.first else { return nil }
+        print("SHARING: DependencyEntitySync CHECKING FOR NEW REQUEST ON ENTITY \(entity)")
 
         entitiesWithoutDependencies.removeFirst()
 

@@ -17,6 +17,7 @@
 //
 
 import Foundation
+import WireSystem
 
 public final class SendableBatchObserver {
 
@@ -25,12 +26,14 @@ public final class SendableBatchObserver {
     public var sentHandler: (() -> Void)?
     public var progressHandler: ((Float) -> Void)?
     private var observerToken: Any?
+    let logger = WireLogger(tag: "share extension")
 
     public init(sendables: [Sendable]) {
         self.sendables = sendables
         self.observerToken = NotificationCenter.default.addObserver(forName: contextWasMergedNotification,
                                                                     object: nil,
                                                                     queue: nil) { [weak self] _ in
+            print("SHARING: Observer token")
             DispatchQueue.main.async {
                 self?.onDeliveryChanged()
             }
@@ -48,7 +51,9 @@ public final class SendableBatchObserver {
     }
 
     public func onDeliveryChanged() {
+        print("SHARING: On Delivery Changed")
         if allSendablesSent {
+            print("SHARING: All Sendables are sent")
             DispatchQueue.main.async { [weak self] in
                 self?.sentHandler?()
             }
@@ -59,7 +64,7 @@ public final class SendableBatchObserver {
 
     private func updateProgress() {
         var totalProgress: Float = 0
-
+        print("SHARING: Updating progress")
         sendables.forEach { message in
             if message.isSent {
                 totalProgress += 1.0 / Float(sendables.count)
@@ -68,6 +73,7 @@ public final class SendableBatchObserver {
                 totalProgress += messageProgress / Float(sendables.count)
             }
         }
+        print("SHARING: Progress calculated \(totalProgress)")
 
         DispatchQueue.main.async { [weak self] in
             self?.progressHandler?(totalProgress)

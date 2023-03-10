@@ -68,6 +68,7 @@ NSString * const DeliveredKey = @"delivered";
 
 - (ZMDeliveryState)deliveryState
 {
+    NSLog(@"SHARING: ZMOTRMessage checking delivery state");
     //we set server time stamp in awake from insert to be able to sort messages
     //probably we need to store "deliveryTimestamp" separately and check it here
     if (self.isExpired) {
@@ -99,6 +100,7 @@ NSString * const DeliveredKey = @"delivered";
 
 - (void)markAsSent
 {
+    NSLog(@"SHARING: Marking message as sent, message: %@", self);
     self.delivered = YES;
     [super markAsSent];
 }

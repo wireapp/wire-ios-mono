@@ -67,9 +67,9 @@
       allowLocationSimulation = "YES"
       launchAutomaticallySubstyle = "2">
       <RemoteRunnable
-         runnableDebuggingMode = "1"
-         BundleIdentifier = "com.apple.mobilesafari"
-         RemotePath = "/Applications/MobileSafari.app">
+         runnableDebuggingMode = "0"
+         BundleIdentifier = "com.wearezeta.zclient.alpha"
+         RemotePath = "/var/containers/Bundle/Application/47BD8767-25B2-4D9D-A223-815D1232B34A/Wire.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
@@ -83,7 +83,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "OS_ACTIVITY_MODE"
-            value = "disable"
+            value = ""
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
@@ -94,7 +94,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES"
-      askForAppToLaunch = "Yes"
       launchAutomaticallySubstyle = "2">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">

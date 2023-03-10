@@ -20,6 +20,7 @@ import Foundation
 
 extension ZMAssetClientMessage {
     override open func update(with updateEvent: ZMUpdateEvent, initialUpdate: Bool) {
+        print("SHARING: Updating asset client message from event")
         guard let message = GenericMessage(from: updateEvent) else { return }
 
         do {
@@ -38,8 +39,10 @@ extension ZMAssetClientMessage {
             return
         }
 
+        print("SHARING: Asset Update Event on asset: \(String(describing: self)) with status: \(String(describing: status)) and transfer state \(transferState.name)")
         switch status {
         case .uploaded(let data) where data.hasAssetID:
+            print("SHARING: Updating status from event to uploaded for message \(String(describing: self))")
             updateTransferState(.uploaded, synchronize: false)
         case .notUploaded where transferState != .uploaded:
             switch assetData.notUploaded {
