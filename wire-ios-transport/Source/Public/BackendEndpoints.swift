@@ -41,7 +41,7 @@ final class BackendEndpoints: NSObject, BackendEndpointsProvider, Codable {
         self.accountsURL = accountsURL
         self.websiteURL = websiteURL
         self.countlyURL = countlyURL
-        
+
         super.init()
     }
 }

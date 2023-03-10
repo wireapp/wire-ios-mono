@@ -22,8 +22,8 @@ import UIKit
  * A token that represents an active background task.
  */
 
-fileprivate var activityCounter = 0 
-fileprivate let activityCounterQueue = DispatchQueue(label: "wire-transport.background-activity-counter")
+private var activityCounter = 0
+private let activityCounterQueue = DispatchQueue(label: "wire-transport.background-activity-counter")
 
 @objc public class BackgroundActivity: NSObject {
 
@@ -86,7 +86,7 @@ fileprivate let activityCounterQueue = DispatchQueue(label: "wire-transport.back
 
         return ObjectIdentifier(self) == ObjectIdentifier(otherActivity)
     }
-    
+
     override public var description: String {
         return "<BackgroundActivity [\(index)]: \(name)>"
     }

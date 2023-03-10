@@ -16,65 +16,64 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 // 
 
-
 import XCTest
 
 class ZMTTestBaseTests: ZMTBaseTest {
 
     func testVerySmallJPEG() {
-        
+
         // given
         let expectedData = try? Data(contentsOf: Bundle(for: object_getClass(ZMTBaseTest.self)!).url(forResource: "tiny", withExtension: "jpg")!)
-        
+
         // when
         let data = self.verySmallJPEGData()
-        
+
         // then
         XCTAssertNotNil(data)
         XCTAssertEqual(data, expectedData)
-        
+
     }
-    
+
     func testMediumJPEG() {
-        
+
         // given
         let expectedData = try? Data(contentsOf: Bundle(for: object_getClass(ZMTBaseTest.self)!).url(forResource: "medium", withExtension: "jpg")!)
-        
+
         // when
         let data = self.mediumJPEGData()
-        
+
         // then
         XCTAssertNotNil(data)
         XCTAssertEqual(data, expectedData)
-        
+
     }
-    
+
     func testVerySmallJPEG_static() {
-        
+
         // given
         let expectedData = try? Data(contentsOf: Bundle(for: object_getClass(ZMTBaseTest.self)!).url(forResource: "tiny", withExtension: "jpg")!)
-        
+
         // when
         let data = ZMTBaseTest.verySmallJPEGData()
-        
+
         // then
         XCTAssertNotNil(data)
         XCTAssertEqual(data, expectedData)
-        
+
     }
-    
+
     func testMediumJPEG_static() {
-        
+
         // given
         let expectedData = try? Data(contentsOf: Bundle(for: object_getClass(ZMTBaseTest.self)!).url(forResource: "medium", withExtension: "jpg")!)
-        
+
         // when
         let data = ZMTBaseTest.mediumJPEGData()
-        
+
         // then
         XCTAssertNotNil(data)
         XCTAssertEqual(data, expectedData)
-        
+
     }
-    
+
 }

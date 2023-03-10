@@ -16,9 +16,7 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
-
 
 public extension UUID {
 
@@ -28,7 +26,7 @@ public extension UUID {
 }
 
 extension Date {
-    
+
     public func transportString() -> String {
         return (self as NSDate).transportString()
     }

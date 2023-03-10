@@ -19,7 +19,6 @@
 import CoreFoundation
 import Security
 
-
 public enum EnqueueResult {
     case success, nilRequest, maximumNumberOfRequests
 }
@@ -29,42 +28,38 @@ public protocol UnauthenticatedTransportSessionProtocol: TearDownCapable {
     func enqueueOneTime(_ request: ZMTransportRequest)
     func enqueueRequest(withGenerator generator: ZMTransportRequestGenerator) -> EnqueueResult
     func tearDown()
-    
+
     var environment: BackendEnvironmentProvider { get }
 }
-
 
 @objcMembers public class UserInfo: NSObject {
     public let identifier: UUID
     public let cookieData: Data
-    
+
     public init(identifier: UUID, cookieData: Data) {
         self.identifier = identifier
         self.cookieData = cookieData
     }
-    
+
     public override func isEqual(_ object: Any?) -> Bool {
         guard let other = object as? UserInfo else { return false }
         return other.cookieData == cookieData && other.identifier == identifier
     }
 }
 
-
 private let zmLog = ZMSLog(tag: "Network")
 
-
 fileprivate extension ZMTransportRequest {
-    func log() -> Void {
+    func log() {
         zmLog.debug("[Unauthenticated] ----> Request: \(description)")
     }
 }
 
 fileprivate extension ZMTransportResponse {
-    func log() -> Void {
+    func log() {
         zmLog.debug("[Unauthenticated] <---- Response: \(description)")
     }
 }
-
 
 /// The `UnauthenticatedTransportSession` class should be used instead of `ZMTransportSession`
 /// until a user has been authenticated. Consumers should set themselves as delegate to 
@@ -82,7 +77,7 @@ final public class UnauthenticatedTransportSession: NSObject, UnauthenticatedTra
     fileprivate let reachability: ReachabilityProvider
 
     private let remoteMonitoring: RemoteMonitoring
-    
+
     /// Property to accept requests
     public let readyForRequests: Bool
 
@@ -100,12 +95,11 @@ final public class UnauthenticatedTransportSession: NSObject, UnauthenticatedTra
         self.userAgent = ZMUserAgent()
         self.remoteMonitoring = RemoteMonitoring(level: .debug)
         self.readyForRequests = readyForRequests
-        
+
         super.init()
 
         let configuration = URLSessionConfiguration.ephemeral
         configuration.httpAdditionalHeaders = ["User-Agent": ZMUserAgent.userAgent(withAppVersion: applicationVersion)]
-
 
         if let proxySettings = environment.proxy {
             let proxyDictionary = proxySettings.socks5Settings(proxyUsername: proxyUsername, proxyPassword: proxyPassword)
@@ -116,8 +110,7 @@ final public class UnauthenticatedTransportSession: NSObject, UnauthenticatedTra
 
         self.session = urlSession ?? URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
     }
-    
-    
+
     /// Enqueues a single request on the internal `URLSession`.
     ///
     /// - parameter request: Request which should be enqueued.
@@ -145,7 +138,7 @@ final public class UnauthenticatedTransportSession: NSObject, UnauthenticatedTra
             decrement(notify: false)
             return .nilRequest
         }
-        
+
         enqueueRequest(request)
 
         return .success
@@ -159,31 +152,30 @@ final public class UnauthenticatedTransportSession: NSObject, UnauthenticatedTra
         guard let urlRequest = URL(string: request.path, relativeTo: baseURL).flatMap(NSMutableURLRequest.init) else { preconditionFailure() }
         urlRequest.configure(with: request)
         remoteMonitoring.log(request: urlRequest)
-        
+
         request.log()
 
         let task = session.task(with: urlRequest as URLRequest) { [weak self] data, response, error in
-            
+
             var transportResponse: ZMTransportResponse!
 
             if let response = response as? HTTPURLResponse {
                 self?.remoteMonitoring.log(response: response)
                 transportResponse = ZMTransportResponse(httpurlResponse: response, data: data, error: error, apiVersion: request.apiVersion)
-            }
-            else if let error = error {
+            } else if let error = error {
                 transportResponse = ZMTransportResponse(transportSessionError: error, apiVersion: request.apiVersion)
             }
-            
+
             if nil == transportResponse {
                 preconditionFailure()
             }
-            
+
             transportResponse?.log()
 
             request.complete(with: transportResponse)
             self?.decrement(notify: true)
         }
-        
+
         task.resume()
     }
 
@@ -202,7 +194,7 @@ final public class UnauthenticatedTransportSession: NSObject, UnauthenticatedTra
     private func increment() -> Int {
         return numberOfRunningRequests.increment()
     }
-    
+
     public func tearDown() {
         // From NSURLSession documentation at https://developer.apple.com/documentation/foundation/urlsession:
         // "The session object keeps a strong reference to the delegate until your app 
@@ -263,7 +255,7 @@ extension ZMTransportResponse {
     /// - returns: The encrypted cookie data (using the cookies key) if there is any.
     private func extractCookieData() -> Data? {
         guard let response = rawResponse else { return nil }
-        let cookies = HTTPCookie.cookies(withResponseHeaderFields: response.allHeaderFields as! [String : String], for: response.url!)
+        let cookies = HTTPCookie.cookies(withResponseHeaderFields: response.allHeaderFields as! [String: String], for: response.url!)
         return HTTPCookie.extractData(from: cookies)
     }
 
@@ -281,7 +273,7 @@ extension ZMTransportResponse {
 }
 
 extension HTTPCookie {
-    
+
     static func cookies(from string: String, for url: URL) -> [HTTPCookie] {
         let headers = [HeaderKey.cookie.rawValue: string]
         return HTTPCookie.cookies(withResponseHeaderFields: headers, for: url)
@@ -291,12 +283,12 @@ extension HTTPCookie {
         let cookies = HTTPCookie.cookies(from: cookieString, for: url)
         return extractData(from: cookies)
     }
-    
+
     fileprivate static func extractData(from cookies: [HTTPCookie]) -> Data? {
         guard !cookies.isEmpty else { return nil }
         let properties = cookies.compactMap(\.properties)
         guard let name = properties.first?[.name] as? String, name == CookieKey.zetaId.rawValue else { return nil }
-        
+
         let archiver = NSKeyedArchiver(requiringSecureCoding: true)
         archiver.encode(properties, forKey: CookieKey.properties.rawValue)
         archiver.finishEncoding()

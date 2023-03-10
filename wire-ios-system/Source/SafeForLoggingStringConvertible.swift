@@ -37,7 +37,7 @@ public struct SafeValueForLogging<T: CustomStringConvertible>: SafeForLoggingStr
 
 extension Array: SafeForLoggingStringConvertible where Array.Element: SafeForLoggingStringConvertible {
     public var safeForLoggingDescription: String {
-        return String(describing: map { $0.safeForLoggingDescription} )
+        return String(describing: map { $0.safeForLoggingDescription})
     }
 }
 
@@ -46,8 +46,8 @@ extension Dictionary: SafeForLoggingStringConvertible where Key: SafeForLoggingS
         let result = enumerated().map { (_, element) in
             return (element.key.safeForLoggingDescription, element.value.safeForLoggingDescription)
         }
-        
-        let dictionary = Dictionary<String, String>(uniqueKeysWithValues: result)
+
+        let dictionary = [String: String](uniqueKeysWithValues: result)
         return String(describing: dictionary)
     }
 }

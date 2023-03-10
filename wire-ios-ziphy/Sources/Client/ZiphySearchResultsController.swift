@@ -56,7 +56,7 @@ public final class ZiphySearchResultsController {
     // MARK: - Getting Search Results
 
     /// Performs a search with the given term and returns the results.
-    public func search(withTerm searchTerm: String, _ completion:@escaping ZiphyListRequestCallback) -> CancelableTask? {
+    public func search(withTerm searchTerm: String, _ completion: @escaping ZiphyListRequestCallback) -> CancelableTask? {
 
         self.paginationController = ZiphyPaginationController()
 

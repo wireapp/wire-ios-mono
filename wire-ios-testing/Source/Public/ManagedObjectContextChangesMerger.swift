@@ -16,12 +16,11 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 
 final public class ManagedObjectContextChangesMerger: NSObject {
     public let managedObjectContexts: Set<NSManagedObjectContext>
-    
+
     public init(managedObjectContexts: Set<NSManagedObjectContext>) {
         self.managedObjectContexts = managedObjectContexts
         super.init()
@@ -32,7 +31,7 @@ final public class ManagedObjectContextChangesMerger: NSObject {
                                                    object: moc)
         }
     }
-    
+
     @objc func contextDidSave(_ notification: Notification) {
         let mocThatSaved = notification.object as! NSManagedObjectContext
         managedObjectContexts.subtracting(Set(arrayLiteral: mocThatSaved)).forEach { moc in

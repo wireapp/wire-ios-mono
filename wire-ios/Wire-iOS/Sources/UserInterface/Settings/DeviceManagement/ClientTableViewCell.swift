@@ -93,8 +93,6 @@ class ClientTableViewCell: UITableViewCell, DynamicTypeCapable {
 
     var wr_editable: Bool
 
-    var variant: ColorSchemeVariant?
-
     // MARK: - Initialization
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         wr_editable = true

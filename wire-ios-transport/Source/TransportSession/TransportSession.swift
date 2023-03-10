@@ -20,38 +20,38 @@ import Foundation
 
 @objc
 public protocol TransportSessionType: ZMBackgroundable, ZMRequestCancellation, TearDownCapable {
-    
+
     var reachability: ReachabilityProvider & TearDownCapable { get }
-    
+
     var pushChannel: ZMPushChannel { get }
-    
+
     var cookieStorage: ZMPersistentCookieStorage { get }
-    
+
     var requestLoopDetectionCallback: ((_ path: String) -> Void)? { get set }
-    
-    @objc(enqueueOneTimeRequest:) 
+
+    @objc(enqueueOneTimeRequest:)
     func enqueueOneTime(_ request: ZMTransportRequest)
-    
+
     @objc(attemptToEnqueueSyncRequestWithGenerator:)
     func attemptToEnqueueSyncRequest(generator: ZMTransportRequestGenerator) -> ZMTransportEnqueueResult
-    
+
     @objc(setAccessTokenRenewalFailureHandler:)
     func setAccessTokenRenewalFailureHandler(_ handler: @escaping ZMCompletionHandlerBlock)
 
     @objc(setAccessTokenRenewalSuccessHandler:)
     func setAccessTokenRenewalSuccessHandler(_ handler: @escaping ZMAccessTokenHandlerBlock)
-    
+
     func setNetworkStateDelegate(_ delegate: ZMNetworkStateDelegate?)
-    
+
     @objc(addCompletionHandlerForBackgroundSessionWithIdentifier:handler:)
     func addCompletionHandlerForBackgroundSession(identifier: String, handler: @escaping () -> Void)
-    
+
     @objc(configurePushChannelWithConsumer:groupQueue:)
     func configurePushChannel(consumer: ZMPushChannelConsumer, groupQueue: ZMSGroupQueue)
 
     @objc(renewAccessTokenWithClientID:)
     func renewAccessToken(with clientID: String)
-    
+
 }
 
 extension ZMTransportSession: TransportSessionType {}

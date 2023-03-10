@@ -49,7 +49,7 @@ import Foundation
 @objc public protocol BackendEnvironmentProvider: BackendTrustProvider, BackendEndpointsProvider {
     /// Descriptive name of the backend
     var title: String { get }
-    
+
     var environmentType: EnvironmentTypeProvider { get }
     var proxy: ProxySettingsProvider? { get }
 }
@@ -61,5 +61,5 @@ import Foundation
     var port: Int { get }
     var needsAuthentication: Bool { get }
 
-    func socks5Settings(proxyUsername: String?, proxyPassword: String?) -> [AnyHashable : Any]?
+    func socks5Settings(proxyUsername: String?, proxyPassword: String?) -> [AnyHashable: Any]?
 }

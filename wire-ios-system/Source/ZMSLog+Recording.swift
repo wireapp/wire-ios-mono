@@ -18,15 +18,15 @@
 
 import Foundation
 
-private var recordingToken : LogHookToken? = nil
+private var recordingToken: LogHookToken?
 
 extension ZMSLog {
-    
+
     /// Start recording
     @objc public static func startRecording(isInternal: Bool = true) {
         logQueue.sync {
             if recordingToken == nil {
-                recordingToken = self.nonLockingAddEntryHook(logHook: { (level, tag, entry, isSafe) -> (Void) in
+                recordingToken = self.nonLockingAddEntryHook(logHook: { (level, tag, entry, isSafe) -> Void in
                     guard isInternal || isSafe else { return }
                     let tagString = tag.flatMap { "[\($0)] "} ?? ""
                     let date = dateFormatter.string(from: entry.timestamp)
@@ -37,10 +37,10 @@ extension ZMSLog {
             }
         }
     }
-    
+
     /// Stop recording logs and discard cache
     @objc public static func stopRecording() {
-        var tokenToRemove : LogHookToken?
+        var tokenToRemove: LogHookToken?
         logQueue.sync {
             guard let token = recordingToken else { return }
             tokenToRemove = token
@@ -57,11 +57,11 @@ extension ZMSLog {
         df.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSS Z"
         return df
     }()
-    
+
     private static var isRunningSystemTests: Bool {
         guard let path = ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"]
             else { return false }
         return path.contains("WireSystem Tests")
     }
-    
+
 }

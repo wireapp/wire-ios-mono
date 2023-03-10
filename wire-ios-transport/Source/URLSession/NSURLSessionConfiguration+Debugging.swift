@@ -19,7 +19,7 @@
 import Foundation
 
 extension URLSessionConfiguration {
-    
+
     @objc public var configurationDump: String {
         var dump = [
             "identifier: \(self.identifier ?? "nil")",

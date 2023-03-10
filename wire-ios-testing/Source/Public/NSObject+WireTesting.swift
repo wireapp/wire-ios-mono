@@ -16,13 +16,12 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 // 
 
-
 import Foundation
 
 @objc extension NSObject {
-    
+
     public static func isEqualOrBothNil(_ object1: NSObject?, toObject object2: NSObject?) -> Bool {
         return object1 == object2
     }
-    
+
 }

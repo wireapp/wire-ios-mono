@@ -16,20 +16,19 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 // 
 
-
 import Foundation
 
 /// Reports an error and terminates the application
 public func fatal(_ message: String,
                   file: StaticString = #file,
-                  line: UInt = #line) -> Never  {
+                  line: UInt = #line) -> Never {
     ZMAssertionDump_NSString("Swift assertion", "\(file)", Int32(line), message)
     fatalError(message, file: file, line: line)
 }
 
 /// If the condition is not true, reports an error and terminates the application
 public func require(_ condition: Bool, _ message: String = "", file: StaticString = #file, line: UInt = #line) {
-    if(!condition) {
+    if !condition {
         fatal(message, file: file, line: line)
     }
 }

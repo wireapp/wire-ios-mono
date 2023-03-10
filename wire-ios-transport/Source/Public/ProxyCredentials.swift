@@ -23,7 +23,6 @@ public final class ProxyCredentials: NSObject {
     public var password: String
     public var proxy: ProxySettingsProvider
 
-
     init(proxy: ProxySettingsProvider, username: String, password: String) {
         self.username = username
         self.password = password
@@ -46,7 +45,7 @@ public final class ProxyCredentials: NSObject {
 
         try? Keychain.deleteItem(.usernameItem(for: proxy))
         try? Keychain.deleteItem(.passwordItem(for: proxy))
-        
+
         try Keychain.storeItem(.usernameItem(for: proxy), value: usernameData)
         try Keychain.storeItem(.passwordItem(for: proxy), value: passwordData)
     }

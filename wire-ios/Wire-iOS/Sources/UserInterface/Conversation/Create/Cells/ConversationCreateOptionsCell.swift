@@ -21,10 +21,10 @@ import UIKit
 
 final class ConversationCreateOptionsCell: RightIconDetailsCell {
 
-    var expanded = false {
-        didSet { applyColorScheme(colorSchemeVariant) }
-    }
+    // MARK: - Properties
+    var expanded = false
 
+    // MARK: - Override Properties for Accessibility
     override var accessibilityLabel: String? {
         get {
             return title
@@ -56,26 +56,31 @@ final class ConversationCreateOptionsCell: RightIconDetailsCell {
         }
     }
 
+    // MARK: - Overrides
     override func setUp() {
         super.setUp()
-
         title = L10n.Localizable.Conversation.Create.Options.title
         icon = nil
         showSeparator = false
         contentLeadingOffset = 16
-
+        setupIcon()
         setupAccessibility()
     }
 
-    override func applyColorScheme(_ colorSchemeVariant: ColorSchemeVariant) {
-        super.applyColorScheme(colorSchemeVariant)
-
+    // MARK: Methods
+    /// Sets up the icon and its color.
+    private func setupIcon() {
         let color = SemanticColors.Icon.foregroundPlainDownArrow
-        let image = StyleKitIcon.downArrow.makeImage(size: .tiny, color: color).withRenderingMode(.alwaysTemplate)
+        let image = StyleKitIcon.downArrow.makeImage(
+            size: .tiny,
+            color: color).withRenderingMode(.alwaysTemplate)
 
         // flip upside down if necessary
         if let cgImage = image.cgImage, expanded {
-            accessory = UIImage(cgImage: cgImage, scale: image.scale, orientation: .downMirrored).withRenderingMode(.alwaysTemplate)
+            accessory = UIImage(
+                cgImage: cgImage,
+                scale: image.scale,
+                orientation: .downMirrored).withRenderingMode(.alwaysTemplate)
         } else {
             accessory = image
         }
@@ -89,17 +94,18 @@ final class ConversationCreateOptionsCell: RightIconDetailsCell {
     }
 }
 
+// MARK: - ConversationCreateOptionsCell Extension
 extension ConversationCreateOptionsCell: ConversationCreationValuesConfigurable {
     func configure(with values: ConversationCreationValues) {
-        let guests = values.allowGuests.localized.localizedUppercase
-        let services = values.allowServices.localized.localizedUppercase
-        let receipts = values.enableReceipts.localized.localizedUppercase
+        let guests = values.allowGuests.localized.capitalized
+        let services = values.allowServices.localized.capitalized
+        let receipts = values.enableReceipts.localized.capitalized
         status = L10n.Localizable.Conversation.Create.Options.subtitle(guests, services, receipts)
     }
 }
 
 private extension Bool {
     var localized: String {
-        return self ? "general.on".localized : "general.off".localized
+        return self ? L10n.Localizable.General.on : L10n.Localizable.General.off
     }
 }

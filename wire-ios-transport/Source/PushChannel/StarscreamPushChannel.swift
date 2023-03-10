@@ -214,13 +214,13 @@ extension StarscreamPushChannel: WebSocketDelegate {
     func didReceive(event: WebSocketEvent, client: WebSocketClient) {
         switch event {
 
-        case .connected(_):
+        case .connected:
             Logging.pushChannel.debug("Sending ping")
             onOpen()
-        case .disconnected(_, _):
+        case .disconnected:
             Logging.pushChannel.debug("Websocket disconnected")
             onClose()
-        case .text(_):
+        case .text:
             break
         case .binary(let data):
             Logging.pushChannel.debug("Received data")
@@ -231,15 +231,15 @@ extension StarscreamPushChannel: WebSocketDelegate {
             consumerQueue?.performGroupedBlock { [weak self] in
                 self?.consumer?.pushChannelDidReceive(transportData)
             }
-        case .pong(_):
+        case .pong:
             break
-        case .ping(_):
+        case .ping:
             break
-        case .error(_):
+        case .error:
             onClose()
-        case .viabilityChanged(_):
+        case .viabilityChanged:
             break
-        case .reconnectSuggested(_):
+        case .reconnectSuggested:
             break
         case .cancelled:
             onClose()
@@ -256,7 +256,7 @@ class StarscreamCertificatePinning: CertificatePinning {
         self.environment = environment
     }
 
-    func evaluateTrust(trust: SecTrust, domain: String?, completion: ((PinningState) -> ())) {
+    func evaluateTrust(trust: SecTrust, domain: String?, completion: ((PinningState) -> Void)) {
         if environment.verifyServerTrust(trust: trust, host: domain) {
             completion(.success)
         } else {

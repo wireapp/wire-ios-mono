@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 import WireUtilities
 
@@ -25,17 +24,17 @@ extension String {
         let regex = try! NSRegularExpression(pattern: "[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}", options: .caseInsensitive)
         return regex
     }()
-    
+
     fileprivate static let clientIDMatcher: NSRegularExpression = {
         let regex = try! NSRegularExpression(pattern: "[a-f0-9]{13,16}", options: .caseInsensitive)
         return regex
     }()
-    
+
     fileprivate static let matchers = [UUIDMatcher, clientIDMatcher]
 
     var removingSensitiveInfo: String {
         let result = NSMutableString(string: self)
-        let range = NSMakeRange(0, utf16.count)
+        let range = NSRange(location: 0, length: utf16.count)
 
         String.matchers
             .flatMap { $0.matches(in: self, options: [], range: range) }

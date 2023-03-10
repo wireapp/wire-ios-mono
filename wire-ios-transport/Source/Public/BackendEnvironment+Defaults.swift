@@ -44,10 +44,10 @@ extension BackendEnvironment {
             self.init(environmentType: environmentType, data: data)
         }
     }
-    
+
     public func save(in userDefaults: UserDefaults) {
         type.save(in: userDefaults)
-        
+
         switch type {
         case .custom:
             struct SerializedData: Encodable {
@@ -55,7 +55,7 @@ extension BackendEnvironment {
                 let endpoints: BackendEndpoints
                 let apiProxy: ProxySettings?
             }
-            
+
             let backendEndpoints = BackendEndpoints(
                 backendURL: endpoints.backendURL,
                 backendWSURL: endpoints.backendWSURL,
@@ -84,22 +84,22 @@ extension BackendEnvironment {
             break
         }
     }
-    
+
     public static func migrate(from: UserDefaults, to: UserDefaults) {
         [EnvironmentType.defaultsKey, BackendEnvironment.defaultsKey].forEach { key in
             UserDefaults.moveValue(forKey: key, from: from, to: to)
         }
     }
-    
+
 }
 
 fileprivate extension UserDefaults {
-    
+
     static func moveValue(forKey key: String, from: UserDefaults, to: UserDefaults) {
         guard let value = from.value(forKey: key) else { return }
-        
+
         to.setValue(value, forKey: key)
         from.removeObject(forKey: key)
     }
-    
+
 }

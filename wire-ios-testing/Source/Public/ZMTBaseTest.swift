@@ -26,5 +26,5 @@ extension ZMTBaseTest {
             assert(false)
         }
     }
-    
+
 }

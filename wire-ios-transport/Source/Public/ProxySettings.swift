@@ -18,7 +18,6 @@
 
 import Foundation
 
-
 final class ProxySettings: NSObject, ProxySettingsProvider, Codable {
 
     let host: String
@@ -31,17 +30,17 @@ final class ProxySettings: NSObject, ProxySettingsProvider, Codable {
         self.host = host
         self.port = port
         self.needsAuthentication = needsAuthentication
-        
+
         super.init()
     }
 
-    func socks5Settings(proxyUsername: String?, proxyPassword: String?) -> [AnyHashable : Any]? {
-        var proxyDictionary: [AnyHashable : Any] = [
-            "SOCKSEnable" : 1,
+    func socks5Settings(proxyUsername: String?, proxyPassword: String?) -> [AnyHashable: Any]? {
+        var proxyDictionary: [AnyHashable: Any] = [
+            "SOCKSEnable": 1,
             "SOCKSProxy": host,
             "SOCKSPort": port,
             kCFProxyTypeKey: kCFProxyTypeSOCKS,
-            kCFStreamPropertySOCKSVersion: kCFStreamSocketSOCKSVersion5,
+            kCFStreamPropertySOCKSVersion: kCFStreamSocketSOCKSVersion5
         ]
 
         if let username = proxyUsername, let password = proxyPassword, needsAuthentication {

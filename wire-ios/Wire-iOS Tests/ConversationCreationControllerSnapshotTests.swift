@@ -27,12 +27,10 @@ final class ConversationCreationControllerSnapshotTests: ZMSnapshotTestCase {
     override func setUp() {
         super.setUp()
         accentColor = .violet
-        ColorScheme.default.variant = .light
     }
 
     override func tearDown() {
         sut = nil
-        ColorScheme.default.variant = .light
         super.tearDown()
     }
 

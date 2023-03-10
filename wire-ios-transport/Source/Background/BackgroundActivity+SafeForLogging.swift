@@ -32,4 +32,3 @@ struct ActivityName: SafeForLoggingStringConvertible {
         return name.readableHash
     }
 }
-

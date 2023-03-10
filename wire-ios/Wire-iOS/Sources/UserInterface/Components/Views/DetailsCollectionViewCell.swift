@@ -135,6 +135,14 @@ class DetailsCollectionViewCell: SeparatorCollectionViewCell, DynamicTypeCapable
         setupAccessibility()
     }
 
+    override var isHighlighted: Bool {
+        didSet {
+            backgroundColor = isHighlighted
+            ? SemanticColors.View.backgroundUserCellHightLighted
+            : SemanticColors.View.backgroundUserCell
+        }
+    }
+
     // MARK: - Layout
 
     private func updateIcon(_ newValue: UIImage?) {

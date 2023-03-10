@@ -16,26 +16,25 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 
 // TODO-SWIFT: convert to struct
 @objc(ZMAccessToken) @objcMembers
 public class AccessToken: NSObject {
-    
+
     public let token: String
     public let type: String
     public let expirationDate: Date
-    
+
     @objc(initWithToken:type:expiresInSeconds:)
     public init(token: String, type: String, expiresInSeconds: UInt) {
         self.token = token
         self.type = type
         self.expirationDate = Date(timeIntervalSinceNow: Double(expiresInSeconds))
     }
-    
+
     @objc
     public var httpHeaders: [String: String] {
-        return ["Authorization" : "\(self.type) \(self.token)"]
+        return ["Authorization": "\(self.type) \(self.token)"]
     }
 }

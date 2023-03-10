@@ -29,20 +29,20 @@ struct TrustData: Decodable {
     }
     let certificateKey: SecKey
     let hosts: [Host]
-    
-    enum CodingKeys : String, CodingKey {
+
+    enum CodingKeys: String, CodingKey {
         case certificateKey
         case hosts
     }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let certificateKeyData = try container.decode(Data.self, forKey: .certificateKey)
-        
+
         guard let certificate = SecCertificateCreateWithData(nil, certificateKeyData as CFData) else {
             throw DecodingError.dataCorruptedError(forKey: CodingKeys.certificateKey, in: container, debugDescription: "Error decoding certificate for pinned key")
         }
-        
+
         guard let certificateKey = SecCertificateCopyKey(certificate) else {
             throw DecodingError.dataCorruptedError(forKey: CodingKeys.certificateKey, in: container, debugDescription: "Error extracting pinned key from certificate")
         }
@@ -55,7 +55,7 @@ extension TrustData {
     func matches(host: String) -> Bool {
         let matchingHosts = hosts.filter { $0.matches(host: host) }
         return !matchingHosts.isEmpty
-    }    
+    }
 }
 
 extension TrustData.Host {
@@ -68,4 +68,3 @@ extension TrustData.Host {
         }
     }
 }
-

@@ -19,48 +19,48 @@
 import Foundation
 
 /// Records the URLs of REST requests sent over the network
-@objc protocol RequestRecorder : NSObjectProtocol {
-    
+@objc protocol RequestRecorder: NSObjectProtocol {
+
     /// Records a REST request
     func recordRequest(path: String, contentHash: UInt, date: Date?)
-    
+
 }
 
 /// Monitors the REST requests that are sent over the network
 /// to detect suspicious request loops
-@objcMembers public class RequestLoopDetection : NSObject {
-    
+@objcMembers public class RequestLoopDetection: NSObject {
+
     /// List of requests
-    fileprivate var recordedRequests : [IdentifierDate] = []
-    
+    fileprivate var recordedRequests: [IdentifierDate] = []
+
     /// After this time, requests are purged from the list
-    static let decayTimer : TimeInterval = 60 // 1 minute
-    
+    static let decayTimer: TimeInterval = 60 // 1 minute
+
     /// Repeatition warning trigger threshold
     /// If a request is repeated more than this number of times,
     /// it will trigger a warning
     static let repetitionTriggerThreshold = 20
-    
+
     /// Hard limit of URLs to keep in the history
     static let historyLimit = 120
-    
+
     /// Trigger that will be invoked when a loop is detected
     /// The URL passed is the URL that created the loop
-    fileprivate let triggerCallback : (String) -> (Void)
-    
-    public init(triggerCallback: @escaping (String)->(Void)) {
+    fileprivate let triggerCallback: (String) -> Void
+
+    public init(triggerCallback: @escaping (String) -> Void) {
         self.triggerCallback = triggerCallback
     }
 }
 
 // MARK: - Loop detection
-extension RequestLoopDetection : RequestRecorder{
-    
+extension RequestLoopDetection: RequestRecorder {
+
     /// Resets the detector, discarding all recorder requests
     public func reset() {
         self.recordedRequests = []
     }
-    
+
     public func recordRequest(path: String, contentHash: UInt, date: Date?) {
         purgeOldRequests()
         if self.recordedRequests.count == type(of: self).historyLimit {
@@ -70,7 +70,7 @@ extension RequestLoopDetection : RequestRecorder{
         self.insert(identifier: identifier)
         triggerIfTooMany(identifier: identifier)
     }
-    
+
     /// Removes requests that are too old from the recorded requests
     private func purgeOldRequests() {
         let purgeDate = Date(timeIntervalSinceNow: -type(of: self).decayTimer)
@@ -83,7 +83,7 @@ extension RequestLoopDetection : RequestRecorder{
             reset()
         }
     }
-    
+
     /// Insert request in the right date order in the array.
     /// - note: Complexity: O(n). Could be made O(log(n)) with
     /// binary search
@@ -91,7 +91,7 @@ extension RequestLoopDetection : RequestRecorder{
         if identifier.date.timeIntervalSinceNow < -type(of: self).decayTimer {
             return // not even adding, this is too old
         }
-        
+
         // I assume most (if not all) request are inserted in ascending order, so I will
         // search backwards
         var insertionIndex = 0
@@ -103,7 +103,7 @@ extension RequestLoopDetection : RequestRecorder{
         }
         self.recordedRequests.insert(identifier, at: insertionIndex)
     }
-    
+
     /// Check if there are too many occurrences of a given identifier
     private func triggerIfTooMany(identifier: IdentifierDate) {
         if self.recordedRequests
@@ -117,16 +117,14 @@ extension RequestLoopDetection : RequestRecorder{
     }
 }
 
+private struct IdentifierDate {
+    let identifier: String
+    let date: Date
+    let path: String
 
-fileprivate struct IdentifierDate {
-    let identifier : String
-    let date : Date
-    let path : String
-    
     init(path: String, contentHash: UInt, date: Date) {
         self.identifier = "\(path)[\(contentHash)]"
         self.date = date
         self.path = path
     }
 }
-

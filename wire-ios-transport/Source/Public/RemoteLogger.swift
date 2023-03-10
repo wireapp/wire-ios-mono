@@ -28,7 +28,7 @@ extension RemoteLogger {
     }
 }
 
-public class RemoteMonitoring: NSObject  {
+public class RemoteMonitoring: NSObject {
     @objc public enum Level: Int {
         case debug
         case info
@@ -37,7 +37,6 @@ public class RemoteMonitoring: NSObject  {
         case error
         case critical
     }
-
 
     var level: Level
 
@@ -79,5 +78,3 @@ public class RemoteMonitoring: NSObject  {
         }
     }
 }
-
-

@@ -28,7 +28,7 @@ class NativePushChannel: NSObject, PushChannelType {
             scheduleOpen()
         }
     }
-    
+
     var accessToken: AccessToken? {
         didSet {
             Logging.pushChannel.debug("Setting access token")
@@ -145,7 +145,6 @@ class NativePushChannel: NSObject, PushChannelType {
 
         return urlComponents?.url
     }
-
 
     func listen() {
         websocketTask?.receive(completionHandler: { [weak self] (result) in

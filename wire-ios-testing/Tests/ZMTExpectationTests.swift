@@ -16,40 +16,39 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 // 
 
-
 import XCTest
 
 class ZMTExpectationTests: ZMTBaseTest {
 
     let notificationName = "ZMTFooBar"
-    
+
     func testNotificationExpectationNotSent() {
-        
-        var handlerIsCalled = false;
+
+        var handlerIsCalled = false
         self.expectation(forNotification: NSNotification.Name(rawValue: notificationName), object: nil, handler: {
-            _ in handlerIsCalled = true;
-            return true;
+            _ in handlerIsCalled = true
+            return true
         })
-        
+
         let receivedBeforeSending = self.waitForCustomExpectations(withTimeout: 0.01)
-        XCTAssertFalse(receivedBeforeSending);
-        XCTAssertFalse(handlerIsCalled);
+        XCTAssertFalse(receivedBeforeSending)
+        XCTAssertFalse(handlerIsCalled)
     }
-    
+
     func testNotificationExpectationSent() {
-        
-        var handlerIsCalled = false;
+
+        var handlerIsCalled = false
         self.expectation(forNotification: NSNotification.Name(rawValue: notificationName), object: nil, handler: {
-            _ in handlerIsCalled = true;
-            return true;
+            _ in handlerIsCalled = true
+            return true
         })
-        
+
         NotificationCenter.default.post(name: Notification.Name(rawValue: notificationName), object: nil)
-        XCTAssertTrue(handlerIsCalled);
-        
+        XCTAssertTrue(handlerIsCalled)
+
         let receivedAfterSending = self.waitForCustomExpectations(withTimeout: 0.2)
         XCTAssertTrue(receivedAfterSending)
-        
+
     }
-    
+
 }

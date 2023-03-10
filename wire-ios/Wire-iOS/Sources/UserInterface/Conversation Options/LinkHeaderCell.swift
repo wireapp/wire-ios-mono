@@ -25,17 +25,10 @@ final class LinkHeaderCell: UITableViewCell, CellConfigurationConfigurable {
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
 
-    private var variant: ColorSchemeVariant = .light {
-        didSet {
-            styleViews()
-        }
-    }
-
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupViews()
         createConstraints()
-        styleViews()
     }
 
     @available(*, unavailable)
@@ -55,19 +48,19 @@ final class LinkHeaderCell: UITableViewCell, CellConfigurationConfigurable {
     private func createConstraints() {
         [topSeparator, titleLabel, subtitleLabel].prepareForLayout()
         NSLayoutConstraint.activate([
-          topSeparator.topAnchor.constraint(equalTo: contentView.topAnchor),
-          topSeparator.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-          topSeparator.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-          topSeparator.heightAnchor.constraint(equalToConstant: .hairline),
+            topSeparator.topAnchor.constraint(equalTo: contentView.topAnchor),
+            topSeparator.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            topSeparator.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            topSeparator.heightAnchor.constraint(equalToConstant: .hairline),
 
-          titleLabel.topAnchor.constraint(equalTo: topSeparator.bottomAnchor, constant: 24),
-          titleLabel.leadingAnchor.constraint(equalTo: topSeparator.leadingAnchor),
-          titleLabel.trailingAnchor.constraint(equalTo: topSeparator.trailingAnchor),
+            titleLabel.topAnchor.constraint(equalTo: topSeparator.bottomAnchor, constant: 24),
+            titleLabel.leadingAnchor.constraint(equalTo: topSeparator.leadingAnchor),
+            titleLabel.trailingAnchor.constraint(equalTo: topSeparator.trailingAnchor),
 
-          subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
-          subtitleLabel.leadingAnchor.constraint(equalTo: topSeparator.leadingAnchor),
-          subtitleLabel.trailingAnchor.constraint(equalTo: topSeparator.trailingAnchor),
-          subtitleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24)
+            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+            subtitleLabel.leadingAnchor.constraint(equalTo: topSeparator.leadingAnchor),
+            subtitleLabel.trailingAnchor.constraint(equalTo: topSeparator.trailingAnchor),
+            subtitleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24)
         ])
     }
 
@@ -78,8 +71,7 @@ final class LinkHeaderCell: UITableViewCell, CellConfigurationConfigurable {
         backgroundColor = .clear
     }
 
-    func configure(with configuration: CellConfiguration, variant: ColorSchemeVariant) {
-        self.variant = variant
+    func configure(with configuration: CellConfiguration) {
+        styleViews()
     }
-
 }

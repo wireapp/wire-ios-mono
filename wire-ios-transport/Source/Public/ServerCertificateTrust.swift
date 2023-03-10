@@ -20,11 +20,11 @@ import Foundation
 
 final class ServerCertificateTrust: NSObject, BackendTrustProvider {
     let trustData: [TrustData]
-    
+
     init(trustData: [TrustData]) {
         self.trustData = trustData
     }
-    
+
     public func verifyServerTrust(trust: SecTrust, host: String?) -> Bool {
         guard let host = host else { return false }
         let pinnedKeys = trustData
@@ -34,11 +34,10 @@ final class ServerCertificateTrust: NSObject, BackendTrustProvider {
             .map { trustData in
                 trustData.certificateKey
             }
-        
+
         return verifyServerTrustWithPinnedKeys(trust, pinnedKeys)
     }
-    
-    
+
     /// Returns the public key of the leaf certificate associated with the trust object
     /// 
     /// To dump certificate data, use
@@ -57,20 +56,20 @@ final class ServerCertificateTrust: NSObject, BackendTrustProvider {
     /// - Returns: public key form the trust
     private func publicKeyAssociatedWithServerTrust(_ serverTrust: SecTrust) -> SecKey? {
         let policy = SecPolicyCreateBasicX509()
-        
+
         // leaf certificate
         let certificate: SecCertificate? = SecTrustGetCertificateAtIndex(serverTrust, 0)
-        
+
         let certificatesCArray = [certificate] as CFArray
-        var secTrust: SecTrust? = nil
-        
+        var secTrust: SecTrust?
+
         guard SecTrustCreateWithCertificates(certificatesCArray, policy, &secTrust) == noErr,
               let trust = secTrust else {
             return nil
         }
-        
+
         let key: SecKey?
-        
+
         if #available(iOS 14.0, *) {
             key = SecTrustCopyKey(trust)
         } else {
@@ -78,27 +77,26 @@ final class ServerCertificateTrust: NSObject, BackendTrustProvider {
             var error: CFError?
             _ = SecTrustEvaluateWithError(trust, &error)
             SecTrustGetTrustResult(trust, &result)
-            
+
             key = SecTrustCopyPublicKey(trust)
         }
-        
+
         return key
     }
-    
-    
+
     private func verifyServerTrustWithPinnedKeys(_ serverTrust: SecTrust, _ pinnedKeys: [SecKey]) -> Bool {
         guard SecTrustEvaluateWithError(serverTrust, nil) else {
             return false
         }
-        
+
         guard !pinnedKeys.isEmpty else {
             return true
         }
-        
+
         guard let publicKey = publicKeyAssociatedWithServerTrust(serverTrust) else {
             return false
         }
-        
+
         return pinnedKeys.contains(publicKey)
     }
 }

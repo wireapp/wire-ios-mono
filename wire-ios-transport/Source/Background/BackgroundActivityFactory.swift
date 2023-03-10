@@ -49,7 +49,7 @@ private let zmLog = ZMSLog(tag: "background-activity")
     // MARK: - Configuration
 
     /// The activity manager to use to.
-    @objc public weak var activityManager: BackgroundActivityManager? = nil
+    @objc public weak var activityManager: BackgroundActivityManager?
 
     // MARK: - State
 
@@ -59,7 +59,7 @@ private let zmLog = ZMSLog(tag: "background-activity")
             return hasValidCurrentBackgroundTask
         }
     }
-    
+
     private var hasValidCurrentBackgroundTask: Bool {
         return self.currentBackgroundTask != nil && self.currentBackgroundTask != UIBackgroundTaskIdentifier.invalid
     }
@@ -105,7 +105,7 @@ private let zmLog = ZMSLog(tag: "background-activity")
     public func startBackgroundActivity(withName name: String, expirationHandler: @escaping (() -> Void)) -> BackgroundActivity? {
         return startActivityIfPossible(name, expirationHandler)
     }
-    
+
     /**
      * Notifies when all background activites have completed or expired.
      * - parameter completionHandler: The code to exectute when the background activites are completed. The execution happens on the main queue.
@@ -117,7 +117,7 @@ private let zmLog = ZMSLog(tag: "background-activity")
             guard hasValidCurrentBackgroundTask else {
                 return completionHandler()
             }
-            
+
             allTasksEndedHandlers.append(completionHandler)
         }
     }
@@ -148,14 +148,14 @@ private let zmLog = ZMSLog(tag: "background-activity")
                 zmLog.safePublic("End background activity: current background task is invalid")
                 return
             }
-            
+
             let count = SafeValueForLogging(activities.count)
             if activities.remove(activity) != nil {
                 zmLog.safePublic("End background activity: removed \(activity), \(count) others left.")
             } else {
                 zmLog.safePublic("End background activity: could not remove \(activity), \(count) others left")
             }
-            
+
             if activities.isEmpty {
                 zmLog.safePublic("End background activity: no activities left, finishing")
                 finishBackgroundTask()
@@ -171,13 +171,13 @@ private let zmLog = ZMSLog(tag: "background-activity")
             let activityName = ActivityName(name: name)
             guard let activityManager = activityManager else {
                 zmLog.safePublic("Start activity <\(activityName)>: failed, activityManager is nil")
-                return nil 
+                return nil
             }
-            
+
             // Do not start new tasks if the background timer is running.
             guard currentBackgroundTask != UIBackgroundTaskIdentifier.invalid else {
                 zmLog.safePublic("Start activity <\(activityName)>: failed, currentBackgroundTask is invalid")
-                return nil         
+                return nil
             }
 
             // Try to create the task
@@ -188,7 +188,7 @@ private let zmLog = ZMSLog(tag: "background-activity")
                 let task = activityManager.beginBackgroundTask(withName: name, expirationHandler: handleExpiration)
                 guard task != UIBackgroundTaskIdentifier.invalid else {
                     zmLog.safePublic("Start activity <\(activityName)>: failed to begin new background task")
-                    return nil         
+                    return nil
                 }
                 let value = SafeValueForLogging(task.rawValue)
                 zmLog.safePublic("Start activity <\(activityName)>: started new background task: \(value)")
@@ -211,7 +211,7 @@ private let zmLog = ZMSLog(tag: "background-activity")
             zmLog.safePublic("Handle expiration: failed, activityManager is nil")
             return
         }
-        
+
         let value = SafeValueForLogging(activityManager.stateDescription)
         zmLog.safePublic("Handle expiration: \(value)")
         let activities = isolationQueue.sync {
@@ -229,7 +229,7 @@ private let zmLog = ZMSLog(tag: "background-activity")
 
     /// Ends the current background task.
     private func finishBackgroundTask() {
-        
+
         let allTasksEndedHandlers = self.allTasksEndedHandlers
         self.allTasksEndedHandlers.removeAll()
         mainQueue.async {

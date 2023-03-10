@@ -22,49 +22,48 @@ import XCTest
 import WireTesting
 @testable import WireTransport
 
-
 final class AccessTokenTests: ZMTBaseTest {
-    
+
     func testThatItStoresTokenAndType() {
         // given
         let token = "MyVeryUniqueToken23423540899874"
         let type = "TestTypew930847923874982374"
-    
+
         // when
         let accessToken = AccessToken(token: token, type: type, expiresInSeconds: 0)
-    
+
         // then
         XCTAssertEqual(accessToken.token, token)
         XCTAssertEqual(accessToken.type, type)
     }
-    
+
     func testThatItCalculatesExpirationDate() {
-        
+
         // given
         let expiresIn: UInt = 15162342
-    
+
         // when
         let accessToken = AccessToken(token: "foo", type: "bar", expiresInSeconds: expiresIn)
-    
+
         // then
         let expiration = Date(timeIntervalSinceNow: Double(expiresIn))
         XCTAssertEqual(
             accessToken.expirationDate.timeIntervalSinceReferenceDate,
             expiration.timeIntervalSinceReferenceDate,
             accuracy: 0.1)
-    
+
     }
-    
+
     func testThatItReturnsHTTPHeaders() {
         // given
         let token = "34rfsdfwe3242"
         let type = "secret-token"
         let accessToken = AccessToken(token: token, type: type, expiresInSeconds: 0)
         let expected: [String: String] = ["Authorization": [type, token].joined(separator: " ")]
-    
+
         // when
         let header = accessToken.httpHeaders
-    
+
         // then
         XCTAssertEqual(header, expected)
     }

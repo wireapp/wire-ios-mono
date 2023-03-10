@@ -26,17 +26,17 @@ public class Cache<Key: Hashable, Value> {
     private let maxCost: Int
     private let maxElementsCount: Int
     private var currentCost: Int = 0
-    
+
     private struct EntryMetadata<Value> {
         let value: Value
         let cost: Int
-        
+
         init(value: Value, cost: Int) {
             self.value = value
             self.cost = cost
         }
     }
-    
+
     /// Create a new cache
     ///
     /// When any of the limits are reached the oldest value in the Cache will be removed first.
@@ -52,7 +52,7 @@ public class Cache<Key: Hashable, Value> {
         self.maxElementsCount = maxElementsCount
         cacheBuffer = CircularArray<Key>(size: maxElementsCount)
     }
-    
+
     /// Add a value to the cache
     ///
     /// - Parameters:
@@ -67,14 +67,14 @@ public class Cache<Key: Hashable, Value> {
         assert(cost > 0, "Cost must be greather than 0")
         cache[key] = EntryMetadata(value: value, cost: cost)
         currentCost = currentCost + cost
-        
+
         var didPurgeItems = false
         didPurgeItems = didPurgeItems || purgeBasedOnElementsCount(adding: key)
         didPurgeItems = didPurgeItems || purgeBasedOnCost()
-        
+
         return didPurgeItems
     }
-    
+
     /// Retrieve a value from the cache
     ///
     /// - Parameters:
@@ -83,7 +83,7 @@ public class Cache<Key: Hashable, Value> {
     public func value(for key: Key) -> Value? {
         return cache[key]?.value
     }
-    
+
     /// Remove all values from the cache.
     public func purge() {
         cache.removeAll()
@@ -99,31 +99,31 @@ public class Cache<Key: Hashable, Value> {
         currentCost = currentCost - metadata.cost
 
         cache[discardedElement] = nil
-        
+
         return true
     }
-    
+
     private func purgeBasedOnCost() -> Bool {
         guard currentCost > maxCost else {
             return false
         }
-        
+
         var elementsToDiscard: Int = 0
 
         // Get the objects from the current cache buffer
         let currentCacheBuffer = cacheBuffer.content
-        
+
         for key in currentCacheBuffer {
             // Find the corresponding element's metadata
             let metadata = cache[key]!
-            
+
             // Advance one index forward
             elementsToDiscard = elementsToDiscard + 1
 
             // Erase cached object from the cache
             cache[key] = nil
             currentCost = currentCost - metadata.cost
-            
+
             // check if the cost is back to normal
             if currentCost <= maxCost {
                 break
@@ -135,8 +135,8 @@ public class Cache<Key: Hashable, Value> {
         let elementsToKeep = currentCacheBuffer.suffix(numberOfElementsToKeep)
 
         cacheBuffer = CircularArray(size: maxElementsCount, initialValue: Array(elementsToKeep))
-        
+
         return true
     }
-    
+
 }

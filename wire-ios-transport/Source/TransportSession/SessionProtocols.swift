@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 /// The following protocols are used in `UnauthenticatedTransportSession`
 /// to enable easy injection of mocks in tests.
 
@@ -43,5 +42,5 @@ extension URLSession: SessionProtocol {
         ) -> Void) -> DataTaskProtocol {
         return dataTask(with: request, completionHandler: completionHandler) as DataTaskProtocol
     }
-    
+
 }

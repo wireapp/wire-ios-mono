@@ -78,7 +78,7 @@ public enum EnvironmentType: Equatable {
 
 extension EnvironmentType {
     static let defaultsKey = "ZMBackendEnvironmentType"
-    
+
     public init(userDefaults: UserDefaults) {
         if let value = userDefaults.string(forKey: EnvironmentType.defaultsKey) {
             self.init(stringValue: value)
@@ -87,7 +87,7 @@ extension EnvironmentType {
             self = .production
         }
     }
-    
+
     public func save(in userDefaults: UserDefaults) {
         userDefaults.setValue(self.stringValue, forKey: EnvironmentType.defaultsKey)
     }
@@ -99,9 +99,9 @@ public class BackendEnvironment: NSObject {
     let proxySettings: ProxySettingsProvider?
     let certificateTrust: BackendTrustProvider
     let type: EnvironmentType
-    
+
     init(
-        title: String,environmentType: EnvironmentType,
+        title: String, environmentType: EnvironmentType,
         endpoints: BackendEndpointsProvider,
         proxySettings: ProxySettingsProvider?,
         certificateTrust: BackendTrustProvider
@@ -112,7 +112,7 @@ public class BackendEnvironment: NSObject {
         self.proxySettings = proxySettings
         self.certificateTrust = certificateTrust
     }
-    
+
     convenience init?(environmentType: EnvironmentType, data: Data) {
         struct SerializedData: Decodable {
             let title: String
@@ -138,34 +138,34 @@ public class BackendEnvironment: NSObject {
             Logging.backendEnvironment.error("Could not decode information from data: \(error)")
             return nil
         }
-    }    
+    }
 }
 
 extension BackendEnvironment: BackendEnvironmentProvider {
     public var environmentType: EnvironmentTypeProvider {
         return EnvironmentTypeProvider(environmentType: type)
     }
-    
+
     public var backendURL: URL {
         return endpoints.backendURL
     }
-    
+
     public var backendWSURL: URL {
         return endpoints.backendWSURL
     }
-    
+
     public var blackListURL: URL {
         return endpoints.blackListURL
     }
-    
+
     public var teamsURL: URL {
         return endpoints.teamsURL
     }
-    
+
     public var accountsURL: URL {
         return endpoints.accountsURL
     }
-    
+
     public var websiteURL: URL {
         return endpoints.websiteURL
     }

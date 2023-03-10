@@ -28,7 +28,7 @@ import UIKit
 
     /// End the background task.
     func endBackgroundTask(_ task: UIBackgroundTaskIdentifier)
-    
+
     // Make sure to only access this from main thread!
     var backgroundTimeRemaining: TimeInterval { get }
     var applicationState: UIApplication.State { get }
