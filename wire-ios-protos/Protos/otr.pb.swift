@@ -50,7 +50,7 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
   struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
   typealias Version = _2
 }
@@ -109,7 +109,7 @@ public struct Proteus_UserId {
 
   public init() {}
 
-  fileprivate var _uuid: Data? = nil
+  fileprivate var _uuid: Data?
 }
 
 public struct Proteus_QualifiedUserId {
@@ -139,8 +139,8 @@ public struct Proteus_QualifiedUserId {
 
   public init() {}
 
-  fileprivate var _id: String? = nil
-  fileprivate var _domain: String? = nil
+  fileprivate var _id: String?
+  fileprivate var _domain: String?
 }
 
 public struct Proteus_ClientId {
@@ -161,7 +161,7 @@ public struct Proteus_ClientId {
 
   public init() {}
 
-  fileprivate var _client: UInt64? = nil
+  fileprivate var _client: UInt64?
 }
 
 public struct Proteus_ClientEntry {
@@ -191,8 +191,8 @@ public struct Proteus_ClientEntry {
 
   public init() {}
 
-  fileprivate var _client: Proteus_ClientId? = nil
-  fileprivate var _text: Data? = nil
+  fileprivate var _client: Proteus_ClientId?
+  fileprivate var _text: Data?
 }
 
 public struct Proteus_UserEntry {
@@ -215,7 +215,7 @@ public struct Proteus_UserEntry {
 
   public init() {}
 
-  fileprivate var _user: Proteus_UserId? = nil
+  fileprivate var _user: Proteus_UserId?
 }
 
 public struct Proteus_QualifiedUserEntry {
@@ -238,7 +238,7 @@ public struct Proteus_QualifiedUserEntry {
 
   public init() {}
 
-  fileprivate var _domain: String? = nil
+  fileprivate var _domain: String?
 }
 
 /// deprecated, use QualifiedNewOtrMessage
@@ -300,11 +300,11 @@ public struct Proteus_NewOtrMessage {
 
   public init() {}
 
-  fileprivate var _sender: Proteus_ClientId? = nil
-  fileprivate var _nativePush: Bool? = nil
-  fileprivate var _blob: Data? = nil
-  fileprivate var _nativePriority: Proteus_Priority? = nil
-  fileprivate var _transient: Bool? = nil
+  fileprivate var _sender: Proteus_ClientId?
+  fileprivate var _nativePush: Bool?
+  fileprivate var _blob: Data?
+  fileprivate var _nativePriority: Proteus_Priority?
+  fileprivate var _transient: Bool?
 }
 
 public struct Proteus_QualifiedNewOtrMessage {
@@ -361,7 +361,7 @@ public struct Proteus_QualifiedNewOtrMessage {
 
   /// For more details please refer to backend swagger at
   /// https://staging-nginz-https.zinfra.io/api/swagger-ui/
-  public var clientMismatchStrategy: Proteus_QualifiedNewOtrMessage.OneOf_ClientMismatchStrategy? = nil
+  public var clientMismatchStrategy: Proteus_QualifiedNewOtrMessage.OneOf_ClientMismatchStrategy?
 
   public var reportAll: Proteus_ClientMismatchStrategy.ReportAll {
     get {
@@ -452,11 +452,11 @@ public struct Proteus_QualifiedNewOtrMessage {
 
   public init() {}
 
-  fileprivate var _sender: Proteus_ClientId? = nil
-  fileprivate var _nativePush: Bool? = nil
-  fileprivate var _blob: Data? = nil
-  fileprivate var _nativePriority: Proteus_Priority? = nil
-  fileprivate var _transient: Bool? = nil
+  fileprivate var _sender: Proteus_ClientId?
+  fileprivate var _nativePush: Bool?
+  fileprivate var _blob: Data?
+  fileprivate var _nativePriority: Proteus_Priority?
+  fileprivate var _transient: Bool?
 }
 
 public struct Proteus_ClientMismatchStrategy {
@@ -551,9 +551,9 @@ public struct Proteus_OtrAssetMeta {
 
   public init() {}
 
-  fileprivate var _sender: Proteus_ClientId? = nil
-  fileprivate var _isInline: Bool? = nil
-  fileprivate var _nativePush: Bool? = nil
+  fileprivate var _sender: Proteus_ClientId?
+  fileprivate var _isInline: Bool?
+  fileprivate var _nativePush: Bool?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -577,19 +577,19 @@ extension Proteus_OtrAssetMeta: @unchecked Sendable {}
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "proteus"
+private let _protobuf_package = "proteus"
 
 extension Proteus_Priority: SwiftProtobuf._ProtoNameProviding {
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "LOW_PRIORITY"),
-    2: .same(proto: "HIGH_PRIORITY"),
+    2: .same(proto: "HIGH_PRIORITY")
   ]
 }
 
 extension Proteus_UserId: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".UserId"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "uuid"),
+    1: .same(proto: "uuid")
   ]
 
   public var isInitialized: Bool {
@@ -631,7 +631,7 @@ extension Proteus_QualifiedUserId: SwiftProtobuf.Message, SwiftProtobuf._Message
   public static let protoMessageName: String = _protobuf_package + ".QualifiedUserId"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "id"),
-    2: .same(proto: "domain"),
+    2: .same(proto: "domain")
   ]
 
   public var isInitialized: Bool {
@@ -678,7 +678,7 @@ extension Proteus_QualifiedUserId: SwiftProtobuf.Message, SwiftProtobuf._Message
 extension Proteus_ClientId: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".ClientId"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "client"),
+    1: .same(proto: "client")
   ]
 
   public var isInitialized: Bool {
@@ -720,7 +720,7 @@ extension Proteus_ClientEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
   public static let protoMessageName: String = _protobuf_package + ".ClientEntry"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "client"),
-    2: .same(proto: "text"),
+    2: .same(proto: "text")
   ]
 
   public var isInitialized: Bool {
@@ -769,7 +769,7 @@ extension Proteus_UserEntry: SwiftProtobuf.Message, SwiftProtobuf._MessageImplem
   public static let protoMessageName: String = _protobuf_package + ".UserEntry"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "user"),
-    2: .same(proto: "clients"),
+    2: .same(proto: "clients")
   ]
 
   public var isInitialized: Bool {
@@ -818,7 +818,7 @@ extension Proteus_QualifiedUserEntry: SwiftProtobuf.Message, SwiftProtobuf._Mess
   public static let protoMessageName: String = _protobuf_package + ".QualifiedUserEntry"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "domain"),
-    2: .same(proto: "entries"),
+    2: .same(proto: "entries")
   ]
 
   public var isInitialized: Bool {
@@ -871,7 +871,7 @@ extension Proteus_NewOtrMessage: SwiftProtobuf.Message, SwiftProtobuf._MessageIm
     4: .same(proto: "blob"),
     5: .standard(proto: "native_priority"),
     6: .same(proto: "transient"),
-    7: .standard(proto: "report_missing"),
+    7: .standard(proto: "report_missing")
   ]
 
   public var isInitialized: Bool {
@@ -954,7 +954,7 @@ extension Proteus_QualifiedNewOtrMessage: SwiftProtobuf.Message, SwiftProtobuf._
     7: .standard(proto: "report_all"),
     8: .standard(proto: "ignore_all"),
     9: .standard(proto: "report_only"),
-    10: .standard(proto: "ignore_only"),
+    10: .standard(proto: "ignore_only")
   ]
 
   public var isInitialized: Bool {
@@ -1152,7 +1152,7 @@ extension Proteus_ClientMismatchStrategy.IgnoreAll: SwiftProtobuf.Message, Swift
 extension Proteus_ClientMismatchStrategy.ReportOnly: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = Proteus_ClientMismatchStrategy.protoMessageName + ".ReportOnly"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "user_ids"),
+    1: .standard(proto: "user_ids")
   ]
 
   public var isInitialized: Bool {
@@ -1189,7 +1189,7 @@ extension Proteus_ClientMismatchStrategy.ReportOnly: SwiftProtobuf.Message, Swif
 extension Proteus_ClientMismatchStrategy.IgnoreOnly: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = Proteus_ClientMismatchStrategy.protoMessageName + ".IgnoreOnly"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "user_ids"),
+    1: .standard(proto: "user_ids")
   ]
 
   public var isInitialized: Bool {
@@ -1229,7 +1229,7 @@ extension Proteus_OtrAssetMeta: SwiftProtobuf.Message, SwiftProtobuf._MessageImp
     1: .same(proto: "sender"),
     2: .same(proto: "recipients"),
     3: .same(proto: "isInline"),
-    4: .standard(proto: "native_push"),
+    4: .standard(proto: "native_push")
   ]
 
   public var isInitialized: Bool {

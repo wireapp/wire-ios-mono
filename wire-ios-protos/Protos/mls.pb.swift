@@ -50,7 +50,7 @@ import SwiftProtobuf
 // incompatible with the version of SwiftProtobuf to which you are linking.
 // Please ensure that you are building against the same version of the API
 // that was used to generate this file.
-fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
+private struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAPIVersionCheck {
   struct _2: SwiftProtobuf.ProtobufAPIVersion_2 {}
   typealias Version = _2
 }
@@ -165,9 +165,9 @@ public struct Mls_GroupInfoBundle {
 
   public init() {}
 
-  fileprivate var _groupInfoType: Mls_GroupInfoType? = nil
-  fileprivate var _ratchetTreeType: Mls_RatchetTreeType? = nil
-  fileprivate var _groupInfo: Data? = nil
+  fileprivate var _groupInfoType: Mls_GroupInfoType?
+  fileprivate var _ratchetTreeType: Mls_RatchetTreeType?
+  fileprivate var _groupInfo: Data?
 }
 
 public struct Mls_CommitBundle {
@@ -208,9 +208,9 @@ public struct Mls_CommitBundle {
 
   public init() {}
 
-  fileprivate var _commit: Data? = nil
-  fileprivate var _welcome: Data? = nil
-  fileprivate var _groupInfoBundle: Mls_GroupInfoBundle? = nil
+  fileprivate var _commit: Data?
+  fileprivate var _welcome: Data?
+  fileprivate var _groupInfoBundle: Mls_GroupInfoBundle?
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -222,13 +222,13 @@ extension Mls_CommitBundle: @unchecked Sendable {}
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-fileprivate let _protobuf_package = "mls"
+private let _protobuf_package = "mls"
 
 extension Mls_GroupInfoType: SwiftProtobuf._ProtoNameProviding {
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "PUBLIC_GROUP_STATE"),
     2: .same(proto: "GROUP_INFO"),
-    3: .same(proto: "GROUP_INFO_JWE"),
+    3: .same(proto: "GROUP_INFO_JWE")
   ]
 }
 
@@ -236,7 +236,7 @@ extension Mls_RatchetTreeType: SwiftProtobuf._ProtoNameProviding {
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "FULL"),
     2: .same(proto: "DELTA"),
-    3: .same(proto: "REFERENCE"),
+    3: .same(proto: "REFERENCE")
   ]
 }
 
@@ -245,7 +245,7 @@ extension Mls_GroupInfoBundle: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .standard(proto: "group_info_type"),
     2: .standard(proto: "ratchet_tree_type"),
-    3: .standard(proto: "group_info"),
+    3: .standard(proto: "group_info")
   ]
 
   public var isInitialized: Bool {
@@ -300,7 +300,7 @@ extension Mls_CommitBundle: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "commit"),
     2: .same(proto: "welcome"),
-    3: .standard(proto: "group_info_bundle"),
+    3: .standard(proto: "group_info_bundle")
   ]
 
   public var isInitialized: Bool {

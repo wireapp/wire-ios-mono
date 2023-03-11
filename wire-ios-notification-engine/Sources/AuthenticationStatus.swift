@@ -37,7 +37,7 @@ class AuthenticationStatus: AuthenticationStatusProvider {
         return isLoggedIn ? .authenticated : .unauthenticated
     }
 
-    private var isLoggedIn : Bool {
+    private var isLoggedIn: Bool {
         return transportSession.cookieStorage.authenticationCookieData != nil
     }
 

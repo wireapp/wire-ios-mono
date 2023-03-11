@@ -129,7 +129,7 @@ class AddParticipantActionHandlerTests: MessagingTestBase {
     }
 
     func testThatItProcessMemberJoinEventInTheResponse() throws {
-        syncMOC.performGroupedAndWait { [self] syncMOC in
+        syncMOC.performGroupedAndWait { [self] _ in
             // given
             let selfUser = ZMUser.selfUser(in: self.syncMOC)
             let action = AddParticipantAction(users: [user], conversation: conversation)
@@ -156,7 +156,7 @@ class AddParticipantActionHandlerTests: MessagingTestBase {
     }
 
     func testThatItRefetchTeamUsers_On403() {
-        syncMOC.performGroupedAndWait { [self] syncMOC in
+        syncMOC.performGroupedAndWait { [self] _ in
             // given
             let team = Team.insertNewObject(in: self.syncMOC)
             let selfUser = ZMUser.selfUser(in: self.syncMOC)
@@ -188,7 +188,7 @@ class AddParticipantActionHandlerTests: MessagingTestBase {
     }
 
     func testThatItCallsResultHandler_On200() {
-        syncMOC.performGroupedAndWait { [self] syncMOC in
+        syncMOC.performGroupedAndWait { [self] _ in
             // given
             let selfUser = ZMUser.selfUser(in: self.syncMOC)
             var action = AddParticipantAction(users: [user], conversation: conversation)

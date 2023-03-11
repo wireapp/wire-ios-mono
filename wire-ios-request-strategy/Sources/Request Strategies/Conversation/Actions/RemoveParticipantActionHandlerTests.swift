@@ -119,7 +119,7 @@ class RemoveParticipantActionHandlerTests: MessagingTestBase {
     }
 
     func testThatItProcessMemberLeaveEventInTheResponse() throws {
-        syncMOC.performGroupedAndWait { [self] syncMOC in
+        syncMOC.performGroupedAndWait { [self] _ in
             // given
             conversation.addParticipantAndUpdateConversationState(user: self.user, role: nil)
 
@@ -203,7 +203,7 @@ class RemoveParticipantActionHandlerTests: MessagingTestBase {
     }
 
     func testThatItCallsResultHandler_On200() {
-        syncMOC.performGroupedAndWait { [self] syncMOC in
+        syncMOC.performGroupedAndWait { [self] _ in
             // given
             conversation.addParticipantAndUpdateConversationState(user: self.user, role: nil)
             let selfUser = ZMUser.selfUser(in: self.syncMOC)

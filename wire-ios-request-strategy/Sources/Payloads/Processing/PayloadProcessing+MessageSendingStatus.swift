@@ -77,7 +77,7 @@ extension Payload.MessageSendingStatus {
 
 extension Payload.ClientListByUserID {
 
-    func materializingUsers(withDomain domain: String?, in context: NSManagedObjectContext)  -> Payload.ClientListByUser {
+    func materializingUsers(withDomain domain: String?, in context: NSManagedObjectContext) -> Payload.ClientListByUser {
 
         return reduce(into: Payload.ClientListByUser()) { (result, tuple: (userID: String, clientIDs: [String])) in
             guard let userID = UUID(uuidString: tuple.userID) else { return }

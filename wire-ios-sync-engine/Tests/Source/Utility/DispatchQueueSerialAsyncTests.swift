@@ -23,7 +23,7 @@ class DispatchQueueSerialAsyncTests: XCTestCase {
 
     func testThatItWaitsForOneTaskBeforeAnother() {
         let sut = DispatchQueue(label: "test")
-        
+
         let doneExpectation = self.expectation(description: "Done with jobs")
 
         var done1: Bool = false

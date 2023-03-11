@@ -335,7 +335,7 @@ class PayloadProcessing_ConversationTests: MessagingTestBase {
     // MARK: 1:1 / Connection Conversations
 
     func testUpdateOrCreateConversation_OneToOne_CreatesConversation() throws {
-        syncMOC.performGroupedAndWait { syncMOC in
+        syncMOC.performGroupedAndWait { _ in
             // given
             BackendInfo.isFederationEnabled = true
             self.otherUser.connection?.conversation = nil
@@ -363,7 +363,7 @@ class PayloadProcessing_ConversationTests: MessagingTestBase {
     }
 
     func testUpdateOrCreateConversation_OneToOne_DoesntAssignDomain_WhenFederationIsDisabled() throws {
-        syncMOC.performGroupedAndWait { syncMOC in
+        syncMOC.performGroupedAndWait { _ in
             // given
             BackendInfo.isFederationEnabled = false
             self.otherUser.connection?.conversation = nil
@@ -426,7 +426,7 @@ class PayloadProcessing_ConversationTests: MessagingTestBase {
     }
 
     func testUpdateOrCreateConversation_OneToOne_MergesWithExistingConversation() throws {
-        try syncMOC.performGroupedAndWait { syncMOC in
+        try syncMOC.performGroupedAndWait { _ in
             // given
 
             // We already have a local 1:1 conversation
@@ -503,7 +503,7 @@ class PayloadProcessing_ConversationTests: MessagingTestBase {
     // MARK: Self conversation
 
     func testUpdateOrCreateConversation_Self_CreatesConversation() throws {
-        try syncMOC.performGroupedAndWait { syncMOC in
+        try syncMOC.performGroupedAndWait { _ in
             // given
             BackendInfo.isFederationEnabled = true
             let qualifiedID = QualifiedID(uuid: UUID(), domain: self.owningDomain)
@@ -519,7 +519,7 @@ class PayloadProcessing_ConversationTests: MessagingTestBase {
     }
 
     func testUpdateOrCreateConversation_Self_DoesntAssignDomain_WhenFederationIsDisabled() throws {
-        try syncMOC.performGroupedAndWait { syncMOC in
+        try syncMOC.performGroupedAndWait { _ in
             // given
             BackendInfo.isFederationEnabled = false
             let qualifiedID = QualifiedID(uuid: UUID(), domain: self.owningDomain)

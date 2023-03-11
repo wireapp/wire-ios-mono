@@ -173,7 +173,7 @@ final class ZMUserSessionTests_SecurityClassification: ZMUserSessionTestsBase {
         let localDomain = UUID().uuidString
 
         let otherUsersDomains = otherUsers.compactMap { $0.domain }
-        let classifiedDomains = [otherUsersDomains, [localDomain]].flatMap{ $0 }
+        let classifiedDomains = [otherUsersDomains, [localDomain]].flatMap { $0 }
 
         storeClassifiedDomains(with: .enabled, domains: classifiedDomains)
         BackendInfo.isFederationEnabled = true
@@ -209,7 +209,7 @@ final class ZMUserSessionTests_SecurityClassification: ZMUserSessionTestsBase {
         let localDomain = UUID().uuidString
 
         let otherUsersDomains = otherUsers.compactMap { $0.domain }
-        let classifiedDomains = [otherUsersDomains, [localDomain]].flatMap{ $0 }
+        let classifiedDomains = [otherUsersDomains, [localDomain]].flatMap { $0 }
 
         storeClassifiedDomains(with: .enabled, domains: classifiedDomains)
         BackendInfo.isFederationEnabled = false

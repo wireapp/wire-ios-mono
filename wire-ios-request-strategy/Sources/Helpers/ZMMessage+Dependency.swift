@@ -78,7 +78,7 @@ extension ZMMessage {
         // is set using the local timestamp so we can safely check with the current messge timestamp (not delivered,
         // so also a local timestamp). Of course the user could change the local clock in between sending messages
         // but this is quite an edge case.
-        let MaxDelayToConsiderForBlockingObject = Double(3 * 60); // 3 minutes
+        let MaxDelayToConsiderForBlockingObject = Double(3 * 60)
 
         var blockingMessage: ZMMessage?
 

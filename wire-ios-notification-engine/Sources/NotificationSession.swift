@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 import WireRequestStrategy
 
@@ -65,7 +64,7 @@ public class NotificationSession {
 
     /// Directory of all application statuses.
 
-    private let applicationStatusDirectory : ApplicationStatusDirectory
+    private let applicationStatusDirectory: ApplicationStatusDirectory
 
     /// The list to which save notifications of the UI moc are appended and persisted.
 
@@ -90,12 +89,12 @@ public class NotificationSession {
     private let logger = WireLogger(tag: "notification-engine")
 
     // MARK: - Life cycle
-        
+
     /// Initializes a new `SessionDirectory` to be used in an extension environment
     /// - parameter databaseDirectory: The `NSURL` of the shared group container
     /// - throws: `InitializationError.noAccount` in case the account does not exist
     /// - returns: The initialized session object if no error is thrown
-    
+
     public convenience init(
         applicationGroupIdentifier: String,
         accountIdentifier: UUID,
@@ -114,7 +113,7 @@ public class NotificationSession {
             applicationContainer: sharedContainerURL
         )
 
-        coreDataStack.loadStores { error in
+        coreDataStack.loadStores { _ in
             // TODO jacob error handling
         }
 
@@ -170,7 +169,7 @@ public class NotificationSession {
         )
 
         let requestGeneratorStore = RequestGeneratorStore(strategies: [pushNotificationStrategy])
-        
+
         let operationLoop = RequestGeneratingOperationLoop(
             userContext: coreDataStack.viewContext,
             syncContext: coreDataStack.syncContext,
@@ -178,9 +177,9 @@ public class NotificationSession {
             requestGeneratorStore: requestGeneratorStore,
             transportSession: transportSession
         )
-        
+
         let saveNotificationPersistence = ContextDidSaveNotificationPersistence(accountContainer: accountContainer)
-        
+
         try self.init(
             coreDataStack: coreDataStack,
             transportSession: transportSession,
@@ -223,7 +222,7 @@ public class NotificationSession {
     }
 
     // MARK: - Methods
-    
+
     public func processPushNotification(with payload: [AnyHashable: Any]) {
         logger.info("Received push notification with payload: \(payload)")
 
@@ -237,7 +236,7 @@ public class NotificationSession {
             self.fetchEvents(fromPushChannelPayload: payload)
         }
     }
-    
+
     func fetchEvents(fromPushChannelPayload payload: [AnyHashable: Any]) {
         guard let nonce = self.messageNonce(fromPushChannelData: payload) else {
             delegate?.notificationSessionDidFailWithError(error: .noEventID)
@@ -272,7 +271,7 @@ public class NotificationSession {
 
         return UUID(uuidString: rawUUID)
     }
-    
+
     private enum PushChannelKeys: String {
         case data = "data"
         case identifier = "id"
@@ -501,4 +500,3 @@ public struct CallEventPayload {
     }
 
 }
-

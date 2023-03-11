@@ -62,7 +62,7 @@ extension JSONEncoder {
     }
 }
 
-// MARK:  Decodable / Encodable
+// MARK: Decodable / Encodable
 
 extension Decodable {
 

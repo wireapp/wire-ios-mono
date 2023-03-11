@@ -86,7 +86,7 @@ class ConnectToUserActionHandlerTests: MessagingTestBase {
     }
 
     func testThatItProcessConnectionEventInTheResponse() throws {
-        syncMOC.performGroupedAndWait { [self] syncMOC in
+        syncMOC.performGroupedAndWait { [self] _ in
             // given
             let userID = UUID()
             let domain = self.owningDomain
