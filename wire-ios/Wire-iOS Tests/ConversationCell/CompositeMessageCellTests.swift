@@ -51,12 +51,12 @@ final class CompositeMessageCellTests: XCTestCase {
 
         verify(message: message,
                allWidths: false,
-               snapshotBackgroundColor: UIColor.from(scheme: .contentBackground))
+               snapshotBackgroundColor: SemanticColors.View.backgroundConversationView)
     }
 
     func testThatItRendersButton() {
         verify(message: makeMessage(sender: mockSelfUser),
-               snapshotBackgroundColor: UIColor.from(scheme: .contentBackground))
+               snapshotBackgroundColor: SemanticColors.View.backgroundConversationView)
     }
 
     func testThatButtonStyleIsUpdatedAfterStateChange() {
