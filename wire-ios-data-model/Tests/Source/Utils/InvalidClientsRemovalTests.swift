@@ -73,7 +73,7 @@ class InvalidClientsRemovalTests: DiskDatabaseTest {
         syncMOC.performGroupedBlockAndWait {
             // given
             let selfClient = self.createSelfClient(in: syncMOC)
-            var preKeys : [(id: UInt16, prekey: String)] = []
+            var preKeys: [(id: UInt16, prekey: String)] = []
             selfClient.keysStore.encryptionContext.perform {
                 preKeys = try! $0.generatePrekeys(0 ..< 2)
             }

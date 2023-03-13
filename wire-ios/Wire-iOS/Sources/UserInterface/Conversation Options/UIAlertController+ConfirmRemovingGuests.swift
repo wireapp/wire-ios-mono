@@ -20,29 +20,31 @@ import UIKit
 
 extension UIAlertController {
 
+    typealias GuestRoom = L10n.Localizable.GuestRoom
+
     static func checkYourConnection() -> UIAlertController {
         let controller = UIAlertController(
-            title: "guest_room.error.generic.title".localized,
-            message: "guest_room.error.generic.message".localized,
+            title: GuestRoom.Error.Generic.title,
+            message: GuestRoom.Error.Generic.message,
             preferredStyle: .alert
         )
         controller.addAction(.ok())
-        controller.view.tintColor = UIColor.from(scheme: .textForeground, variant: .light)
+        controller.view.tintColor = SemanticColors.Label.textDefault
         return controller
     }
 
     static func confirmRemovingGuests(_ completion: @escaping (Bool) -> Void) -> UIAlertController {
         return confirmController(
-            title: "guest_room.remove_guests.message".localized,
-            confirmTitle: "guest_room.remove_guests.action".localized,
+            title: GuestRoom.RemoveGuests.message,
+            confirmTitle: GuestRoom.RemoveGuests.action,
             completion: completion
         )
     }
 
     static func confirmRevokingLink(_ completion: @escaping (Bool) -> Void) -> UIAlertController {
         return confirmController(
-            title: "guest_room.revoke_link.message".localized,
-            confirmTitle: "guest_room.revoke_link.action".localized,
+            title: GuestRoom.RevokeLink.message,
+            confirmTitle: GuestRoom.RevokeLink.action,
             completion: completion
         )
     }
@@ -55,7 +57,7 @@ extension UIAlertController {
 
         controller.addAction(confirmAction)
         controller.addAction(.cancel { completion(false) })
-        controller.view.tintColor = UIColor.from(scheme: .textForeground, variant: .light)
+        controller.view.tintColor = SemanticColors.Label.textDefault
         return controller
     }
 

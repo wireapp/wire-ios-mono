@@ -16,18 +16,16 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import XCTest
-
 
 class IteratorContainmentTests: XCTestCase {
 
     func testThatItReturnsFalseForAnyInEmptySequence() {
-        XCTAssertFalse([].any { _ in return true } )
+        XCTAssertFalse([].any { _ in return true })
     }
 
     func testThatItReturnsTrueForAllInEmptySequence() {
-        XCTAssertTrue([].all { _ in return false } )
+        XCTAssertTrue([].all { _ in return false })
     }
 
     func testThatItReturnsTrueIfThereIsAnElementThatMatchesAny() {

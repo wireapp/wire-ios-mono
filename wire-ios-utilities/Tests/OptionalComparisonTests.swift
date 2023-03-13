@@ -16,12 +16,11 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import XCTest
 import WireTesting
 
 class OptionalComparisonTests: XCTestCase {
-    
+
     func testThatItComparesTwoOptionalsGreaterThanAndLessThan() {
         // given
         let operands: [(Int?, Int?, Bool)] = [
@@ -32,18 +31,18 @@ class OptionalComparisonTests: XCTestCase {
             (0, nil, true),
             (2, nil, true)
         ]
-        
+
         // then
         operands.forEach { (lhs, rhs, expected) in
             XCTAssertEqual(lhs > rhs, expected, "Comparison failed, expected \(String(describing: lhs)) to be greater than \(String(describing: rhs))")
             XCTAssertEqual(lhs < rhs, !expected, "Comparison failed, expected \(String(describing: lhs)) to be less than \(String(describing: rhs))")
         }
     }
-    
+
     func testOptionalComparisonWhenBothOperandsAreNil() {
         let lhs: Int? = nil
         let rhs: Int? = nil
-        
+
         XCTAssertFalse(lhs > rhs)
         XCTAssertFalse(lhs < rhs)
     }

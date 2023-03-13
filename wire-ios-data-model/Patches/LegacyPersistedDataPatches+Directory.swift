@@ -41,7 +41,7 @@ extension LegacyPersistedDataPatch {
         LegacyPersistedDataPatch(version: "273.2.0", block: InvalidDomainRemoval.removeDuplicatedEntitiesWithInvalidDomain),
         LegacyPersistedDataPatch(version: "279.0.4", block: InvalidFeatureRemoval.restoreDefaultConferenceCallingConfig),
         LegacyPersistedDataPatch(version: "285.0.0", block: ZMConversation.introduceAccessRoleV2),
-        LegacyPersistedDataPatch(version: "290.0.1", block: ZMUser.refetchSelfUserDomain),
+        LegacyPersistedDataPatch(version: "290.0.1", block: ZMUser.refetchSelfUserDomain)
     ]
 
 }

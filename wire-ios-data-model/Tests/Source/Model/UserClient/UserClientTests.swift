@@ -132,7 +132,7 @@ final class UserClientTests: ZMBaseManagedObjectTest {
             // given
             let selfClient = self.createSelfClient(onMOC: self.syncMOC)
 
-            var preKeys : [(id: UInt16, prekey: String)] = []
+            var preKeys: [(id: UInt16, prekey: String)] = []
             selfClient.keysStore.encryptionContext.perform({ (sessionsDirectory) in
                 preKeys = try! sessionsDirectory.generatePrekeys(0 ..< 2)
             })
@@ -164,7 +164,7 @@ final class UserClientTests: ZMBaseManagedObjectTest {
         self.syncMOC.performGroupedBlockAndWait {
             // given
             let selfClient = self.createSelfClient(onMOC: self.syncMOC)
-            var preKeys : [(id: UInt16, prekey: String)] = []
+            var preKeys: [(id: UInt16, prekey: String)] = []
             selfClient.keysStore.encryptionContext.perform({ (sessionsDirectory) in
                 preKeys = try! sessionsDirectory.generatePrekeys(0 ..< 2)
             })
@@ -286,7 +286,7 @@ final class UserClientTests: ZMBaseManagedObjectTest {
         self.syncMOC.performGroupedBlockAndWait {
             let selfClient = self.createSelfClient(onMOC: self.syncMOC)
 
-            var preKeys : [(id: UInt16, prekey: String)] = []
+            var preKeys: [(id: UInt16, prekey: String)] = []
             selfClient.keysStore.encryptionContext.perform({ (sessionsDirectory) in
                 preKeys = try! sessionsDirectory.generatePrekeys(0 ..< 2)
             })
@@ -665,7 +665,7 @@ extension UserClientTests {
             // GIVEN
             let selfClient = self.createSelfClient(onMOC: self.syncMOC)
 
-            var preKeys : [(id: UInt16, prekey: String)] = []
+            var preKeys: [(id: UInt16, prekey: String)] = []
 
             selfClient.keysStore.encryptionContext.perform({ (sessionsDirectory) in
                 preKeys = try! sessionsDirectory.generatePrekeys(0 ..< 2)
@@ -942,7 +942,7 @@ extension UserClientTests {
             otherClient.user = otherUser
             otherClient.needsSessionMigration = true
 
-            var preKeys : [(id: UInt16, prekey: String)] = []
+            var preKeys: [(id: UInt16, prekey: String)] = []
             selfClient.keysStore.encryptionContext.perform { sessionsDirectory in
                 preKeys = try! sessionsDirectory.generatePrekeys(0 ..< 2)
             }
@@ -997,7 +997,7 @@ extension UserClientTests {
             otherClient.user = otherUser
             otherClient.needsSessionMigration = true
 
-            var preKeys : [(id: UInt16, prekey: String)] = []
+            var preKeys: [(id: UInt16, prekey: String)] = []
             selfClient.keysStore.encryptionContext.perform { sessionsDirectory in
                 preKeys = try! sessionsDirectory.generatePrekeys(0 ..< 2)
             }

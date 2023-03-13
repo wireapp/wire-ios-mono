@@ -20,11 +20,14 @@ import UIKit
 import WireDataModel
 import WireSyncEngine
 
-final class ConversationGuestOptionsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SpinnerCapable, ConversationGuestOptionsViewModelDelegate {
+final class ConversationGuestOptionsViewController: UIViewController,
+                                                    UITableViewDelegate,
+                                                    UITableViewDataSource,
+                                                    SpinnerCapable,
+                                                    ConversationGuestOptionsViewModelDelegate {
 
     private let tableView = UITableView()
     private var viewModel: ConversationGuestOptionsViewModel
-    private let variant: ColorSchemeVariant
 
     var dismissSpinner: SpinnerCompletion?
 
@@ -38,14 +41,12 @@ final class ConversationGuestOptionsViewController: UIViewController, UITableVie
             userSession: userSession
         )
         self.init(
-            viewModel: .init(configuration: configuration),
-            variant: ColorScheme.default.variant
+            viewModel: .init(configuration: configuration)
         )
     }
 
-    init(viewModel: ConversationGuestOptionsViewModel, variant: ColorSchemeVariant) {
+    init(viewModel: ConversationGuestOptionsViewModel) {
         self.viewModel = viewModel
-        self.variant = variant
         super.init(nibName: nil, bundle: nil)
         setupViews()
         createConstraints()

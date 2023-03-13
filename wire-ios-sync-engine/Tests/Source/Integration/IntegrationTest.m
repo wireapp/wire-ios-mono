@@ -52,7 +52,7 @@
     
     WaitForAllGroupsToBeEmpty(0.5);
     [NSFileManager.defaultManager removeItemAtURL:[MockUserClient mockEncryptionSessionDirectory] error:nil];
-    
+    [self resetCurrentAPIVersion];
     [super tearDown];
 }
 

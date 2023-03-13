@@ -83,7 +83,7 @@ class UserClientKeysStoreTests: OtrBaseTest {
 
         // when
         while true {
-            var newKeys : [(id: UInt16, prekey: String)]!
+            var newKeys: [(id: UInt16, prekey: String)]!
             var maxKey: UInt16!
             var minKey: UInt16!
             do {

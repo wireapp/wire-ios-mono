@@ -123,6 +123,7 @@ static ZMReachability *sharedReachabilityMock = nil;
 - (void)setUp;
 {
     [super setUp];
+    [self setDefaultAPIVersion];
     BackgroundActivityFactory.sharedFactory.activityManager = UIApplication.sharedApplication;
     [BackgroundActivityFactory.sharedFactory resume];
     
@@ -255,7 +256,8 @@ static ZMReachability *sharedReachabilityMock = nil;
     _application = nil;
     self.groupIdentifier = nil;
     self.sharedContainerURL = nil;
-    
+
+    [self unsetDefaultAPIVersion];
     [super tearDown];
     Require([self waitForAllGroupsToBeEmptyWithTimeout:5]);
 }

@@ -133,7 +133,7 @@ final class FeatureTests: ZMBaseManagedObjectTest {
 
     func testThatItNeedsToNotifyUser_AfterAChange() {
         // Given
-        syncMOC.performGroupedAndWait { context in
+        syncMOC.performGroupedAndWait { _ in
             let defaultConferenceCalling = Feature.fetch(name: .conferenceCalling, context: self.syncMOC)
             defaultConferenceCalling?.status = .disabled
             defaultConferenceCalling?.hasInitialDefault = false
@@ -161,7 +161,7 @@ final class FeatureTests: ZMBaseManagedObjectTest {
 
     func testThatItDoesNotNeedToNotifyUser_IfThePreviousValueIsDefault() {
         // Given
-        syncMOC.performGroupedAndWait { context in
+        syncMOC.performGroupedAndWait { _ in
             let defaultConferenceCalling = Feature.fetch(name: .conferenceCalling, context: self.syncMOC)
             XCTAssertNotNil(defaultConferenceCalling)
             XCTAssertTrue(defaultConferenceCalling!.hasInitialDefault)

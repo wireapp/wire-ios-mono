@@ -26,15 +26,14 @@ class StringLengthValidatorTests: XCTestCase {
 
         do {
             try StringLengthValidator.validateValue(&value, minimumStringLength: 1, maximumStringLength: 64, maximumByteLength: 100)
-        }
-        catch let err {
+        } catch let err {
             error = err
         }
 
         XCTAssertNil(error)
         XCTAssertEqual(originalValue, value! as! String)
     }
-    
+
     func testThatTooShortStringsDoNotPassValidation() {
         var value: AnyObject? = "short" as AnyObject
         do {
@@ -46,7 +45,7 @@ class StringLengthValidatorTests: XCTestCase {
             XCTAssertNotNil(error)
         }
     }
-    
+
     func testThatTooLongStringsDoNotPassValidation() {
         var value: AnyObject? = "long" as AnyObject
         do {
@@ -58,7 +57,7 @@ class StringLengthValidatorTests: XCTestCase {
             XCTAssertNotNil(error)
         }
     }
-    
+
     func testThatValidStringsPassValidation() {
         var value: AnyObject? = "normal" as AnyObject
         do {
@@ -69,13 +68,13 @@ class StringLengthValidatorTests: XCTestCase {
         } catch {
             XCTAssertNil(error)
         }
-        //XCTAssertTrue REsult
+        // XCTAssertTrue REsult
     }
-    
+
     func testThatCombinedEmojiPassesValidation_3() {
         let originalValue: AnyObject? = "👨‍👧‍👦" as AnyObject
         var value = originalValue
-        
+
         do {
             try StringLengthValidator.validateValue(&value,
                                                     minimumStringLength: 1,
@@ -84,14 +83,14 @@ class StringLengthValidatorTests: XCTestCase {
         } catch {
             XCTAssertNil(error)
         }
-        //XCTAssertTrue REsult
+        // XCTAssertTrue REsult
         XCTAssertEqual(originalValue as! String, value as! String)
     }
-    
+
     func testThatCombinedEmojiPassesValidation_4() {
         let originalValue: AnyObject? = "👩‍👩‍👦‍👦" as AnyObject
         var value = originalValue
-        
+
         do {
             try StringLengthValidator.validateValue(&value,
                                                     minimumStringLength: 1,
@@ -100,14 +99,14 @@ class StringLengthValidatorTests: XCTestCase {
         } catch {
             XCTAssertNil(error)
         }
-        //XCTAssertTrue REsult
+        // XCTAssertTrue REsult
         XCTAssertEqual(originalValue as! String, value as! String)
     }
-    
+
     func testThatItRemovesControlCharactersBetweenCombinedEmoji() {
         let originalValue: AnyObject? = "👩‍👩‍👦‍👦/n👨‍👧‍👦" as AnyObject
         var value = originalValue
-        
+
         do {
             try StringLengthValidator.validateValue(&value,
                                                     minimumStringLength: 1,
@@ -116,14 +115,14 @@ class StringLengthValidatorTests: XCTestCase {
         } catch {
             XCTAssertNil(error)
         }
-        //XCTAssertTrue REsult
+        // XCTAssertTrue REsult
         XCTAssertEqual(originalValue as! String, value as! String)
     }
-    
+
     func testThatNilIsNotValid() {
-        
-        var value: AnyObject? = nil
-        
+
+        var value: AnyObject?
+
         do {
             try StringLengthValidator.validateValue(&value,
                                                     minimumStringLength: 1,
@@ -132,13 +131,13 @@ class StringLengthValidatorTests: XCTestCase {
         } catch {
             XCTAssertNotNil(error)
         }
-        //XCTAssertFalse REsult
+        // XCTAssertFalse REsult
     }
-    
+
     func testThatItReplacesNewlinesAndTabWithSpacesInThePhoneNumber() {
-        
+
         var phoneNumber: AnyObject? = "1234\n5678" as AnyObject
-        
+
         do {
             try StringLengthValidator.validateValue(&phoneNumber,
                                                     minimumStringLength: 0,
@@ -149,5 +148,5 @@ class StringLengthValidatorTests: XCTestCase {
         }
         XCTAssertEqual(phoneNumber as! String, "1234 5678")
     }
-    
+
 }

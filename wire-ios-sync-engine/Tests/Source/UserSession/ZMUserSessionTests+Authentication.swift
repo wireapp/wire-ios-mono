@@ -22,9 +22,11 @@ import XCTest
 
 class ZMUserSessionTests_Authentication: ZMUserSessionTestsBase {
 
+    var previousApiVersion: APIVersion?
+
     override func setUp() {
         super.setUp()
-
+        previousApiVersion = BackendInfo.apiVersion
         BackendInfo.apiVersion = .v0
 
         syncMOC.performGroupedBlockAndWait {
@@ -33,7 +35,7 @@ class ZMUserSessionTests_Authentication: ZMUserSessionTestsBase {
     }
 
     override func tearDown() {
-        BackendInfo.apiVersion = nil
+        BackendInfo.apiVersion = previousApiVersion
         super.tearDown()
     }
 

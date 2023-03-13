@@ -67,3 +67,31 @@ Notifications send through Apple Push Notification service can only be received 
 ### Translations
 
 All Wire translations are crowdsourced via CrowdIn: https://crowdin.com/projects/wire
+
+### Running security tests
+
+To run all the security tests, you will first need to be able to build the app locally. To do this, see the "How to build locally" section above. 
+Then, from the command line, you can run the security tests with the following commands:
+
+```
+xcodebuild test \
+  -workspace wire-ios-mono.xcworkspace \
+  -scheme Wire-iOS \
+  -testPlan SecurityTests \
+  -destination 'platform=iOS Simulator,name=iPhone 8,OS=15.2'
+
+  xcodebuild test \
+  -workspace wire-ios-mono.xcworkspace \
+  -scheme WireSyncEngine \
+  -testPlan SecurityTests \
+  -destination 'platform=iOS Simulator,name=iPhone 8,OS=15.2'
+
+  xcodebuild test \
+  -workspace wire-ios-mono.xcworkspace \
+  -scheme WireDataModel \
+  -testPlan SecurityTests \
+  -destination 'platform=iOS Simulator,name=iPhone 8,OS=15.2'
+```
+
+`xcodebuild` will print the test results to the console. It will also log the location of the test result (in `.xcresult` format), which you can open
+with Xcode to see the test results in a more friendly format.

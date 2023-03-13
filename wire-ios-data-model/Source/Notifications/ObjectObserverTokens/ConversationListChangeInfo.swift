@@ -46,7 +46,7 @@ extension ZMConversationList {
     public var updatedIndexes: IndexSet { return setChangeInfo.updatedIndexes }
     public var movedIndexPairs: [MovedIndex] { return setChangeInfo.movedIndexPairs }
     public var zm_movedIndexPairs: [ZMMovedIndex] { return setChangeInfo.zm_movedIndexPairs}
-    public func enumerateMovedIndexes(_ block:@escaping (_ from: Int, _ to: Int) -> Void) {
+    public func enumerateMovedIndexes(_ block: @escaping (_ from: Int, _ to: Int) -> Void) {
         setChangeInfo.enumerateMovedIndexes(block)
     }
 }

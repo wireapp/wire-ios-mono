@@ -23,20 +23,20 @@ extension Notification.Name {
 }
 
 struct AvailabilityBehaviourChange {
-    
+
     static let needsToNotifyAvailabilityBehaviourChangeKey = "needsToNotifyAvailabilityBehaviourChange"
-    
+
     static func notifyAvailabilityBehaviourChange(in moc: NSManagedObjectContext) {
         let selfUser = ZMUser.selfUser(in: moc)
-        
+
         guard selfUser.hasTeam else { return }
-        
+
         switch selfUser.availability {
         case .away, .busy:
             selfUser.needsToNotifyAvailabilityBehaviourChange = [.alert, .notification]
         default:
             selfUser.needsToNotifyAvailabilityBehaviourChange = .alert
         }
-        
+
     }
 }

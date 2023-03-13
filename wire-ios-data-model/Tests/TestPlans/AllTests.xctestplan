@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "044989AF-72C7-4A5C-A9EB-9726D7D674E6",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:WireDataModel.xcodeproj",
+        "identifier" : "F9C9A5051CAD5DF10039E10C",
+        "name" : "WireDataModelTests"
+      }
+    }
+  ],
+  "version" : 1
+}

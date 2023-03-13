@@ -53,4 +53,14 @@ extension MessagingTest {
 
         return stack
     }
+
+    @objc
+    public func setDefaultAPIVersion() {
+        setCurrentAPIVersion(.v0)
+    }
+
+    @objc
+    public func unsetDefaultAPIVersion() {
+        resetCurrentAPIVersion()
+    }
 }

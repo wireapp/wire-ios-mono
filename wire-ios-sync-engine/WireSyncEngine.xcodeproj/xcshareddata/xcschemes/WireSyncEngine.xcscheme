@@ -53,11 +53,14 @@
       </MacroExpansion>
       <TestPlans>
          <TestPlanReference
-            reference = "container:TestsPlans/AllTests.xctestplan"
+            reference = "container:Tests/TestsPlans/AllTests.xctestplan"
             default = "YES">
          </TestPlanReference>
          <TestPlanReference
-            reference = "container:TestsPlans/IntegrationTests.xctestplan">
+            reference = "container:Tests/TestsPlans/IntegrationTests.xctestplan">
+         </TestPlanReference>
+         <TestPlanReference
+            reference = "container:Tests/TestsPlans/SecurityTests.xctestplan">
          </TestPlanReference>
       </TestPlans>
       <Testables>

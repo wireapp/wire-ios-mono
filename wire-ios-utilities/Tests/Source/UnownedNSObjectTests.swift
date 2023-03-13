@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 // 
 
-
 import XCTest
 import WireUtilities
 
@@ -27,10 +26,9 @@ final class UnownedNSObjectTests: XCTestCase {
         XCTAssertTrue(unown.isValid)
         XCTAssertEqual(NSNumber(value: 10), unown.unbox!)
     }
-    
-    
+
     func testThatUnownedNSObjectIsInvalidIfObjectDoesNotExistAnymore() {
-        var array : Array<NSObject>? = [NSObject()]
+        var array: [NSObject]? = [NSObject()]
         let unownedObject = UnownedNSObject(array![0] as NSObject)
         array = nil
         XCTAssertFalse(unownedObject.isValid)

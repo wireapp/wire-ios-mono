@@ -42,7 +42,7 @@ class DeepLinkURLActionProcessorTests: DatabaseTest {
         sut = nil
         mockTransportSession = nil
         mockUpdateEventProcessor = nil
-        setCurrentAPIVersion(nil)
+        resetCurrentAPIVersion()
         super.tearDown()
     }
 

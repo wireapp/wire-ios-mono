@@ -26,25 +26,25 @@ class ArrayShiftTests: XCTestCase {
         // GIVEN
         let sut = [0, 1, 2, 3, 4]
         let expected = [4, 0, 1, 2, 3]
-        
+
         // WHEN / THEN
         XCTAssertEqual(sut.shifted(by: 1), expected)
     }
-    
+
     func testLeftShift() {
         // GIVEN
         let sut = [0, 1, 2, 3, 4]
         let expected = [1, 2, 3, 4, 0]
-        
+
         // WHEN / THEN
         XCTAssertEqual(sut.shifted(by: -1), expected)
     }
-    
+
     func testShiftByAmountBiggerThanArraySize() {
         // GIVEN
         let sut = [0, 1, 2, 3, 4]
         let expected = [4, 0, 1, 2, 3]
-        
+
         // WHEN / THEN
         XCTAssertEqual(sut.shifted(by: 6), expected)
     }

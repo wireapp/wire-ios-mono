@@ -16,14 +16,13 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 // 
 
-
 import XCTest
 import WireUtilities
 
 class NSUUIDType1Tests: XCTestCase {
 
     /// type 1 sample UUID sorted by timestamp, and corresponding unix timestamp (with accuracy up to 0.01)
-    static let sortedType1UUIDStrings : [(String, TimeInterval)] = [
+    static let sortedType1UUIDStrings: [(String, TimeInterval)] = [
         ("a6526b00-000a-11e5-a837-0800200c9a66", 1432248144.48),
         ("54ad3a24-be09-11e5-9912-ba0be0483c18", 1453138298.93),
         ("54ad3f92-be09-11e5-9912-ba0be0483c18", 1453138298.93),
@@ -36,54 +35,53 @@ class NSUUIDType1Tests: XCTestCase {
     func testThatItDetectsType1UUID() {
         // given
         let uuid = NSUUID(uuidString: NSUUIDType1Tests.sortedType1UUIDStrings[0].0)!
-        
+
         // then
         XCTAssertTrue(uuid.isType1UUID)
     }
-    
+
     func testThatItDetectsANonType1UUID() {
         // given
         let uuid = UUID() // this is guaranteed to generate a type 4
-        
+
         // then
         XCTAssertFalse(uuid.isType1UUID)
     }
-    
+
     func testThatItGetsTheRightTimestamps() {
 
-        for (string, timestamp) in NSUUIDType1Tests.sortedType1UUIDStrings
-        {
+        for (string, timestamp) in NSUUIDType1Tests.sortedType1UUIDStrings {
             let uuid = UUID.init(uuidString: string)!
             let date = Date(timeIntervalSince1970: timestamp)
-            
+
             // the timestamps in the sample data have some rounding errors
             // so I can't test that they are equal, just that they are not too different
             let dateDiff = uuid.type1Timestamp!.timeIntervalSince1970 - date.timeIntervalSince1970
             XCTAssertLessThanOrEqual(abs(dateDiff), 0.01)
         }
     }
-    
+
     func testThatItComparesTwoUUIDsByTime() {
-        
+
         // given
         let earlierUUID = UUID.init(uuidString: NSUUIDType1Tests.sortedType1UUIDStrings[1].0)!
         let laterUUID = UUID.init(uuidString: NSUUIDType1Tests.sortedType1UUIDStrings[3].0)!
         let sameUUID = UUID.init(uuidString: NSUUIDType1Tests.sortedType1UUIDStrings[1].0)!
-        
+
         // then
         XCTAssertEqual(earlierUUID.compare(withType1UUID: laterUUID as NSUUID), ComparisonResult.orderedAscending)
         XCTAssertEqual(laterUUID.compare(withType1UUID: earlierUUID as NSUUID), ComparisonResult.orderedDescending)
         XCTAssertEqual(earlierUUID.compare(withType1UUID: sameUUID as NSUUID), ComparisonResult.orderedSame)
     }
-    
+
     func testThatItComparesType1UUIDsByTime() {
-        
-        var previous : UUID? = nil
+
+        var previous: UUID?
         for uuid in NSUUIDType1Tests.sortedType1UUIDStrings.map({ UUID(uuidString: $0.0)! }) {
             defer {
                 previous = uuid
             }
-            
+
             guard let last = previous else {
                 continue
             }
@@ -93,10 +91,10 @@ class NSUUIDType1Tests: XCTestCase {
 
         }
     }
-    
-    func testThatGeneratedUUIDsAreOfType1(){
+
+    func testThatGeneratedUUIDsAreOfType1() {
         let uuid = UUID.timeBasedUUID()
-        
+
         XCTAssertTrue(uuid.isType1UUID)
     }
 }

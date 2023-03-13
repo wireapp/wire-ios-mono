@@ -228,7 +228,7 @@ extension ClientMessageTests_OTR {
 
             // when
             syncMessage.sender = nil
-            var payload : (data: Data, strategy: MissingClientsStrategy)?
+            var payload: (data: Data, strategy: MissingClientsStrategy)?
             self.performIgnoringZMLogError {
                  payload = sut?.encryptForTransport()
             }

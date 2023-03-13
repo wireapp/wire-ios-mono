@@ -547,7 +547,7 @@ final class ConversationObserverTests: NotificationDispatcherTestBase {
         // when
         self.checkThatItNotifiesTheObserverOfAChange(conversation,
                                                      modifier: { conversation, _ in conversation.userDefinedName = "Cacao" },
-                                                     expectedChangedField: "nameChanged" ,
+                                                     expectedChangedField: "nameChanged",
                                                      expectedChangedKeys: ["displayName"])
 
     }
@@ -685,7 +685,7 @@ final class ConversationObserverTests: NotificationDispatcherTestBase {
         // when
         self.checkThatItNotifiesTheObserverOfAChange(conversation,
                                                      modifier: { conversation, _ in conversation.isArchived = true },
-                                                     expectedChangedField: "isArchivedChanged" ,
+                                                     expectedChangedField: "isArchivedChanged",
                                                      expectedChangedKeys: ["isArchived"])
 
     }
@@ -699,7 +699,7 @@ final class ConversationObserverTests: NotificationDispatcherTestBase {
         // when
         self.checkThatItNotifiesTheObserverOfAChange(conversation,
                                                      modifier: { conversation, _ in conversation.mutedMessageTypes = .regular },
-                                                     expectedChangedField: "mutedMessageTypesChanged" ,
+                                                     expectedChangedField: "mutedMessageTypesChanged",
                                                      expectedChangedKeys: ["mutedStatus"])
 
     }
@@ -755,7 +755,7 @@ final class ConversationObserverTests: NotificationDispatcherTestBase {
                                                      modifier: { conversation, _ in
                                                         conversation.clearedTimeStamp = Date()
             },
-                                                     expectedChangedField: "clearedChanged" ,
+                                                     expectedChangedField: "clearedChanged",
                                                      expectedChangedKeys: ["clearedTimeStamp"])
     }
 
@@ -769,7 +769,7 @@ final class ConversationObserverTests: NotificationDispatcherTestBase {
                                                      modifier: { conversation, _ in
                                                         conversation.securityLevel = .secure
             },
-                                                     expectedChangedField: "securityLevelChanged" ,
+                                                     expectedChangedField: "securityLevelChanged",
                                                      expectedChangedKeys: ["securityLevel"])
     }
 

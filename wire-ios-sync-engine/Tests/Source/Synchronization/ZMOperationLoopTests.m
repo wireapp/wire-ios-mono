@@ -84,6 +84,7 @@
     self.mockUpdateEventProcessor = nil;
     [self.sut tearDown];
     self.sut = nil;
+    [self resetCurrentAPIVersion];
     [super tearDown];
 }
 

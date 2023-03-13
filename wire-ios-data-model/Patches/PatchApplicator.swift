@@ -56,16 +56,16 @@ public final class PatchApplicator<T: DataPatchInterface> {
 }
 
 public protocol DataPatchInterface: CaseIterable {
-    
+
     var version: Int { get }
     func execute(in context: NSManagedObjectContext)
-    
+
 }
 
 // When we add the first patch, uncomment this type and add an enum
 // case. The patch code should go in the execute method.
 
-//enum DataPatch: Int, DataPatchInterface {
+// enum DataPatch: Int, DataPatchInterface {
 //
 //
 //
@@ -77,4 +77,4 @@ public protocol DataPatchInterface: CaseIterable {
 //        switch self {
 //        }
 //    }
-//}
+// }

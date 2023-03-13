@@ -47,7 +47,7 @@ final class ConversationServicesOptionsViewControllerTests: XCTestCase {
         // GIVEN
         let config = MockServicesOptionsViewModelConfiguration(allowServices: false)
         let viewModel = ConversationServicesOptionsViewModel(configuration: config)
-        let sut = ConversationServicesOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationServicesOptionsViewController(viewModel: viewModel)
 
         // THEN
         verify(matching: sut)
@@ -57,7 +57,7 @@ final class ConversationServicesOptionsViewControllerTests: XCTestCase {
         // GIVEN
         let config = MockServicesOptionsViewModelConfiguration(allowServices: false)
         let viewModel = ConversationServicesOptionsViewModel(configuration: config)
-        let sut = ConversationServicesOptionsViewController(viewModel: viewModel, variant: .dark)
+        let sut = ConversationServicesOptionsViewController(viewModel: viewModel)
         sut.overrideUserInterfaceStyle = .dark
 
         // THEN
@@ -68,7 +68,7 @@ final class ConversationServicesOptionsViewControllerTests: XCTestCase {
         // GIVEN
         let config = MockServicesOptionsViewModelConfiguration(allowServices: true)
         let viewModel = ConversationServicesOptionsViewModel(configuration: config)
-        let sut = ConversationServicesOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationServicesOptionsViewController(viewModel: viewModel)
 
         // THEN
         verify(matching: sut)
@@ -78,7 +78,7 @@ final class ConversationServicesOptionsViewControllerTests: XCTestCase {
         // GIVEN
         let config = MockServicesOptionsViewModelConfiguration(allowServices: true)
         let viewModel = ConversationServicesOptionsViewModel(configuration: config)
-        let sut = ConversationServicesOptionsViewController(viewModel: viewModel, variant: .dark)
+        let sut = ConversationServicesOptionsViewController(viewModel: viewModel)
         sut.overrideUserInterfaceStyle = .dark
 
         // THEN
@@ -91,7 +91,7 @@ final class ConversationServicesOptionsViewControllerTests: XCTestCase {
         // GIVEN
         let config = MockServicesOptionsViewModelConfiguration(allowServices: false)
         let viewModel = ConversationServicesOptionsViewModel(configuration: config)
-        let sut = ConversationServicesOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationServicesOptionsViewController(viewModel: viewModel)
 
         // Verify that the toggle should be off.
         verify(matching: sut)
@@ -112,7 +112,7 @@ final class ConversationServicesOptionsViewControllerTests: XCTestCase {
         // GIVEN
         let config = MockServicesOptionsViewModelConfiguration(allowServices: true)
         let viewModel = ConversationServicesOptionsViewModel(configuration: config)
-        let sut = ConversationServicesOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationServicesOptionsViewController(viewModel: viewModel)
 
         // THEN
         verify(matching: sut.wrapInNavigationController())
@@ -147,7 +147,7 @@ final class ConversationServicesOptionsViewControllerTests: XCTestCase {
         let viewModel = ConversationServicesOptionsViewModel(configuration: config)
 
         // For ConversationServicesOptionsViewModel's delegate
-        _ = ConversationServicesOptionsViewController(viewModel: viewModel, variant: .light)
+        _ = ConversationServicesOptionsViewController(viewModel: viewModel)
 
         // Show the alert
         let sut = viewModel.setAllowServices(false)!

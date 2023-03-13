@@ -28,7 +28,6 @@ class GroupDetailsNotificationOptionsCellTests: CoreDataSnapshotTestCase {
         selfUserInTeam = true
         super.setUp()
         cell = GroupDetailsNotificationOptionsCell(frame: CGRect(x: 0, y: 0, width: 350, height: 56))
-        cell.colorSchemeVariant = .light
         cell.overrideUserInterfaceStyle = .light
         conversation = self.createGroupConversation()
     }
@@ -56,7 +55,6 @@ class GroupDetailsNotificationOptionsCellTests: CoreDataSnapshotTestCase {
     }
 
     func testThatItDisplaysCell_Dark() {
-        cell.colorSchemeVariant = .dark
         cell.overrideUserInterfaceStyle = .dark
         update(.all)
         verify(view: cell)

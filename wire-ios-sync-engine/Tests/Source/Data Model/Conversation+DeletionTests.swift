@@ -32,7 +32,7 @@ class Conversation_DeletionTests: DatabaseTest {
     override func tearDown() {
         mockTransportSession.cleanUp()
         mockTransportSession = nil
-        setCurrentAPIVersion(nil)
+        resetCurrentAPIVersion()
         super.tearDown()
     }
 

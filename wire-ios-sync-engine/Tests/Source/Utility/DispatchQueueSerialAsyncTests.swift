@@ -20,9 +20,10 @@ import Foundation
 import XCTest
 
 class DispatchQueueSerialAsyncTests: XCTestCase {
-    let sut = DispatchQueue(label: "test")
 
     func testThatItWaitsForOneTaskBeforeAnother() {
+        let sut = DispatchQueue(label: "test")
+        
         let doneExpectation = self.expectation(description: "Done with jobs")
 
         var done1: Bool = false
@@ -47,10 +48,7 @@ class DispatchQueueSerialAsyncTests: XCTestCase {
             doneExpectation.fulfill()
         }
 
-        self.waitForExpectations(timeout: 0.5) { error in
-            XCTAssertNil(error)
-        }
-
+        self.wait(for: [doneExpectation], timeout: 0.5)
         XCTAssertTrue(done1)
         XCTAssertTrue(done2)
     }

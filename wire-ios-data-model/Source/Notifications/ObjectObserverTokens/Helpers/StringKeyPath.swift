@@ -53,7 +53,7 @@ public final class StringKeyPath: Hashable {
         return 1 < count
     }
 
-    public lazy var decompose : (head: StringKeyPath, tail: StringKeyPath?)? = {
+    public lazy var decompose: (head: StringKeyPath, tail: StringKeyPath?)? = {
         if 1 <= self.count {
             if let i = self.rawValue.firstIndex(of: ".") {
                 let head = self.rawValue[..<i]

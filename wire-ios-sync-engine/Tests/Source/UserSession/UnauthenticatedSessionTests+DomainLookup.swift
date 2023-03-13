@@ -47,7 +47,7 @@ public final class UnauthenticatedSessionTests_DomainLookup: ZMTBaseTest {
         transportSession = nil
         mockDelegate = nil
         reachability = nil
-        setCurrentAPIVersion(nil)
+        resetCurrentAPIVersion()
         super.tearDown()
     }
 

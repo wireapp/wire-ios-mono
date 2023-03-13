@@ -40,7 +40,7 @@ public protocol SetChangeInfoOwner {
     var movedIndexPairs: [MovedIndex] { get }
     var zm_movedIndexPairs: [ZMMovedIndex] { get }
 
-    func enumerateMovedIndexes(_ block:@escaping (_ from: Int, _ to: Int) -> Void)
+    func enumerateMovedIndexes(_ block: @escaping (_ from: Int, _ to: Int) -> Void)
 
 }
 
@@ -70,7 +70,7 @@ open class SetChangeInfo<T: Hashable>: NSObject {
         self.observedObject = observedObject
     }
 
-    open func enumerateMovedIndexes(_ block:@escaping (_ from: Int, _ to: Int) -> Void) {
+    open func enumerateMovedIndexes(_ block: @escaping (_ from: Int, _ to: Int) -> Void) {
         self.changeSet.enumerateMovedIndexes(block: block)
     }
 

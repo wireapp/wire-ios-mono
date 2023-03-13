@@ -16,34 +16,32 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import XCTest
 import WireUtilities
 
+class OrderedSetTests: XCTestCase {
 
-class OrderedSetTests : XCTestCase {
-
-    func testThatItAddsValuesFromAnNSOrderedSet(){
+    func testThatItAddsValuesFromAnNSOrderedSet() {
         // given
-        let set1 = NSOrderedSet(array:["a", "b"])
-        let set2 = NSOrderedSet(array:["b", "c"])
-        
+        let set1 = NSOrderedSet(array: ["a", "b"])
+        let set2 = NSOrderedSet(array: ["b", "c"])
+
         // when
         let joined = set1.adding(orderedSet: set2)
-        
+
         // then
-        XCTAssertEqual(joined, NSOrderedSet(array:["a", "b", "c"]))
+        XCTAssertEqual(joined, NSOrderedSet(array: ["a", "b", "c"]))
     }
-    
-    func testThatItRemovesValuesFromAnNSOrderedSet(){
+
+    func testThatItRemovesValuesFromAnNSOrderedSet() {
         // given
-        let set1 = NSOrderedSet(array:["a", "b"])
-        let set2 = NSOrderedSet(array:["b", "c"])
-        
+        let set1 = NSOrderedSet(array: ["a", "b"])
+        let set2 = NSOrderedSet(array: ["b", "c"])
+
         // when
         let subtracted = set1.subtracting(orderedSet: set2)
-        
+
         // then
-        XCTAssertEqual(subtracted, NSOrderedSet(array:["a"]))
+        XCTAssertEqual(subtracted, NSOrderedSet(array: ["a"]))
     }
 }

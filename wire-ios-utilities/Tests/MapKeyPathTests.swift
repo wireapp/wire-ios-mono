@@ -55,11 +55,11 @@ class MapKeyPathTests: XCTestCase {
         let ghostAge = ghost.map(\.age)
 
         // THEN
-        XCTAssertEqual(humanName, Optional<String>.some("Human"))
-        XCTAssertEqual(humanAge, Optional<Optional<Int>>.some(.some(20)))
+        XCTAssertEqual(humanName, String?.some("Human"))
+        XCTAssertEqual(humanAge, Int??.some(.some(20)))
 
-        XCTAssertEqual(botName, Optional<String>.some("Bot"))
-        XCTAssertEqual(botAge, Optional<Optional<Int>>.some(.none))
+        XCTAssertEqual(botName, String?.some("Bot"))
+        XCTAssertEqual(botAge, Int??.some(.none))
 
         XCTAssertEqual(ghostName, Optional<String>.none)
         XCTAssertEqual(ghostAge, Optional<Optional<Int>>.none)
@@ -77,7 +77,7 @@ class MapKeyPathTests: XCTestCase {
         let ghostAge = ghost.flatMap(\.age)
 
         // THEN
-        XCTAssertEqual(humanAge, Optional<Int>.some(20))
+        XCTAssertEqual(humanAge, Int?.some(20))
         XCTAssertEqual(botAge, Optional<Int>.none)
         XCTAssertEqual(ghostAge, Optional<Int>.none)
     }

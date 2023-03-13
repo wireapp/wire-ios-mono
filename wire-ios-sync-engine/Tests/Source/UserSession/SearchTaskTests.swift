@@ -45,7 +45,7 @@ class SearchTaskTests: DatabaseTest {
     override func tearDown() {
         self.teamIdentifier = nil
         self.mockTransportSession = nil
-        setCurrentAPIVersion(nil)
+        resetCurrentAPIVersion()
         super.tearDown()
     }
 

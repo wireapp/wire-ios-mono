@@ -17,12 +17,16 @@
 //
 
 import Foundation
+import WireSystem
+import WireTransport
+
 #if DATADOG_IMPORT
+
+// MARK: - DATADOG ENABLED
+
 import Datadog
 import DatadogCrashReporting
-import WireTransport
 import UIKit
-import WireSystem
 
 public class DatadogWrapper {
 
@@ -144,6 +148,58 @@ extension DatadogWrapper: RemoteLogger {
 
 }
 
+// MARK: Crypto helper
+
+import CryptoKit
+
+extension String {
+
+    var sha256String: String {
+        let inputData = Data(self.utf8)
+        let hashed = SHA256.hash(data: inputData)
+        return hashed.compactMap { String(format: "%02x", $0) }.joined()
+    }
+
+    var alphanumericString: String {
+        let pattern = "[^A-Za-z0-9]+"
+        return self.replacingOccurrences(of: pattern, with: "", options: [.regularExpression])
+    }
+}
+
+#else
+
+// MARK: - DATADOG DISABLED
+
+public enum LogLevel {
+
+    case debug
+    case info
+    case notice
+    case warn
+    case error
+    case critical
+
+}
+public class DatadogWrapper {
+
+    public static let shared: DatadogWrapper? = nil
+
+    public func log(
+        level: LogLevel,
+        message: String,
+        error: Error? = nil,
+        attributes: [String: Encodable]? = nil
+    ) {}
+
+    public func startMonitoring() {}
+
+    public var datadogUserId: String = "NONE"
+}
+
+#endif
+
+// MARK: - COMMON
+
 extension RemoteMonitoring.Level {
 
     var logLevel: LogLevel {
@@ -196,49 +252,3 @@ extension DatadogWrapper: WireSystem.LoggerProtocol {
     }
 
 }
-
-// MARK: - Crypto helper
-
-import CryptoKit
-
-extension String {
-
-    var sha256String: String {
-        let inputData = Data(self.utf8)
-        let hashed = SHA256.hash(data: inputData)
-        return hashed.compactMap { String(format: "%02x", $0) }.joined()
-    }
-
-    var alphanumericString: String {
-        let pattern = "[^A-Za-z0-9]+"
-        return self.replacingOccurrences(of: pattern, with: "", options: [.regularExpression])
-    }
-}
-
-#else
-
-public enum LogLevel {
-
-    case debug
-    case critical
-    case info
-    case warn
-
-}
-public class DatadogWrapper {
-
-    public static let shared: DatadogWrapper? = nil
-
-    public func log(
-        level: LogLevel,
-        message: String,
-        error: Error? = nil,
-        attributes: [String: Encodable]? = nil
-    ) {}
-
-    public func startMonitoring() {}
-
-    public var datadogUserId: String = "NONE"
-}
-
-#endif

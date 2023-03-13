@@ -16,20 +16,19 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 import XCTest
 
 class EmojiOnlyStringTests: XCTestCase {
-    
+
     func testThatCommonEmojisAreDetected() {
         // given
         let commonEmoji = ["©️", "ℹ️", "☘️", "⏰️", "➰️", "♥️", "🀄️", "🇨🇭", "⭔", "⭕",
                            "😜", "🙏", "🌝", "😘", "👍", "💩", "😂", "😍", "😁",
-                           "❤︎", "❤️", "🈚︎",  "🀄︎", //emoji variation
-                           "👩", "👩🏻", "👩🏼", "👩🏽", "👩🏾", "👩🏿", //Fitzpatrick modifiers
+                           "❤︎", "❤️", "🈚︎", "🀄︎", // emoji variation
+                           "👩", "👩🏻", "👩🏼", "👩🏽", "👩🏾", "👩🏿", // Fitzpatrick modifiers
                            "👨‍👩‍👧", "🏳️‍🌈", // Joining
-                           "🧘🏿‍♀️", "🧡", "🦒", "🧦", "🏴󠁧󠁢󠁷󠁬󠁳󠁿", "🧟‍♂️", ///Emoji 5.0
+                           "🧘🏿‍♀️", "🧡", "🦒", "🧦", "🏴󠁧󠁢󠁷󠁬󠁳󠁿", "🧟‍♂️" /// Emoji 5.0
             // TODO: Test for Emoji 11.0 new emoji "🥮" after iOS 12.1 is released
         ]
 
@@ -39,7 +38,7 @@ class EmojiOnlyStringTests: XCTestCase {
             XCTAssert($0.containsEmoji, "Failed: \($0)")
         }
     }
-    
+
     func testThatSeveralEmojisAreDetected() {
         // given
         let commonEmojiGroups = ["😜🙏🌝😘", "👍💩😂😍", "😁💁🙌", "👯😻"]
@@ -48,7 +47,7 @@ class EmojiOnlyStringTests: XCTestCase {
             XCTAssertTrue($0.containsOnlyEmojiWithSpaces)
         }
     }
-    
+
     func testThatSeveralEmojisWithSpacesAreDetected() {
         // given
         let commonEmojiGroups = ["😜      🙏 🌝 😘", "    👍💩😂😍", "😁💁🙌 ", "👯 😻"]
@@ -57,7 +56,7 @@ class EmojiOnlyStringTests: XCTestCase {
             XCTAssertTrue($0.containsOnlyEmojiWithSpaces, "Failed: \($0)")
         }
     }
-    
+
     func testThatNewEmojisAreDetected() {
         // given
         let newEmoji = ["💪🏾", "🤘🏼", "👶🏼", "💅🏼"]
@@ -66,7 +65,7 @@ class EmojiOnlyStringTests: XCTestCase {
             XCTAssertTrue($0.containsOnlyEmojiWithSpaces, "Failed: \($0)")
         }
     }
-    
+
     func testThatSeveralNewEmojisAreDetected() {
         // given
         let newEmojiGroups = ["💪🏾🤘🏼", "👶🏼💅🏼🤘🏼"]
@@ -75,7 +74,7 @@ class EmojiOnlyStringTests: XCTestCase {
             XCTAssertTrue($0.containsOnlyEmojiWithSpaces, "Failed: \($0)")
         }
     }
-    
+
     func testThatSeveralNewEmojisWithSpacesAreDetected() {
         // given
         let newEmojiGroupsWithSpaces = [" 💪🏾🤘🏼", "👶🏼 💅🏼    🤘🏼 "]
@@ -99,15 +98,15 @@ class EmojiOnlyStringTests: XCTestCase {
     func testThatLangaugeStringIsNotDetected() {
         // given
 
-        //Notice: "⿆" - Kangxi Radicals, start from U0x2F0x it is not a emoji, but CharacterSet.symbols contains it.
+        // Notice: "⿆" - Kangxi Radicals, start from U0x2F0x it is not a emoji, but CharacterSet.symbols contains it.
         let langaugeStrings = ["ḀẀẶỳ", "ठःअठी३", "勺卉善爨", "Ёжик", "한국어",
-                               "ⰀⰁ", //Glagolitic, start from U0x2C0x, containsEmoji return true for this language
+                               "ⰀⰁ", // Glagolitic, start from U0x2C0x, containsEmoji return true for this language
             "はい",// Hiragana, start from U0x304x
             "ブ",// Katakana, start from U0x304x
-            "ㄅㄆㄇ", //Bopomofo, start from U0x310x
+            "ㄅㄆㄇ", // Bopomofo, start from U0x310x
             "Ⴀჟჯჰ", // Georgian, updated in uncodie 11.0
             "ქართული", // Georgian, updated in uncodie 11.0
-            " Α α, Β β, Γ γ, Δ δ, Ε ε, Ζ ζ, Η η, Θ θ, Ι ι, Κ κ, Λ λ, Μ μ, Ν ν, Ξ ξ, Ο ο, Π π, Ρ ρ, Σ σ/ς, Τ τ, Υ υ, Φ φ, Χ χ, Ψ ψ, Ω ω.", //Greek
+            " Α α, Β β, Γ γ, Δ δ, Ε ε, Ζ ζ, Η η, Θ θ, Ι ι, Κ κ, Λ λ, Μ μ, Ν ν, Ξ ξ, Ο ο, Π π, Ρ ρ, Σ σ/ς, Τ τ, Υ υ, Φ φ, Χ χ, Ψ ψ, Ω ω.", // Greek
             "。，？！" // Chinese punctuation marks
         ]
         // then
@@ -116,7 +115,7 @@ class EmojiOnlyStringTests: XCTestCase {
             XCTAssertFalse($0.containsEmoji, "\($0) contains emojis")
         }
     }
-    
+
     func testThatRTLStringIsNotDetected() {
         // given
         let rtlStrings = ["  באמת!‏"]
@@ -125,7 +124,7 @@ class EmojiOnlyStringTests: XCTestCase {
             XCTAssertFalse($0.containsOnlyEmojiWithSpaces)
         }
     }
-    
+
     func testThatLanguageStringWithEmojiNotDetected() {
         // given
         let languageEmojiStrings = ["😜ḀẀẶỳ", "👯ठःअठी३", "👯勺卉善爨", "👯Ёжик"]
@@ -135,7 +134,7 @@ class EmojiOnlyStringTests: XCTestCase {
             XCTAssert($0.containsEmoji)
         }
     }
-    
+
     func testThatEmptyStringIsNotDetected() {
         XCTAssertFalse("".containsOnlyEmojiWithSpaces)
     }

@@ -19,7 +19,7 @@
 import Foundation
 
 enum InvalidConversationRemoval {
-    
+
     /// We had a situation where we were creating invalid conversations in response an event. After fixing this issue
     /// we need to delete all invalid conversations which have been accumulating over time.
     static func removeInvalid(in moc: NSManagedObjectContext) {

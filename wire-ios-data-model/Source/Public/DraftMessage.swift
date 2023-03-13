@@ -46,7 +46,7 @@ import WireCryptobox
 
 /// A serializable version of `DraftMessage` that conforms to `Codable` and
 /// holds on to a `StorableMention` values instead `Mention`.
-fileprivate final class StorableDraftMessage: NSObject, Codable {
+private final class StorableDraftMessage: NSObject, Codable {
 
     /// The text of the message to be stored.
     let text: String

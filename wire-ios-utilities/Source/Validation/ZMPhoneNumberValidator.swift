@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import UIKit
 
 @objc public class ZMPhoneNumberValidator: NSObject, ZMPropertyValidator {
@@ -27,18 +26,18 @@ import UIKit
         defer { ioValue.pointee = pointee as AnyObject? }
         try validateValue(&pointee)
     }
-    
+
     @discardableResult public static func validateValue(_ ioValue: inout Any?) throws -> Bool {
-        
+
         guard let phoneNumber = ioValue as? NSString,
             phoneNumber.length >= 1 else {
                 return true
         }
-        
+
         var validSet = CharacterSet.decimalDigits
         validSet.insert(charactersIn: "+-. ()")
         let invalidSet = validSet.inverted
-        
+
         if phoneNumber.rangeOfCharacter(from: invalidSet, options: .literal).location != NSNotFound {
             let description = "The phone number is invalid."
             let userInfo = [NSLocalizedDescriptionKey: description]
@@ -47,11 +46,9 @@ import UIKit
                                 userInfo: userInfo)
             throw error
         }
-        
+
         var finalPhoneNumber: Any? = "+".appending((phoneNumber as NSString).stringByRemovingCharacters("+-. ()") as String)
-            
-        
-        
+
         do {
             _ = try StringLengthValidator.validateStringValue(&finalPhoneNumber,
                                                 minimumStringLength: 9,
@@ -60,14 +57,14 @@ import UIKit
         } catch let error {
             throw error
         }
-        
+
         if finalPhoneNumber as! NSString != phoneNumber {
             ioValue = finalPhoneNumber
         }
 
         return true
     }
-    
+
     @objc(isValidPhoneNumber:)
     public static func isValidPhoneNumber(_ phoneNumber: String) -> Bool {
         var phoneNumber: Any? = phoneNumber
@@ -77,26 +74,26 @@ import UIKit
             return false
         }
     }
-    
+
     @objc(validatePhoneNumber:)
     public static func validate(phoneNumber: String) -> String? {
         var phoneNumber: Any? = phoneNumber
         _ = try? validateValue(&phoneNumber)
         return phoneNumber as? String
     }
-    
+
 }
 
 extension NSString {
-    
-    func stringByRemovingCharacters(_ characters:NSString) -> NSString {
+
+    func stringByRemovingCharacters(_ characters: NSString) -> NSString {
         var finalString = self
         for i in 0..<characters.length {
-            let toRemove = characters.substring(with: NSMakeRange(i, 1))
+            let toRemove = characters.substring(with: NSRange(location: i, length: 1))
             finalString = finalString.replacingOccurrences(of: toRemove,
                                              with: "",
                                              options: [],
-                                             range: NSMakeRange(0, finalString.length)) as NSString
+                                             range: NSRange(location: 0, length: finalString.length)) as NSString
         }
         return finalString
     }

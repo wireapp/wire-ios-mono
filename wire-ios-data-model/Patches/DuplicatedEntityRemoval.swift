@@ -21,19 +21,19 @@ import Foundation
 private let zmLog = ZMSLog(tag: "DuplicateEntity")
 
 enum DuplicatedEntityRemoval {
-    
+
     static func removeDuplicated(in moc: NSManagedObjectContext) {
         // will skip this during test unless on disk
         guard moc.persistentStoreCoordinator!.persistentStores.first!.type != NSInMemoryStoreType else { return }
         deleteDuplicatedClients(in: moc)
         moc.saveOrRollback()
     }
-    
+
     static func deleteDuplicatedClients(in context: NSManagedObjectContext) {
         // Fetch clients having the same remote identifiers
-        context.findDuplicated(by: #keyPath(UserClient.remoteIdentifier)).forEach { (remoteId: String?, clients: [UserClient]) in
+        context.findDuplicated(by: #keyPath(UserClient.remoteIdentifier)).forEach { (_: String?, clients: [UserClient]) in
             // Group clients having the same remote identifiers by user
-            clients.filter { !($0.user?.isSelfUser ?? true) }.group(by: ZMUserClientUserKey).forEach { (user: ZMUser, clients: [UserClient]) in
+            clients.filter { !($0.user?.isSelfUser ?? true) }.group(by: ZMUserClientUserKey).forEach { (_: ZMUser, clients: [UserClient]) in
                 UserClient.merge(clients)
             }
         }
@@ -61,17 +61,17 @@ extension UserClient {
         precondition(!(self.user?.isSelfUser ?? false), "Cannot merge self user's clients")
         precondition(client.remoteIdentifier == self.remoteIdentifier, "UserClient's remoteIdentifier should be equal to merge")
         precondition(client.user == self.user, "UserClient's Users should be equal to merge")
-        
+
         let addedOrRemovedInSystemMessages = client.addedOrRemovedInSystemMessages
         let ignoredByClients = client.ignoredByClients
         let messagesMissingRecipient = client.messagesMissingRecipient
         let trustedByClients = client.trustedByClients
-        
+
         self.addedOrRemovedInSystemMessages.formUnion(addedOrRemovedInSystemMessages)
         self.ignoredByClients.formUnion(ignoredByClients)
         self.messagesMissingRecipient.formUnion(messagesMissingRecipient)
         self.trustedByClients.formUnion(trustedByClients)
-        
+
         if let missedByClient = client.missedByClient {
             self.missedByClient = missedByClient
         }
@@ -79,13 +79,12 @@ extension UserClient {
 }
 
 extension ZMManagedObject {
-    
+
     /// Returns the first of two objects that is not null. If both are
     /// not null, deletes the second one
     fileprivate static func firstNonNullAndDeleteSecond<Object: ZMManagedObject>(
         _ obj1: Object?,
-        _ obj2: Object?) -> Object?
-    {
+        _ obj2: Object?) -> Object? {
         if let obj1 = obj1 {
             if let obj2 = obj2 {
                 obj2.managedObjectContext?.delete(obj2)

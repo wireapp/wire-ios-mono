@@ -283,7 +283,7 @@ platform :ios do
             sh "cd ../#{build.archive_path(with_filename: false)} && tar -czf #{build.filename}.xcarchive.tgz #{build.filename}.xcarchive"
         end
         
-        sh "cd .. && aws s3 cp --recursive --exclude '*'  --include '*.ipa' --include '*.xcarchive.tgz' artifacts/ #{s3_path}"
+        sh "cd .. && aws s3 cp --recursive --exclude '*'  --include '*.ipa' --include '*.xcarchive.tgz' --include '*.junit' artifacts/ #{s3_path}"
     end
 
     desc "Upload for internal use"
@@ -354,6 +354,44 @@ platform :ios do
             ],
             site: "datadoghq.eu")
     end
+
+    desc "Run security plans"
+    lane :security_plans do |options|
+        build = Build.new(options: options)
+
+        xcode_version = options[:xcode_version]
+
+        ios_version = "15.2"
+        if !xcode_version.nil? 
+            xcversion(version: xcode_version)
+
+            if xcode_version == "13.2.1"
+                ios_version = "15.2"
+            elsif xcode_version == "13.1"
+                 ios_version = "15.0"
+            elsif xcode_version == "12.4"
+                ios_version = "14.4"
+            end
+        end
+
+        for scheme in ["Wire-iOS", "WireDataModel", "WireSyncEngine"] do
+            run_tests(
+                testplan: "SecurityTests",
+                scheme: scheme,
+                skip_detect_devices: true,
+                configuration: "Debug",
+                # test_without_building: true,
+                sdk:"iphonesimulator",
+                destination: "platform=iOS Simulator,name=iPhone 8,OS=#{ios_version}",
+                # code_coverage: true,
+                derived_data_path: "DerivedData",
+                buildlog_path: build.build_path,
+                output_directory: "#{build.artifact_path(with_filename: false)}/tests/#{scheme}",
+                output_types: "junit"
+            )    
+        end
+    end
+
 
     desc "Run post-test tasks"
     lane :post_test do
@@ -496,6 +534,7 @@ class Build
     end
 
     def artifact_directory
+        result = ""
         suffix = "" 
         if for_simulator 
             suffix = "simulator" 
@@ -505,22 +544,25 @@ class Build
 
         case @build_type
         when "Playground"
-            "playground-#{normalized_branch_name}/#{suffix}"
+            result = "playground-#{normalized_branch_name}/#{suffix}"
         when "Development"
-            "development/#{suffix}"
+            result = "development/#{suffix}"
         when "Internal"
-            "internal/#{suffix}"
+            result = "internal/#{suffix}"
         when "AppStore"
-            "release/appstore"
+            result = "release/appstore"
         when "AVS"
-            "avs-experimental/#{suffix}"
+            result = "avs-experimental/#{suffix}"
         when "RC"
-            "release/#{suffix}"
+            result = "release/#{suffix}"
         when "Beta"
-            "release/testflight"
+            result = "release/testflight"
         else
             UI.user_error! "Unknown build type: #{@build_type}"
         end
+
+        # We want to group related artifacts by the filename.
+        result + "/" + filename
     end
 
     # Force custom AVS version

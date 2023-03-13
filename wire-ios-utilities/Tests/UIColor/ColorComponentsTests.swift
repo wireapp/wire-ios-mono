@@ -20,27 +20,27 @@ import XCTest
 
 final class ColorComponentsTests: XCTestCase {
     func testThatWhiteColorComponentsAreCorrect() {
-        ///GIVEN
+        /// GIVEN
         let whiteColor = UIColor.white
-        
-        ///WHEN
+
+        /// WHEN
         let sut = UIColor.Components(color: whiteColor)
-        
-        ///THEN
+
+        /// THEN
         XCTAssertEqual(sut.red, 1)
         XCTAssertEqual(sut.green, 1)
         XCTAssertEqual(sut.blue, 1)
         XCTAssertEqual(sut.alpha, 1)
     }
-    
+
     func testThatRedColorComponentsAreCorrect() {
-        ///GIVEN
+        /// GIVEN
         let redColor = UIColor.red
-        
-        ///WHEN
+
+        /// WHEN
         let sut = UIColor.Components(color: redColor)
-        
-        ///THEN
+
+        /// THEN
         XCTAssertEqual(sut, redColor.components)
     }
 
@@ -53,12 +53,12 @@ final class ColorComponentsTests: XCTestCase {
     }
 
     func testThatColorCanBeInitializeWithRGBAValues() {
-        let sut = UIColor(rgba:(255, 0, 0, 1))
+        let sut = UIColor(rgba: (255, 0, 0, 1))
         XCTAssertEqual(UIColor.red, sut)
     }
 
     func testThatColorCanBeInitializeWithRGBValues() {
-        let sut = UIColor(rgb:(127.5, 0, 127.5))
+        let sut = UIColor(rgb: (127.5, 0, 127.5))
         XCTAssertEqual(UIColor.purple, sut)
     }
 }

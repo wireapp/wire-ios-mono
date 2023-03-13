@@ -34,6 +34,11 @@ class SlowSyncTests_NotificationsV3: IntegrationTest {
         createExtraUsersAndConversations()
     }
 
+    override func tearDown() {
+        super.tearDown()
+        resetCurrentAPIVersion()
+    }
+
     // MARK: - Slow sync with error
 
     func test_WhenSinceIdParam404DuringQuickSyncItTriggersASlowSync() {

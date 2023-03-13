@@ -19,7 +19,7 @@
 import Foundation
 
 struct TransferStateMigration {
-    
+
     internal enum LegacyTransferState: Int, CaseIterable {
         case uploading = 0
         case uploaded
@@ -29,7 +29,7 @@ struct TransferStateMigration {
         case cancelledUpload
         case failedDownloaded
         case unavailable
-        
+
         // This mapping describes how to migrate from the legacy transferState to the new transferState,
         // which only contains a subset of the legacy cases. This means that we will have a many-to-one mapping.
         //
@@ -40,27 +40,27 @@ struct TransferStateMigration {
         static var migrationMappings: [(from: [LegacyTransferState], to: AssetTransferState)] = [
             (from: [.downloading, .downloaded, .failedDownloaded, .unavailable], to: .uploaded),
             (from: [.failedUpload], to: .uploadingFailed),
-            (from: [.cancelledUpload], to: .uploadingCancelled),
+            (from: [.cancelledUpload], to: .uploadingCancelled)
         ]
     }
-    
+
     /// When we simplified our asset uploading we replaced ZMFileTransferState with AssetTransferState, which
     /// only contains a subset  of the original cases. This method will fetch and migrate all asset messages
     /// which doesn't have a valid tranferState any more.
     static func migrateLegacyTransferState(in moc: NSManagedObjectContext) {
-        
+
         guard moc.persistentStoreCoordinator?.persistentStores.first?.type == NSSQLiteStoreType else {
             return // batch update requests are only supported on sql stores
         }
-        
+
         let transferStateKey = "transferState"
-        
+
         for (legacyValues, newValue) in LegacyTransferState.migrationMappings {
             let batchUpdateRequest = NSBatchUpdateRequest(entityName: ZMAssetClientMessage.entityName())
             batchUpdateRequest.predicate = NSPredicate(format: "\(transferStateKey) IN %@", legacyValues.map(\.rawValue))
             batchUpdateRequest.propertiesToUpdate = [transferStateKey: newValue.rawValue]
             batchUpdateRequest.resultType = .updatedObjectsCountResultType
-            
+
             do {
                 try moc.execute(batchUpdateRequest)
             } catch {

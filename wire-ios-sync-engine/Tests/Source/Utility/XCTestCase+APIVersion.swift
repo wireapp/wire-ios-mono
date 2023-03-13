@@ -19,11 +19,17 @@
 import Foundation
 import XCTest
 
+private var previousApiVersion: APIVersion?
+
 extension XCTestCase {
 
     func setCurrentAPIVersion(_ version: APIVersion?) {
+        previousApiVersion = BackendInfo.apiVersion
         BackendInfo.apiVersion = version
         XCTAssertEqual(BackendInfo.apiVersion, version)
     }
 
+    func resetCurrentAPIVersion() {
+        BackendInfo.apiVersion = previousApiVersion
+    }
 }

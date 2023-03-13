@@ -1,0 +1,51 @@
+{
+  "configurations" : [
+    {
+      "id" : "CC7A4AB7-6BA6-405E-95D7-9A6FF0FC136A",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "environmentVariableEntries" : [
+      {
+        "key" : "RECORDING_SNAPSHOTS",
+        "value" : "NO"
+      },
+      {
+        "key" : "SNAPSHOT_REFERENCE_DIR",
+        "value" : "$(SOURCE_ROOT)\/$(PROJECT_NAME) Tests\/ReferenceImages"
+      },
+      {
+        "key" : "FB_REFERENCE_IMAGE_DIR",
+        "value" : "$(SOURCE_ROOT)\/$(PROJECT_NAME) Tests\/ReferenceImages"
+      },
+      {
+        "key" : "IMAGE_DIFF_DIR",
+        "value" : "$(SOURCE_ROOT)\/SnapshotResults"
+      },
+      {
+        "key" : "SNAPSHOT_ARTIFACTS",
+        "value" : "$(SOURCE_ROOT)\/SnapshotResults"
+      }
+    ],
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:Wire-iOS.xcodeproj",
+      "identifier" : "8F42C537199244A700288E4D",
+      "name" : "Wire-iOS"
+    },
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Wire-iOS.xcodeproj",
+        "identifier" : "BACB88501AF7C48900DDCDB0",
+        "name" : "Wire-iOS-Tests"
+      }
+    }
+  ],
+  "version" : 1
+}

@@ -19,8 +19,7 @@
 import Foundation
 
 final class MigrateSenderClient {
-    
-    
+
     /// Populate senderClientID for `.decryptionFailed` system messages.
     ///
     /// For `.decryptionFailed` system messages we need to copy the `remoteIdentifier` of
@@ -29,7 +28,7 @@ final class MigrateSenderClient {
     static func migrateSenderClientID(in moc: NSManagedObjectContext) {
         let request = NSFetchRequest<ZMSystemMessage>(entityName: ZMSystemMessage.entityName())
         request.predicate = NSPredicate(format: "%K = %d", ZMMessageSystemMessageTypeKey, ZMSystemMessageType.decryptionFailed.rawValue)
-        
+
         let systemMessages = moc.fetchOrAssert(request: request)
 
         for systemMessage in systemMessages {

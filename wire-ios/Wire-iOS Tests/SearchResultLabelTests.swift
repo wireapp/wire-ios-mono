@@ -30,11 +30,12 @@ final class SearchResultLabelTests: ZMSnapshotTestCase {
 
     override func tearDown() {
         sut = nil
-        resetColorScheme()
         super.tearDown()
     }
 
-    fileprivate func performTest(file: StaticString = #file, line: UInt = #line) {
+    fileprivate func performTest(file: StaticString = #file,
+                                 line: UInt = #line,
+                                 mode: UIUserInterfaceStyle = .light) {
         let textCombinations = Set<String>(arrayLiteral: "Very short text", "Very very long text Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
 
         let queryCombinations = Set<String>(arrayLiteral: "", "Short", "Very", "very long", "veniam")
@@ -70,7 +71,8 @@ final class SearchResultLabelTests: ZMSnapshotTestCase {
 
             $0.result.layoutForTest()
             let mockBackgroundView = UIView(frame: $0.result.frame)
-            mockBackgroundView.backgroundColor = .from(scheme: .background)
+            mockBackgroundView.overrideUserInterfaceStyle = mode
+            mockBackgroundView.backgroundColor = SemanticColors.View.backgroundDefault
             mockBackgroundView.addSubview($0.result)
 
             self.verify(view: mockBackgroundView, identifier: identifier, file: #file, line: #line)
@@ -78,21 +80,19 @@ final class SearchResultLabelTests: ZMSnapshotTestCase {
             }.count, 0, line: #line)
     }
 
-    func prepareForTest(variant: ColorSchemeVariant, mode: UIUserInterfaceStyle) {
-        ColorScheme.default.variant = variant
+    func prepareForTest(mode: UIUserInterfaceStyle = .light) {
         sut = SearchResultLabel()
         sut.overrideUserInterfaceStyle = mode
         sut.font = UIFont.systemFont(ofSize: 17)
     }
 
     func testThatItShowsStringWithoutHighlightInDarkTheme() {
-
-        prepareForTest(variant: .dark, mode: .dark)
-        performTest()
+        prepareForTest(mode: .dark)
+        performTest(mode: .dark)
     }
 
     func testThatItShowsStringWithoutHighlight() {
-        prepareForTest(variant: .light, mode: .light)
+        prepareForTest()
         performTest()
     }
 }

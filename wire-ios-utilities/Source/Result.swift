@@ -48,7 +48,7 @@ public extension Result {
         guard case let .success(value) = self else { return nil }
         return value
     }
-    
+
     var error: Error? {
         guard case let .failure(error) = self else { return nil }
         return error
@@ -62,7 +62,7 @@ public extension VoidResult {
         case .failure(let error): self = .failure(error)
         }
     }
-    
+
     init(error: Error?) {
         if let error = error {
             self = .failure(error)
@@ -70,7 +70,7 @@ public extension VoidResult {
             self = .success
         }
     }
-    
+
     var error: Error? {
         guard case let .failure(error) = self else { return nil }
         return error

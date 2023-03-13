@@ -35,7 +35,7 @@ class APIVersionResolverTests: ZMTBaseTest {
     override func tearDown() {
         mockDelegate = nil
         transportSession = nil
-        setCurrentAPIVersion(nil)
+        resetCurrentAPIVersion()
         super.tearDown()
     }
 

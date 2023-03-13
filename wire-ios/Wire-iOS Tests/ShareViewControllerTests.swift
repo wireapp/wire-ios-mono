@@ -132,11 +132,11 @@ final class ShareViewControllerTests: ZMSnapshotTestCase {
     }
 
     func testThatItRendersCorrectlyShareViewController_Video_DarkMode() {
-        activateDarkColorScheme()
         let thumbnail = image(inTestBundleNamed: "unsplash_matterhorn.jpg")
 
         let message: MockShareableMessage = MockMessageFactory.videoMessage(sender: nil, previewImage: thumbnail)
         createSut(message: message)
+        activateDarkColorScheme()
 
         XCTAssertTrue(waitForGroupsToBeEmpty([MediaAssetCache.defaultImageCache.dispatchGroup]))
         verifyInAllDeviceSizes(matching: sut)

@@ -66,7 +66,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         // GIVEN
         let config = MockOptionsViewModelConfiguration(allowGuests: true)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         // THEN
         verify(matching: sut)
     }
@@ -75,7 +75,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         // GIVEN
         let config = MockOptionsViewModelConfiguration(allowGuests: true)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .dark)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         sut.overrideUserInterfaceStyle = .dark
 
         // THEN
@@ -86,7 +86,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         // GIVEN
         let config = MockOptionsViewModelConfiguration(allowGuests: false)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         // THEN
         verify(matching: sut)
     }
@@ -95,7 +95,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         // GIVEN
         let config = MockOptionsViewModelConfiguration(allowGuests: false)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .dark)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         sut.overrideUserInterfaceStyle = .dark
 
         // THEN
@@ -109,7 +109,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         let config = MockOptionsViewModelConfiguration(allowGuests: true)
         config.linkResult = .success("https://app.wire.com/772bfh1bbcssjs982637 3nbbdsn9917nbbdaehkej827648-72bns9")
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         // THEN
         verify(matching: sut)
     }
@@ -119,7 +119,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         let config = MockOptionsViewModelConfiguration(allowGuests: true)
         config.linkResult = .success("https://app.wire.com/772bfh1bbcssjs982637 3nbbdsn9917nbbdaehkej827648-72bns9")
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .dark)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         sut.overrideUserInterfaceStyle = .dark
 
         // THEN
@@ -131,7 +131,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         let config = MockOptionsViewModelConfiguration(allowGuests: true)
         config.linkResult = .success("https://app.wire.com/772bfh1bbcssjs982637 3nbbdsn9917nbbdaehkej827648-72bns9")
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         viewModel.copyInProgress = true
         // THEN
         verify(matching: sut)
@@ -142,7 +142,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         let config = MockOptionsViewModelConfiguration(allowGuests: true)
         config.linkResult = .success("https://app.wire.com/772bfh1bbcssjs982637 3nbbdsn9917nbbdaehkej827648-72bns9")
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .dark)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         viewModel.copyInProgress = true
         sut.overrideUserInterfaceStyle = .dark
 
@@ -155,7 +155,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         let config = MockOptionsViewModelConfiguration(allowGuests: true)
         config.linkResult = .success(nil)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         // THEN
         verify(matching: sut)
     }
@@ -165,7 +165,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         let config = MockOptionsViewModelConfiguration(allowGuests: true)
         config.linkResult = .success(nil)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .dark)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         sut.overrideUserInterfaceStyle = .dark
 
         // THEN
@@ -178,7 +178,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         config.isConversationFromSelfTeam = true
         config.linkResult = .success(nil)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         // THEN
         verify(matching: sut)
     }
@@ -189,7 +189,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         config.isConversationFromSelfTeam = true
         config.linkResult = .success(nil)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .dark)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         sut.overrideUserInterfaceStyle = .dark
 
         // THEN
@@ -202,7 +202,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         config.isConversationFromSelfTeam = false
         config.linkResult = .success(nil)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         // THEN
         verify(matching: sut)
     }
@@ -213,7 +213,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         config.isConversationFromSelfTeam = false
         config.linkResult = .success(nil)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .dark)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         sut.overrideUserInterfaceStyle = .dark
 
         // THEN
@@ -226,7 +226,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         config.isConversationFromSelfTeam = false
         config.linkResult = .success(nil)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         // THEN
         verify(matching: sut)
     }
@@ -237,7 +237,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         config.isConversationFromSelfTeam = false
         config.linkResult = .success(nil)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .dark)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         sut.overrideUserInterfaceStyle = .dark
 
         // THEN
@@ -248,7 +248,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         // GIVEN
         let config = MockOptionsViewModelConfiguration(allowGuests: true, guestLinkFeatureStatus: .unknown)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         // THEN
         verify(matching: sut)
     }
@@ -257,7 +257,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         // GIVEN
         let config = MockOptionsViewModelConfiguration(allowGuests: true, guestLinkFeatureStatus: .unknown)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .dark)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         sut.overrideUserInterfaceStyle = .dark
 
         // THEN
@@ -270,7 +270,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         // GIVEN
         let config = MockOptionsViewModelConfiguration(allowGuests: true)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         // THEN
         verify(matching: sut.wrapInNavigationController())
     }
@@ -282,7 +282,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         let config = MockOptionsViewModelConfiguration(allowGuests: false)
         config.linkResult = .success(nil)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         XCTAssertNotNil(config.allowGuestsChangedHandler)
         config.allowGuests = true
         config.allowGuestsChangedHandler?(true)
@@ -294,7 +294,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         // GIVEN
         let config = MockOptionsViewModelConfiguration(allowGuests: false)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         XCTAssertNotNil(config.allowGuestsChangedHandler)
         config.allowGuests = true
         config.allowGuestsChangedHandler?(true)
@@ -306,7 +306,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         // GIVEN
         let config = MockOptionsViewModelConfiguration(allowGuests: false)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         let navigationController = sut.wrapInNavigationController()
         // WHEN
         viewModel.setAllowGuests(true)
@@ -318,7 +318,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         // GIVEN
         let config = MockOptionsViewModelConfiguration(allowGuests: false)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
-        let sut = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .dark)
+        let sut = ConversationGuestOptionsViewController(viewModel: viewModel)
         sut.overrideUserInterfaceStyle = .dark
         let navigationController = sut.wrapInNavigationController()
         sut.overrideUserInterfaceStyle = .dark
@@ -358,7 +358,7 @@ final class ConversationOptionsViewControllerTests: ZMSnapshotTestCase {
         let config = MockOptionsViewModelConfiguration(allowGuests: true)
         let viewModel = ConversationGuestOptionsViewModel(configuration: config)
         // for ConversationOptionsViewModel's delegate
-        _ = ConversationGuestOptionsViewController(viewModel: viewModel, variant: .light)
+        _ = ConversationGuestOptionsViewController(viewModel: viewModel)
         // Show the alert
         let sut = viewModel.setAllowGuests(false)!
         // THEN

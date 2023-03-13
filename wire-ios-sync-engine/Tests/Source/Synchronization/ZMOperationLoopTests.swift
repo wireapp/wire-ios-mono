@@ -29,6 +29,7 @@ extension ZMOperationLoopTests {
 
     @objc
     func clearCurrentAPIVersion() {
+        // we want to remove the apiVersion here
         setCurrentAPIVersion(nil)
     }
 
