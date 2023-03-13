@@ -1,0 +1,59 @@
+#!/bin/bash
+
+#
+# Wire
+# Copyright (C) 2018 Wire Swiss GmbH
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see http://www.gnu.org/licenses/.
+#
+
+#!/bin/bash
+echo "pre-push started"
+# Run SwiftLint
+START_DATE=$(date +"%s")
+
+SWIFT_LINT=`which swiftlint`
+
+# Run SwiftLint for given filename
+run_swiftlint() {
+    local filename="${1}"
+    echo "File is: ${filename}"
+    echo "File with previous extension is: ${filename#*.}"
+        if [[ "${filename##*.}" == "swift" ]]; then
+            if [[ "${filename#*.}" != "generated.swift" ]]; then
+            echo "Autocorrecting..."
+            ${SWIFT_LINT} --fix --path "${filename}"
+            ${SWIFT_LINT} lint --path "${filename}"
+            fi
+        fi
+}
+
+if [[ -e "${SWIFT_LINT}" ]]; then
+    echo "SwiftLint version: $(${SWIFT_LINT} version)"
+    # Run only if not merging
+    if ! git rev-parse -q --verify MERGE_HEAD; then 
+        # Run for both staged and unstaged files
+        echo "Enter merging"
+        git diff --name-only | while read filename; do run_swiftlint "${filename}"; done
+        git diff --cached --name-only | while read filename; do run_swiftlint "${filename}"; done
+    fi
+else
+    echo "${SWIFT_LINT} is not installed. Please install it first from https://www.github.com/realm/SwiftLint"
+    exit 0
+fi
+
+END_DATE=$(date +"%s")
+
+DIFF=$(($END_DATE - $START_DATE))
+echo "SwiftLint took $(($DIFF / 60)) minutes and $(($DIFF % 60)) seconds to complete."
