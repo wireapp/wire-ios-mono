@@ -16,11 +16,10 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 
 extension NSString {
-    
+
     /// Returns a random string with alphanumerical characters
     @objc(createAlphanumericalString)
     static public func createAlphanumerical() -> NSString {

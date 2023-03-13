@@ -31,10 +31,10 @@ public class MockPendingLegalHoldClient: NSManagedObject {
     @NSManaged public var identifier: String?
 
     /// Prekeys registered for this client
-    @NSManaged public var prekeys : Set<MockPreKey>
+    @NSManaged public var prekeys: Set<MockPreKey>
 
     /// Last prekeys registered for this client
-    @NSManaged public var lastPrekey : MockPreKey
+    @NSManaged public var lastPrekey: MockPreKey
 
 }
 
@@ -60,11 +60,11 @@ extension MockUser {
         // Generate the prekeys
         let encryptionContext = MockUserClient.encryptionContext(for: self, clientId: identifier)
 
-        var generatedPrekeys : [[String: Any]]?
-        var generatedLastPrekey : String?
+        var generatedPrekeys: [[String: Any]]?
+        var generatedLastPrekey: String?
 
         encryptionContext.perform { (session) in
-            generatedPrekeys = try? session.generatePrekeys(NSMakeRange(0, 5))
+            generatedPrekeys = try? session.generatePrekeys(NSRange(location: 0, length: 5))
             generatedLastPrekey = try? session.generateLastPrekey()
         }
 

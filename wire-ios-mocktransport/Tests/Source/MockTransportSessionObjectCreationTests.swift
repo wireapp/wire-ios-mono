@@ -19,63 +19,63 @@
 import Foundation
 import XCTest
 
-class MockTransportSessionObjectCreationTests : MockTransportSessionTests {
-    
+class MockTransportSessionObjectCreationTests: MockTransportSessionTests {
+
     func testThatItDoesNotReturnNonExistingUserWithIdentifier() {
-        
+
         // GIVEN
         self.sut.performRemoteChanges { (session) in
             session.insertUser(withName: "Foo")
         }
-        
+
         // WHEN
         self.sut.performRemoteChanges { (session) in
             let user = session.user(withRemoteIdentifier: "nonvalididentifier")
-            
+
             // THEN
             XCTAssertNil(user)
         }
     }
-    
+
     func testThatItReturnsTheExistingUserWithIdentifier() {
-        
+
         // GIVEN
         var identifier: String!
         self.sut.performRemoteChanges { (session) in
             let user = session.insertUser(withName: "Foo")
             identifier = user.identifier
         }
-        
+
         // WHEN
         self.sut.performRemoteChanges { (session) in
             let user = session.user(withRemoteIdentifier: identifier)
-            
+
             // THEN
             XCTAssertNotNil(user)
             XCTAssertEqual(user?.identifier, identifier)
         }
     }
-    
+
     func testThatItDoesNotReturnNonExistingClientWithIdentifier() {
-        
+
         // GIVEN
         var user: MockUser!
         self.sut.performRemoteChanges { (session) in
             user = session.insertUser(withName: "Foo")
             session.registerClient(for: user, label: "iPhone 89", type: "permanent", deviceClass: "phone")
         }
-        
+
         // WHEN
         self.sut.performRemoteChanges { (session) in
             let client = session.client(for: user, remoteIdentifier: "invalid")
-            
+
             // THEN
             XCTAssertNil(client)
         }
     }
-    
+
     func testThatItReturnsTheExistingClientWithIdentifier() {
-        
+
         // GIVEN
         var user: MockUser!
         var identifier: String!
@@ -84,16 +84,16 @@ class MockTransportSessionObjectCreationTests : MockTransportSessionTests {
             let client = session.registerClient(for: user, label: "iPhone 89", type: "permanent", deviceClass: "phone")
             identifier = client.identifier
         }
-        
+
         // WHEN
         self.sut.performRemoteChanges { (session) in
             let client = session.client(for: user, remoteIdentifier: identifier)
-            
+
             // THEN
             XCTAssertNotNil(client)
             XCTAssertEqual(client?.identifier, identifier)
             XCTAssertEqual(client?.user, user)
         }
     }
-    
+
 }

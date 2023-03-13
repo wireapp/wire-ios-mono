@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 import CoreData
 
@@ -24,7 +23,7 @@ import CoreData
     @NSManaged public var conversation: MockConversation
     @NSManaged public var user: MockUser
     @NSManaged public var role: MockRole?
-    
+
     public static var entityName = "ParticipantRole"
 }
 
@@ -34,7 +33,7 @@ extension MockParticipantRole {
         let participantRole: MockParticipantRole = insert(in: context)
         participantRole.conversation = conversation
         participantRole.user = user
-        
+
         return participantRole
     }
 }

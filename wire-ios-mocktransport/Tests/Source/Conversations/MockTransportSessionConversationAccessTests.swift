@@ -44,7 +44,7 @@ class MockTransportSessionConversationAccessTests: MockTransportSessionTests {
 
     func testThatSettingAccessModeReturnsErrorWhenConversationDoesNotExist() {
         // when
-        let response = self.response(forPayload: [:] as ZMTransportData , path: "/conversations/123456/access", method: .methodPUT, apiVersion: .v0)
+        let response = self.response(forPayload: [:] as ZMTransportData, path: "/conversations/123456/access", method: .methodPUT, apiVersion: .v0)
 
         // then
         XCTAssertEqual(response?.httpStatus, 404)
@@ -53,11 +53,11 @@ class MockTransportSessionConversationAccessTests: MockTransportSessionTests {
     func testThatSettingAccessModeReturnsErrorWhenMissingAccess() {
         // given
         let payload = [
-            "access_role": "activated",
+            "access_role": "activated"
         ] as ZMTransportData
 
         // when
-        let response = self.response(forPayload: payload , path: "/conversations/\(self.conversation.identifier)/access", method: .methodPUT, apiVersion: .v0)
+        let response = self.response(forPayload: payload, path: "/conversations/\(self.conversation.identifier)/access", method: .methodPUT, apiVersion: .v0)
 
         // then
         XCTAssertEqual(response?.httpStatus, 400)
@@ -66,11 +66,11 @@ class MockTransportSessionConversationAccessTests: MockTransportSessionTests {
     func testThatSettingAccessModeReturnsErrorWhenMissingAccessRole() {
         // given
         let payload = [
-            "access": ["invite"],
+            "access": ["invite"]
             ] as ZMTransportData
 
         // when
-        let response = self.response(forPayload: payload , path: "/conversations/\(self.conversation.identifier)/access", method: .methodPUT, apiVersion: .v0)
+        let response = self.response(forPayload: payload, path: "/conversations/\(self.conversation.identifier)/access", method: .methodPUT, apiVersion: .v0)
 
         // then
         XCTAssertEqual(response?.httpStatus, 400)
@@ -85,11 +85,11 @@ class MockTransportSessionConversationAccessTests: MockTransportSessionTests {
         let payload = [
             "access_role": role,
             "access_role_v2": accessRoleV2,
-            "access": access,
+            "access": access
             ] as ZMTransportData
 
         // when
-        let response = self.response(forPayload: payload , path: "/conversations/\(self.conversation.identifier)/access", method: .methodPUT, apiVersion: .v0)
+        let response = self.response(forPayload: payload, path: "/conversations/\(self.conversation.identifier)/access", method: .methodPUT, apiVersion: .v0)
 
         // then
         XCTAssertEqual(response?.httpStatus, 200)
@@ -101,32 +101,31 @@ class MockTransportSessionConversationAccessTests: MockTransportSessionTests {
         guard let responseRoleV2 = payloadData["access_role_v2"] as? [String] else { XCTFail(); return }
         guard let responseAccess = payloadData["access"] as? [String] else { XCTFail(); return }
 
-
         XCTAssertEqual(responseRole, role)
         XCTAssertEqual(responseRoleV2, accessRoleV2)
         XCTAssertEqual(responseAccess, access)
     }
-    
+
     func testThatItCanCreateTheLink() {
         // given
         self.conversation.accessMode = ["code", "invite"]
         // when
         let response = self.response(forPayload: [:] as ZMTransportData, path: "/conversations/\(self.conversation.identifier)/code", method: .methodPOST, apiVersion: .v0)
-        
+
         // then
         XCTAssertEqual(response?.httpStatus, 201)
         guard let receivedPayload = response?.payload as? [String: Any] else { XCTFail(); return }
-        
+
         XCTAssertEqual(receivedPayload["type"] as? String, "conversation.code-update")
         XCTAssertEqual(receivedPayload["conversation"] as? String, conversation.identifier)
         guard let payloadData = receivedPayload["data"] as? [String: Any] else { XCTFail(); return }
         XCTAssertNotNil(payloadData["uri"])
         XCTAssertNotNil(payloadData["code"])
         XCTAssertNotNil(payloadData["key"])
-        
+
         XCTAssertNotNil(conversation.link)
     }
-    
+
     func testThatItCannotCreateLinkWhenNoAccessMode() {
         // given
         self.conversation.accessMode = ["invite"]
@@ -135,7 +134,7 @@ class MockTransportSessionConversationAccessTests: MockTransportSessionTests {
         // then
         XCTAssertEqual(response?.httpStatus, 403)
     }
-    
+
     func testThatItCanFetchLinkWhenCreateLink() {
         // given
         let existingLink = "https://wire-website.com/some-other-link"
@@ -143,11 +142,11 @@ class MockTransportSessionConversationAccessTests: MockTransportSessionTests {
         self.conversation.link = existingLink
         // when
         let response = self.response(forPayload: [:] as ZMTransportData, path: "/conversations/\(self.conversation.identifier)/code", method: .methodPOST, apiVersion: .v0)
-        
+
         // then
         XCTAssertEqual(response?.httpStatus, 200)
         guard let receivedPayload = response?.payload as? [String: Any] else { XCTFail(); return }
-        
+
         XCTAssertEqual(receivedPayload["uri"] as! String, existingLink)
         XCTAssertNotNil(receivedPayload["code"])
         XCTAssertNotNil(receivedPayload["key"])
@@ -179,7 +178,7 @@ class MockTransportSessionConversationAccessTests: MockTransportSessionTests {
         XCTAssertEqual(response?.httpStatus, 404)
         XCTAssertEqual(response?.payloadLabel(), "no-conversation")
     }
-    
+
     func testThatItCanFetchTheLink() {
         // given
         let existingLink = "https://wire-website.com/some-other-link"
@@ -187,16 +186,16 @@ class MockTransportSessionConversationAccessTests: MockTransportSessionTests {
         self.conversation.link = existingLink
         // when
         let response = self.response(forPayload: [:] as ZMTransportData, path: "/conversations/\(self.conversation.identifier)/code", method: .methodGET, apiVersion: .v0)
-        
+
         // then
         XCTAssertEqual(response?.httpStatus, 200)
         guard let receivedPayload = response?.payload as? [String: Any] else { XCTFail(); return }
-        
+
         XCTAssertEqual(receivedPayload["uri"] as! String, existingLink)
         XCTAssertNotNil(receivedPayload["code"])
         XCTAssertNotNil(receivedPayload["key"])
     }
-    
+
     func testThatItCanDeleteLink() {
         // given
         let existingLink = "https://wire-website.com/some-other-link"
@@ -204,10 +203,10 @@ class MockTransportSessionConversationAccessTests: MockTransportSessionTests {
         self.conversation.link = existingLink
         // when
         let response = self.response(forPayload: [:] as ZMTransportData, path: "/conversations/\(self.conversation.identifier)/code", method: .methodDELETE, apiVersion: .v0)
-        
+
         // then
         XCTAssertEqual(response?.httpStatus, 200)
-        
+
         XCTAssertEqual(conversation.link, nil)
     }
 }

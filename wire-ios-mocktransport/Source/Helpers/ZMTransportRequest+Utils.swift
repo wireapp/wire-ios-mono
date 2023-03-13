@@ -19,44 +19,44 @@
 import Foundation
 
 @objc public extension ZMTransportRequest {
-    
-    var URL : URL {
+
+    var URL: URL {
         return Foundation.URL(string: self.path)!
     }
-    
-    var queryParameters : [String: Any] {
+
+    var queryParameters: [String: Any] {
         return ((self.URL as NSURL).zm_queryComponents() as? [String: Any]) ?? [:]
     }
-    
-    var multipartBodyItemsFromRequestOrFile : [ZMMultipartBodyItem] {
+
+    var multipartBodyItemsFromRequestOrFile: [ZMMultipartBodyItem] {
         if let items = self.multipartBodyItems() as? [ZMMultipartBodyItem] {
             return items
         }
-        
+
         guard let fileURL = self.fileUploadURL,
             let multipartData = try? Data(contentsOf: fileURL)
         else {
             return []
         }
-        
+
         return ((multipartData as NSData).multipartDataItemsSeparated(withBoundary: "frontier") as? [ZMMultipartBodyItem]) ?? []
     }
-    
-    var binaryDataTypeAsMIME : String? {
+
+    var binaryDataTypeAsMIME: String? {
         guard let dataType = self.binaryDataType else {
             return nil
         }
         return MockTransportSession.binaryDataType(asMIME: dataType)
     }
-    
+
     @objc(RESTComponentAtIndex:) func RESTComponents(index: Int) -> String? {
         guard self.pathComponents.count > index, index > 0 else {
             return nil
         }
         return self.pathComponents[index]
     }
-    
-    fileprivate var pathComponents : [String] {
+
+    fileprivate var pathComponents: [String] {
         var components = self.URL.path.components(separatedBy: "/").filter { !$0.isEmpty }
         components.removeAPIVersionComponent()
         return components
@@ -74,18 +74,18 @@ import Foundation
 }
 
 public extension ZMTransportRequest {
-    
+
     /// Returns whether the path of the request matches the given string.
     /// Wildcards are allowed using the special symbol "*"
     /// E.g. `/users/ * /clients` will match `/users/ab12da/clients`
     func matches(path: String) -> Bool {
         let pathComponents = self.pathComponents
         let expectedComponents = path.components(separatedBy: "/").filter { !$0.isEmpty }
-        
+
         guard pathComponents.count == expectedComponents.count else {
             return false
         }
-        
+
         return zip(expectedComponents, pathComponents).first(where: { (expected, actual) -> Bool in
             return expected != "*" && expected != actual
         }) == nil
@@ -95,7 +95,6 @@ public extension ZMTransportRequest {
         return request.matches(path: path)
     }
 }
-
 
 private extension Array where Element == String {
     mutating func removeAPIVersionComponent() {

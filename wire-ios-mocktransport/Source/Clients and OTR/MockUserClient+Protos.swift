@@ -24,7 +24,7 @@ public protocol OtrMessage {
 }
 
 extension MockUserClient {
-    
+
     /// Returns an OTR message with the recipients correctly set
     /// - Parameters:
     ///   - clients: clients needed to create recipients
@@ -40,28 +40,28 @@ extension MockUserClient {
         }
         return message
     }
-    
+
     /// Returns an OTR asset message builder with the recipients correctly set
     /// - Parameters:
     ///   - clients: clients needed to create recipients
     ///   - plainText: plain text
     /// - Returns: OTR asset message
     public func otrAssetMessageBuilderWithRecipients(for clients: [MockUserClient], plainText: Data) -> Proteus_OtrAssetMeta {
-        
+
         var message = Proteus_OtrAssetMeta()
         var sender = Proteus_ClientId()
-        
+
         sender.client = identifier!.asHexEncodedUInt
         message.sender = sender
         message.recipients = userEntries(for: clients, plainText: plainText)
 
         return message
     }
-    
+
     /// Create user entries for all received of a message
     private func userEntries(for clients: [MockUserClient], plainText: Data) -> [Proteus_UserEntry] {
         return MockUserClient.createUserToClientMapping(for: clients).map { (user: MockUser, clients: [MockUserClient]) -> Proteus_UserEntry in
-            
+
             let clientEntries = clients.map { client -> Proteus_ClientEntry in
                 let clientId = Proteus_ClientId.with {
                     $0.client = client.identifier!.asHexEncodedUInt
@@ -71,20 +71,20 @@ extension MockUserClient {
                     $0.text = MockUserClient.encrypted(data: plainText, from: self, to: client)
                 }
             }
-            
+
             let userId = Proteus_UserId.with {
                 $0.uuid = UUID(uuidString: user.identifier)!.uuidData
             }
-            
+
             return Proteus_UserEntry.with {
                 $0.user = userId
                 $0.clients = clientEntries
             }
         }
     }
-    
+
     /// Map a list of clients to a lookup by user
-    static private func createUserToClientMapping(for clients: [MockUserClient]) -> [MockUser: [MockUserClient]]{
+    static private func createUserToClientMapping(for clients: [MockUserClient]) -> [MockUser: [MockUserClient]] {
         var mapped = [MockUser: [MockUserClient]]()
         clients.forEach { client in
             var previous = mapped[client.user!] ?? [MockUserClient]()
@@ -93,11 +93,11 @@ extension MockUserClient {
         }
         return mapped
     }
-    
+
 }
 
 extension String {
-    
+
     /// Parses the string as if it was a hex representation of a number
     fileprivate var asHexEncodedUInt: UInt64 {
         var scannedIdentifier: UInt64 = 0

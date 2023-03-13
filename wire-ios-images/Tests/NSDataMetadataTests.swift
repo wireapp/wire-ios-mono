@@ -29,47 +29,45 @@ class NSDataMetadataTests: XCTestCase {
         // WHEN
         var errorReceived: Error? = .none
         do {
-            let _ = try data.wr_removingImageMetadata()
-        }
-        catch let error {
+            _ = try data.wr_removingImageMetadata()
+        } catch let error {
             errorReceived = error
         }
-        
+
         // THEN
         XCTAssertEqual(errorReceived as! MetadataError, MetadataError.unknownFormat)
     }
-    
+
     func testThatItThrowsForNonImageData() {
         // GIVEN
-        let data = self.data(forResource:"Lorem Ipsum", extension:"txt")!
+        let data = self.data(forResource: "Lorem Ipsum", extension: "txt")!
         // WHEN
         var errorReceived: Error? = .none
         do {
-            let _ = try data.wr_removingImageMetadata()
-        }
-        catch let error {
+            _ = try data.wr_removingImageMetadata()
+        } catch let error {
             errorReceived = error
         }
-        
+
         // THEN
         XCTAssertEqual(errorReceived as! MetadataError, MetadataError.unknownFormat)
     }
-    
+
     func testThatItReadsMetadataForImageTypes() {
         // GIVEN
-        [self.data(forResource:"ceiling_rotated_1", extension:"jpg")!,
-        self.data(forResource:"unsplash_medium_exif_4", extension:"jpg")!,
-        self.data(forResource:"ceiling_rotated_3", extension:"tiff")!].forEach { data in
+        [self.data(forResource: "ceiling_rotated_1", extension: "jpg")!,
+        self.data(forResource: "unsplash_medium_exif_4", extension: "jpg")!,
+        self.data(forResource: "ceiling_rotated_3", extension: "tiff")!].forEach { data in
             // WHEN
             let metadata = try! data.wr_metadata()
-            
+
             // THEN
             XCTAssertNotNil(metadata[String(kCGImagePropertyTIFFDictionary)])
         }
     }
 
     func testThatGIFsAreExcludedFromMetadataRemoval() {
-        let data = self.data(forResource:"unsplash_big_gif", extension:"gif")!
+        let data = self.data(forResource: "unsplash_big_gif", extension: "gif")!
 
         let originalMetadata = try! data.wr_metadata()
 
@@ -83,14 +81,14 @@ class NSDataMetadataTests: XCTestCase {
 
     func testThatItPassThroughtImagesWithoutMetadataForImageTypes() {
         // GIVEN
-        [self.data(forResource:"unsplash_big_gif", extension:"gif")!,
-         self.data(forResource:"unsplash_owl_1_MB", extension:"png")!].forEach { data in
+        [self.data(forResource: "unsplash_big_gif", extension: "gif")!,
+         self.data(forResource: "unsplash_owl_1_MB", extension: "png")!].forEach { data in
             // WHEN
             var originalMetadata = try! data.wr_metadata()
             originalMetadata[kCGImagePropertyProfileName as String] = nil
             let converted = try! data.wr_removingImageMetadata()
             var convertedMetadata = try! converted.wr_metadata()
-            
+
             /// remove non-related properties
             convertedMetadata[kCGImagePropertyProfileName as String] = nil
             convertedMetadata[kCGImagePropertyExifDictionary as String] = nil
@@ -99,16 +97,16 @@ class NSDataMetadataTests: XCTestCase {
             XCTAssertEqual(originalMetadata as NSDictionary, convertedMetadata as NSDictionary)
         }
     }
-    
+
     func testThatItRemovesLocationMetadataForImageTypes() {
         // GIVEN
-        [self.data(forResource:"ceiling_rotated_1", extension:"jpg")!,
-        self.data(forResource:"unsplash_medium_exif_4", extension:"jpg")!,
-        self.data(forResource:"ceiling_rotated_2", extension:"png")!,
-        self.data(forResource:"ceiling_rotated_3", extension:"tiff")!].forEach { data in
+        [self.data(forResource: "ceiling_rotated_1", extension: "jpg")!,
+        self.data(forResource: "unsplash_medium_exif_4", extension: "jpg")!,
+        self.data(forResource: "ceiling_rotated_2", extension: "png")!,
+        self.data(forResource: "ceiling_rotated_3", extension: "tiff")!].forEach { data in
             // WHEN
             let metadata = try! data.wr_removingImageMetadata().wr_metadata()
-            
+
             // THEN
             XCTAssertNil(metadata[String(kCGImagePropertyGPSDictionary)])
             if let TIFFData = metadata[String(kCGImagePropertyTIFFDictionary)] as? [String: Any] {
@@ -116,7 +114,7 @@ class NSDataMetadataTests: XCTestCase {
             }
         }
     }
-    
+
     // Other metadata:
     // - Camera manufacturer
     // - Creation date
@@ -124,13 +122,13 @@ class NSDataMetadataTests: XCTestCase {
     // - Etc.
     func testThatItRemovesOtherMetadataForImageTypes() {
         // GIVEN
-        [self.data(forResource:"ceiling_rotated_1", extension:"jpg")!,
-         self.data(forResource:"unsplash_medium_exif_4", extension:"jpg")!,
-         self.data(forResource:"ceiling_rotated_2", extension:"png")!,
-         self.data(forResource:"ceiling_rotated_3", extension:"tiff")!].forEach { data in
+        [self.data(forResource: "ceiling_rotated_1", extension: "jpg")!,
+         self.data(forResource: "unsplash_medium_exif_4", extension: "jpg")!,
+         self.data(forResource: "ceiling_rotated_2", extension: "png")!,
+         self.data(forResource: "ceiling_rotated_3", extension: "tiff")!].forEach { data in
             // WHEN
             let metadata = try! data.wr_removingImageMetadata().wr_metadata()
-            
+
             // THEN
             XCTAssertNil(metadata[String(kCGImagePropertyMakerAppleDictionary)])
             if let EXIFData = metadata[String(kCGImagePropertyExifDictionary)] as? [String: Any] {
@@ -145,17 +143,17 @@ class NSDataMetadataTests: XCTestCase {
             }
         }
     }
-    
+
     func testThatItKeepsOrientationMetadataForImageTypes() {
         // GIVEN
-        [//self.data(forResource:"ceiling_rotated_1", extension:"jpg")!,
-         self.data(forResource:"unsplash_medium_exif_4", extension:"jpg")!].forEach { data in
+        [// self.data(forResource:"ceiling_rotated_1", extension:"jpg")!,
+         self.data(forResource: "unsplash_medium_exif_4", extension: "jpg")!].forEach { data in
             // WHEN
             let originalMetadata = try! data.wr_metadata()
             XCTAssertNotNil(originalMetadata[String(kCGImagePropertyOrientation)])
-            
+
             let metadata = try! data.wr_removingImageMetadata().wr_metadata()
-            
+
             // THEN
             XCTAssertNotNil(metadata[String(kCGImagePropertyOrientation)])
         }

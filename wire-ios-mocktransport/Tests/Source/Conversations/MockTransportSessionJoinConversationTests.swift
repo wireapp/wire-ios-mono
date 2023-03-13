@@ -45,9 +45,8 @@ class MockTransportSessionJoinConversationTests: MockTransportSessionTests {
         // given
         let payload = [
             "code": "test-code",
-            "key": "test-key",
+            "key": "test-key"
         ] as ZMTransportData
-
 
         // when
         let response = self.response(forPayload: payload, path: "/conversations/join", method: .methodPOST, apiVersion: .v0)
@@ -70,9 +69,8 @@ class MockTransportSessionJoinConversationTests: MockTransportSessionTests {
         // given
         let payload = [
             "code": "existing-conversation-code",
-            "key": "test-key",
+            "key": "test-key"
         ] as ZMTransportData
-
 
         // when
         let response = self.response(forPayload: payload, path: "/conversations/join", method: .methodPOST, apiVersion: .v0)
@@ -85,9 +83,8 @@ class MockTransportSessionJoinConversationTests: MockTransportSessionTests {
         // given
         let payload = [
             "code": "wrong-code",
-            "key": "test-key",
+            "key": "test-key"
         ] as ZMTransportData
-
 
         // when
         let response = self.response(forPayload: payload, path: "/conversations/join", method: .methodPOST, apiVersion: .v0)

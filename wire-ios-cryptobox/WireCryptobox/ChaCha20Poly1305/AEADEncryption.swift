@@ -177,7 +177,6 @@ public extension ChaCha20Poly1305 {
             return ciphertextLength - authenticationBytesLength
         }
 
-
         // MARK: - Buffer creation
 
         static func generateRandomNonceBytes() -> [Byte] {

@@ -40,7 +40,7 @@ extension MockTransportSession {
 
     func processGetPushTokens(apiVersion: APIVersion) -> ZMTransportResponse {
         let payload = [
-            "tokens" : Array(pushTokens.values)
+            "tokens": Array(pushTokens.values)
         ] as NSDictionary
         return ZMTransportResponse(payload: payload, httpStatus: 200, transportSessionError: nil, apiVersion: apiVersion.rawValue)
     }

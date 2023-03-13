@@ -66,7 +66,7 @@ public extension ChaCha20Poly1305 {
                     })
                 }
 
-                static func partition(buffer: Array<UInt8>, _ into: (_ partition: ArraySlice<UInt8>, _ field: Field) throws -> Void) throws {
+                static func partition(buffer: [UInt8], _ into: (_ partition: ArraySlice<UInt8>, _ field: Field) throws -> Void) throws {
                     guard buffer.count == Field.sizeOfAllFields else {
                         throw EncryptionError.malformedHeader
                     }
@@ -83,14 +83,14 @@ public extension ChaCha20Poly1305 {
             public static let version: UInt16 = 1
             public static let platform = "WBUI".data(using: .ascii)!
 
-            let buffer: Array<UInt8>
-            let salt: Array<UInt8>
-            let uuidHash: Array<UInt8>
+            let buffer: [UInt8]
+            let salt: [UInt8]
+            let uuidHash: [UInt8]
 
-            init(buffer: Array<UInt8>) throws {
+            init(buffer: [UInt8]) throws {
 
-                var salt: Array<UInt8> = Array<UInt8>(repeating: 0, count: Field.salt.rawValue)
-                var hash: Array<UInt8> = Array<UInt8>(repeating: 0, count: Field.uuidHash.rawValue)
+                var salt: [UInt8] = [UInt8](repeating: 0, count: Field.salt.rawValue)
+                var hash: [UInt8] = [UInt8](repeating: 0, count: Field.uuidHash.rawValue)
 
                 try Field.partition(buffer: buffer) { (partition, field) in
                     switch field {
@@ -117,9 +117,9 @@ public extension ChaCha20Poly1305 {
             }
 
             init(uuid: UUID) throws {
-                var buffer = Array<UInt8>()
+                var buffer = [UInt8]()
                 var version = Header.version.bigEndian
-                var salt = Array<UInt8>(repeating: 0, count: Int(crypto_pwhash_argon2i_SALTBYTES))
+                var salt = [UInt8](repeating: 0, count: Int(crypto_pwhash_argon2i_SALTBYTES))
                 randombytes_buf(&salt, Int(UInt64(crypto_pwhash_argon2i_SALTBYTES)))
                 let uuidHash = try Header.hash(uuid: uuid, salt: salt)
 
@@ -146,12 +146,12 @@ public extension ChaCha20Poly1305 {
                 return try Key(password: passphrase.password, salt: salt)
             }
 
-            fileprivate static func hash(uuid: UUID, salt: Array<UInt8>) throws -> Array<UInt8> {
-                var uuidAsBytes = Array<UInt8>(repeating: 0, count: 128)
+            fileprivate static func hash(uuid: UUID, salt: [UInt8]) throws -> [UInt8] {
+                var uuidAsBytes = [UInt8](repeating: 0, count: 128)
                 (uuid as NSUUID).getBytes(&uuidAsBytes)
 
                 let hashSize = 32
-                var hash = Array<UInt8>(repeating: 0, count: hashSize)
+                var hash = [UInt8](repeating: 0, count: hashSize)
                 guard crypto_pwhash_argon2i(&hash,
                                             UInt64(hashSize),
                                             uuidAsBytes.map(Int8.init),
@@ -182,14 +182,14 @@ public extension ChaCha20Poly1305 {
         /// ChaCha20 Key
         internal struct Key {
 
-            fileprivate let buffer: Array<UInt8>
+            fileprivate let buffer: [UInt8]
 
             /// Generate a key from a passphrase.
             /// - passphrase: string which is used to derive the key
             ///
             /// NOTE: this can fail if the system runs out of memory.
-            public init(password: String, salt: Array<UInt8>) throws {
-                var buffer = Array<UInt8>(repeating: 0, count: Int(crypto_secretstream_xchacha20poly1305_KEYBYTES))
+            public init(password: String, salt: [UInt8]) throws {
+                var buffer = [UInt8](repeating: 0, count: Int(crypto_secretstream_xchacha20poly1305_KEYBYTES))
 
                 guard crypto_pwhash_argon2i(&buffer,
                                             UInt64(crypto_secretstream_xchacha20poly1305_KEYBYTES),
@@ -247,18 +247,18 @@ public extension ChaCha20Poly1305 {
                 throw EncryptionError.writeError(output.streamError ?? EncryptionError.unexpectedStreamEnd)
             }
 
-            var chachaHeader = Array<UInt8>(repeating: 0, count: Int(crypto_secretstream_xchacha20poly1305_HEADERBYTES))
+            var chachaHeader = [UInt8](repeating: 0, count: Int(crypto_secretstream_xchacha20poly1305_HEADERBYTES))
             var state = crypto_secretstream_xchacha20poly1305_state()
 
             guard crypto_secretstream_xchacha20poly1305_init_push(&state, &chachaHeader, key.buffer) == 0 else {
                 throw EncryptionError.encryptionFailed
             }
 
-            var messageBuffer = Array<UInt8>(repeating: 0, count: bufferSize)
-            var messageBufferReadAhead = Array<UInt8>(repeating: 0, count: bufferSize)
+            var messageBuffer = [UInt8](repeating: 0, count: bufferSize)
+            var messageBufferReadAhead = [UInt8](repeating: 0, count: bufferSize)
 
             let cipherBufferSize = bufferSize + Int(crypto_secretstream_xchacha20poly1305_ABYTES)
-            var cipherBuffer = Array<UInt8>(repeating: 0, count: cipherBufferSize)
+            var cipherBuffer = [UInt8](repeating: 0, count: cipherBufferSize)
 
             bytesWritten = output.write(chachaHeader, maxLength: Int(crypto_secretstream_xchacha20poly1305_HEADERBYTES))
             totalBytesWritten += bytesWritten
@@ -332,7 +332,7 @@ public extension ChaCha20Poly1305 {
             var bytesWritten = -1
             var bytesRead = -1
 
-            var fileHeaderBuffer = Array<UInt8>(repeating: 0, count: Int(Header.Field.sizeOfAllFields))
+            var fileHeaderBuffer = [UInt8](repeating: 0, count: Int(Header.Field.sizeOfAllFields))
 
             guard input.read(&fileHeaderBuffer, maxLength: Header.Field.sizeOfAllFields) > 0  else {
                 throw EncryptionError.readError(input.streamError ?? EncryptionError.unexpectedStreamEnd)
@@ -341,7 +341,7 @@ public extension ChaCha20Poly1305 {
             let fileHeader = try Header(buffer: fileHeaderBuffer)
             let key = try fileHeader.deriveKey(from: passphrase)
             var state = crypto_secretstream_xchacha20poly1305_state()
-            var chachaHeader = Array<UInt8>(repeating: 0, count: Int(crypto_secretstream_xchacha20poly1305_HEADERBYTES))
+            var chachaHeader = [UInt8](repeating: 0, count: Int(crypto_secretstream_xchacha20poly1305_HEADERBYTES))
 
             guard input.read(&chachaHeader, maxLength: Int(crypto_secretstream_xchacha20poly1305_HEADERBYTES)) > 0  else {
                 throw EncryptionError.readError(input.streamError ?? EncryptionError.unexpectedStreamEnd)
@@ -351,9 +351,9 @@ public extension ChaCha20Poly1305 {
                 throw EncryptionError.malformedHeader
             }
 
-            var messageBuffer = Array<UInt8>(repeating: 0, count: bufferSize)
+            var messageBuffer = [UInt8](repeating: 0, count: bufferSize)
             let cipherBufferSize = bufferSize + Int(crypto_secretstream_xchacha20poly1305_ABYTES)
-            var cipherBuffer = Array<UInt8>(repeating: 0, count: cipherBufferSize)
+            var cipherBuffer = [UInt8](repeating: 0, count: cipherBufferSize)
             var tag: UInt8 = 0
 
             repeat {

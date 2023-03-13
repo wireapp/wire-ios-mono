@@ -44,11 +44,10 @@ public extension NSData {
         swiftMetadataProperties["{MakerFuji}"]    = kCFNull // kCGImagePropertyMakerFujiDictionary
         swiftMetadataProperties["{MakerOlympus}"] = kCFNull // kCGImagePropertyMakerOlympusDictionary
         swiftMetadataProperties["{MakerPentax}"]  = kCFNull // kCGImagePropertyMakerPentaxDictionary
-        
+
         return swiftMetadataProperties as CFDictionary
     }()
-    
-    
+
     // Removes the privacy-related metadata tags from the binary image (see nullMetadataProperties).
     // Supports JPEG, TIFF, PNG and other image (container) formats/types.
     // @throws MetadataError
@@ -63,24 +62,24 @@ public extension NSData {
         if type == kUTTypeGIF {
             return self
         }
-        
+
         let count = CGImageSourceGetCount(imageSource)
         let mutableData = NSMutableData(data: self as Data)
         guard let imageDestination = CGImageDestinationCreateWithData(mutableData, type, count, nil) else {
             throw MetadataError.cannotCreate
         }
-        
+
         for sourceIndex in 0..<count {
             CGImageDestinationAddImageFromSource(imageDestination, imageSource, sourceIndex, NSData.nullMetadataProperties)
         }
-        
+
         guard CGImageDestinationFinalize(imageDestination) else {
             throw MetadataError.cannotCreate
         }
-        
+
         return mutableData
     }
-    
+
     // Retrieves image metadata from the binary image.
     // @throws MetadataError
     @objc
@@ -88,20 +87,20 @@ public extension NSData {
         guard let imageSource = CGImageSourceCreateWithData(self, nil) else {
             throw MetadataError.unknownFormat
         }
-        
-        return CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [String : Any] ?? [:]
+
+        return CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [String: Any] ?? [:]
     }
 }
 
 public extension Data {
-    
+
     // Removes the privacy-related metadata tags from the binary image (see nullMetadataProperties).
     // Supports JPEG, TIFF, PNG and other image (container) formats/types.
     // @throws MetadataError
     func wr_removingImageMetadata() throws -> Data {
         return try (self as NSData).wr_imageDataWithoutMetadata() as Data
     }
-    
+
     // Retrieves image metadata from the binary image.
     // @throws MetadataError
     func wr_metadata() throws -> [String: Any] {

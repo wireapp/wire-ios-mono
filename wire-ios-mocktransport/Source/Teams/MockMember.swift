@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 
 public struct MockPermissions: OptionSet {
@@ -47,31 +46,29 @@ public struct MockPermissions: OptionSet {
     public static let owner: MockPermissions  = [.admin, .getBilling, .setBilling, .deleteTeam]
 }
 
-
 @objc public final class MockMember: NSManagedObject, EntityNamedProtocol {
     @NSManaged public var team: MockTeam
     @NSManaged public var user: MockUser
-    
+
     @NSManaged private var permissionsRawValue: Int64
-    
+
     public var permissions: MockPermissions {
         get { return MockPermissions(rawValue: permissionsRawValue) }
         set { permissionsRawValue = newValue.rawValue }
     }
-    
+
     public static let entityName = "Member"
 }
 
-
 extension MockMember {
     var payload: ZMTransportData {
-        let data: [String : Any] = [
+        let data: [String: Any] = [
             "user": user.identifier,
             "permissions": ["self": NSNumber(value: permissions.rawValue), "copy": 0]
         ]
         return data as NSDictionary
     }
-    
+
     @objc(insertInContext:forUser:inTeam:)
     public static func insert(in context: NSManagedObjectContext, for user: MockUser, in team: MockTeam) -> MockMember {
         let member: MockMember = insert(in: context)

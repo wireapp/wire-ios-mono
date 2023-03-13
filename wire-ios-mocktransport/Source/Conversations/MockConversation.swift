@@ -22,7 +22,7 @@ extension MockConversation {
     @objc public static let admin = "wire_admin"
     @objc public static let member = "wire_member"
 
-    @objc public static func insertConversationInto(context: NSManagedObjectContext, withCreator creator: MockUser, forTeam team: MockTeam, users:[MockUser]) -> MockConversation {
+    @objc public static func insertConversationInto(context: NSManagedObjectContext, withCreator creator: MockUser, forTeam team: MockTeam, users: [MockUser]) -> MockConversation {
         let conversation = NSEntityDescription.insertNewObject(forEntityName: "Conversation", into: context) as! MockConversation
         conversation.type = .group
         (conversation.accessMode, conversation.accessRole, conversation.accessRoleV2) = defaultAccess(conversationType: .group, team: team)
@@ -32,9 +32,9 @@ extension MockConversation {
         conversation.mutableOrderedSetValue(forKey: #keyPath(MockConversation.activeUsers)).addObjects(from: users)
         return conversation
     }
-    
+
     @objc(insertConversationWithRolesIntoContext:withCreator:otherUsers:)
-    public static func insertConversationWithRolesInto(context: NSManagedObjectContext, creator: MockUser, otherUsers:[MockUser]) -> MockConversation {
+    public static func insertConversationWithRolesInto(context: NSManagedObjectContext, creator: MockUser, otherUsers: [MockUser]) -> MockConversation {
         let conversation = NSEntityDescription.insertNewObject(forEntityName: "Conversation", into: context) as! MockConversation
         conversation.type = .group
         conversation.team = nil
@@ -93,7 +93,7 @@ extension MockConversation {
         let accessRoleV2KeyPath = #keyPath(MockConversation.accessRoleV2)
 
         if changedValues()[accessModeKeyPath] != nil || changedValues()[accessRoleKeyPath] != nil, changedValues()[accessRoleV2KeyPath] != nil {
-            return [ "access_role" : self.accessRole, "access_role_v2": self.accessRoleV2, "access" : self.accessMode ]
+            return [ "access_role": self.accessRole, "access_role_v2": self.accessRoleV2, "access": self.accessMode ]
         } else {
             return nil
         }

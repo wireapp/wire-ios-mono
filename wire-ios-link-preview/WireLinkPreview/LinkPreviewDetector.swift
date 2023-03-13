@@ -64,7 +64,7 @@ public final class LinkPreviewDetector: NSObject, LinkPreviewDetectorType {
      - parameter exluding:   Ranges in the text which should be skipped when searching for links.
      - parameter completion: The completion closure called when the link previews (and it's images) have been downloaded.
      */
-    public func downloadLinkPreviews(inText text: String, excluding: [NSRange] = [], completion : @escaping DetectCompletion) {
+    public func downloadLinkPreviews(inText text: String, excluding: [NSRange] = [], completion: @escaping DetectCompletion) {
         guard let (url, range) = linkDetector?.detectLinksAndRanges(in: text, excluding: excluding).first, !PreviewBlacklist.isBlacklisted(url) else { return completion([]) }
         previewDownloader.requestOpenGraphData(fromURL: url) { [weak self] openGraphData in
             guard let `self` = self, let substringRange = Range<String.Index>(range, in: text) else { return }

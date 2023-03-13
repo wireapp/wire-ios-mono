@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import XCTest
 @testable import WireCryptobox
 
@@ -33,7 +32,7 @@ final class GenericHashBuilderTests: XCTestCase {
         XCTAssertEqual(hash, genericHash)
         XCTAssertEqual(hash.hashValue, genericHash.hashValue)
     }
-    
+
     func testThatDifferentDataHasDifferentHash() {
         // GIVEN
         let data = "some data".data(using: .utf8)!
@@ -42,14 +41,14 @@ final class GenericHashBuilderTests: XCTestCase {
         let builder = GenericHashBuilder()
         builder.append(data)
         let hash = builder.build()
-        
+
         let otherBuilder = GenericHashBuilder()
         otherBuilder.append(otherData)
         let otherHash = otherBuilder.build()
         // THEN
         XCTAssertNotEqual(hash.hashValue, otherHash.hashValue)
     }
-    
+
     func testThatSameDataHasSameHash() {
         // GIVEN
         let data = "some data".data(using: .utf8)!
@@ -58,14 +57,14 @@ final class GenericHashBuilderTests: XCTestCase {
         let builder = GenericHashBuilder()
         builder.append(data)
         let hash = builder.build()
-        
+
         let otherBuilder = GenericHashBuilder()
         otherBuilder.append(otherData)
         let otherHash = otherBuilder.build()
         // THEN
         XCTAssertEqual(hash.hashValue, otherHash.hashValue)
     }
-    
+
     func testThatDataCanBeAppended() {
         // GIVEN
         let data = "some data".data(using: .utf8)!
@@ -75,7 +74,7 @@ final class GenericHashBuilderTests: XCTestCase {
         let builder = GenericHashBuilder()
         builder.append(data)
         let hash = builder.build()
-        
+
         let otherBuilder = GenericHashBuilder()
         otherBuilder.append(otherData1)
         otherBuilder.append(otherData2)

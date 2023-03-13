@@ -16,18 +16,17 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 import WireUtilities
 
 extension ZMImageDownsampleOperation {
-    
+
     @objc
     func createImageProperties(uti: String, imageSize: CGSize) -> ZMIImageProperties? {
         guard let mimeType = UTIHelper.convertToMime(uti: uti) else {
             return nil
         }
-        
+
         return ZMIImageProperties(
             size: imageSize,
             length: UInt(downsampleImageData.count),

@@ -19,8 +19,8 @@
 import Foundation
 import WireSystem
 
-extension CBoxResult : Error {
-    
+extension CBoxResult: Error {
+
     /// Throw if self represents an error
     func throwIfError() throws {
         guard self == CBOX_SUCCESS else {
@@ -28,7 +28,7 @@ extension CBoxResult : Error {
             throw self
         }
     }
-    
+
     func failIfCritical() {
         if self == CBOX_PANIC || self == CBOX_INIT_ERROR {
             fatalError("Cryptobox panic")

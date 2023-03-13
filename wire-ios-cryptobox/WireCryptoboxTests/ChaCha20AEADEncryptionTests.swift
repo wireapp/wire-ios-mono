@@ -104,7 +104,6 @@ class ChaCha20AEADEncryptionTests: XCTestCase {
         }
     }
 
-
     func testThatItFailsToDecryptWithDifferentKey() throws {
         // Given
         let message = "Hello, world".data(using: .utf8)!
@@ -161,7 +160,5 @@ class ChaCha20AEADEncryptionTests: XCTestCase {
             XCTFail("Unexpected error: \(error.localizedDescription)")
         }
     }
-
-
 
 }

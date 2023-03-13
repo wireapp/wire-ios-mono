@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 // 
 
-
 import Foundation
 
 /** 
@@ -34,5 +33,5 @@ import Foundation
  ```
  */
 class PointerWrapper {
-    var ptr : OpaquePointer? = nil
+    var ptr: OpaquePointer?
 }

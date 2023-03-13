@@ -29,7 +29,7 @@ extension NSManagedObject {
         let item = A(entity: entity, insertInto: context)
         return item
     }
-    
+
     public static func fetchAll<A: EntityNamedProtocol>(in context: NSManagedObjectContext, withPredicate predicate: NSPredicate? = nil, sortBy sortDescriptors: [NSSortDescriptor] = []) -> [A] {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: A.entityName)
         fetchRequest.predicate = predicate
@@ -38,7 +38,7 @@ extension NSManagedObject {
         let teams = results as? [A]
         return teams ?? []
     }
-    
+
     public static func fetch<A: EntityNamedProtocol>(in context: NSManagedObjectContext, withPredicate predicate: NSPredicate) -> A? {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: A.entityName)
         fetchRequest.predicate = predicate

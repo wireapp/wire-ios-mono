@@ -33,7 +33,7 @@ import CoreData
     @NSManaged public var hasLegalHoldService: Bool
 
     public static var entityName = "Team"
-    
+
     public override func awakeFromInsert() {
         super.awakeFromInsert()
         identifier = NSUUID.create().transportString()
@@ -45,13 +45,13 @@ extension MockTeam {
     public static func predicateWithIdentifier(identifier: String) -> NSPredicate {
         return NSPredicate(format: "%K == %@", #keyPath(MockTeam.identifier), identifier)
     }
-    
+
     @objc(containsUser:)
     public func contains(user: MockUser) -> Bool {
         guard let userMemberships = user.memberships, !userMemberships.isEmpty else { return false }
         return !userMemberships.union(members).isEmpty
     }
-    
+
     @objc
     public static func insert(in context: NSManagedObjectContext, name: String?, assetId: String?, assetKey: String?, isBound: Bool) -> MockTeam {
         let team: MockTeam = insert(in: context)
@@ -66,25 +66,25 @@ extension MockTeam {
             ])
         return team
     }
-    
-    var payloadValues: [String : Any?] {
+
+    var payloadValues: [String: Any?] {
         return [
             "id": identifier,
-            "name" : name,
-            "icon_key" : pictureAssetKey,
-            "icon" : pictureAssetId,
-            "creator" : creator?.identifier,
-            "binding" : isBound
+            "name": name,
+            "icon_key": pictureAssetKey,
+            "icon": pictureAssetId,
+            "creator": creator?.identifier,
+            "binding": isBound
         ]
     }
-    
+
     var payload: ZMTransportData {
         return payloadValues as NSDictionary
     }
-    
+
     @objc
     public static func createAdminActions(context: NSManagedObjectContext) -> Set<MockAction> {
-        
+
         return  Set(["add_conversation_member",
                  "remove_conversation_member",
                  "modify_conversation_name",
@@ -93,12 +93,12 @@ extension MockTeam {
                  "modify_conversation_access",
                  "modify_other_conversation_member",
                  "leave_conversation",
-                 "delete_conversation"].map{MockAction.insert(in: context, name: $0)})
+                 "delete_conversation"].map {MockAction.insert(in: context, name: $0)})
     }
-    
+
     @objc
     public static func createMemberActions(context: NSManagedObjectContext) -> Set<MockAction> {
-        
-        return  Set(["leave_conversation"].map{MockAction.insert(in: context, name: $0)})
+
+        return  Set(["leave_conversation"].map {MockAction.insert(in: context, name: $0)})
     }
 }

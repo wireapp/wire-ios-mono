@@ -16,66 +16,65 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import Foundation
 import CoreData
 
-@objc public class MockUserClient : NSManagedObject {
-    
+@objc public class MockUserClient: NSManagedObject {
+
     /// User that owns the client
-    @NSManaged public var user : MockUser?
+    @NSManaged public var user: MockUser?
 
     /// Remote identifier
-    @NSManaged public var identifier : String?
-    
+    @NSManaged public var identifier: String?
+
     /// Device label
-    @NSManaged public var label : String?
-    
+    @NSManaged public var label: String?
+
     /// Device type
-    @NSManaged public var type : String?
+    @NSManaged public var type: String?
 
     /// IP address of registration
-    @NSManaged public var address : String?
+    @NSManaged public var address: String?
 
     /// Device class
-    @NSManaged public var deviceClass : String?
-    
+    @NSManaged public var deviceClass: String?
+
     /// Registration location latitude
-    @NSManaged public var locationLatitude : Double
+    @NSManaged public var locationLatitude: Double
 
     /// Registration location longitude
-    @NSManaged public var locationLongitude : Double
-    
+    @NSManaged public var locationLongitude: Double
+
     /// Device model
-    @NSManaged public var model : String?
+    @NSManaged public var model: String?
 
     /// Time of registration
-    @NSManaged public var time : Date?
-    
+    @NSManaged public var time: Date?
+
     /// Encryption key for APS signalling
-    @NSManaged public var enckey : String?
-    
+    @NSManaged public var enckey: String?
+
     /// Hashing key for APS signalling
-    @NSManaged public var mackey : String?
-    
+    @NSManaged public var mackey: String?
+
     /// Prekeys registered for this client
-    @NSManaged public var prekeys : Set<MockPreKey>
-    
+    @NSManaged public var prekeys: Set<MockPreKey>
+
     /// Last prekeys registered for this client
-    @NSManaged public var lastPrekey : MockPreKey
+    @NSManaged public var lastPrekey: MockPreKey
 
 }
 
 extension MockUserClient {
 
     /// Identifier for the session in Cryptobox
-    public var sessionIdentifier : EncryptionSessionIdentifier? {
+    public var sessionIdentifier: EncryptionSessionIdentifier? {
         guard let identifier = self.identifier, let userIdentifier = self.user?.identifier else {
             return nil
         }
         return EncryptionSessionIdentifier(userId: userIdentifier, clientId: identifier)
     }
-  
+
     /// Returns a fetch request to fetch MockUserClients with the given predicate
     @objc public static func fetchRequest(predicate: NSPredicate) -> NSFetchRequest<MockUserClient> {
         let request = NSFetchRequest<MockUserClient>(entityName: "UserClient")
@@ -98,12 +97,12 @@ extension MockUserClient {
 @objc extension MockUserClient {
 
     /// Creates a new client from JSON payload
-    public static func insertClient(payload: [String:Any], context: NSManagedObjectContext) -> MockUserClient? {
-        
+    public static func insertClient(payload: [String: Any], context: NSManagedObjectContext) -> MockUserClient? {
+
         let label = payload["label"] as? String
         let deviceClass = payload["class"] as? String
         let model = payload["model"] as? String
-        
+
         guard let type = payload["type"] as? String, validClientTypes.contains(type),
             let sigkeysPayload = payload["sigkeys"] as? [String: Any],
             let lastKeyPayload = payload["lastkey"] as? [String: Any],
@@ -111,11 +110,10 @@ extension MockUserClient {
             let mackey = sigkeysPayload["mackey"] as? String,
             let enckey = sigkeysPayload["enckey"] as? String,
             let prekeyNumber = lastKeyPayload["id"] as? Int, prekeyNumber == 0xFFFF
-            else
-        {
+            else {
             return nil
         }
-        
+
         let newClient = NSEntityDescription.insertNewObject(forEntityName: "UserClient", into: context) as! MockUserClient
         newClient.label = label
         newClient.type = type
@@ -128,61 +126,59 @@ extension MockUserClient {
         newClient.locationLongitude = 13.3833
         newClient.address = "62.96.148.44"
         newClient.time = Date()
-        
+
         let prekeys = MockPreKey.insertNewKeys(withPayload: prekeysPayload, context: context)
         prekeys.forEach {
             $0.client = newClient
         }
 
         let lastPreKey = MockPreKey.insertNewKey(withPayload: lastKeyPayload, context: context)!
-        lastPreKey.client = newClient;
-        
-        newClient.prekeys = prekeys;
-        newClient.lastPrekey = lastPreKey;
-        
-        
-        return newClient;
+        lastPreKey.client = newClient
+
+        newClient.prekeys = prekeys
+        newClient.lastPrekey = lastPreKey
+
+        return newClient
     }
-    
+
     /// Insert a new client, automatically generate prekeys and last key
     @objc(insertClientWithLabel:type:deviceClass:user:context:)
-    public static func insertClient(label: String, type: String = "permanent", deviceClass: String = "phone", for user: MockUser, in context: NSManagedObjectContext) -> MockUserClient?
-    {
+    public static func insertClient(label: String, type: String = "permanent", deviceClass: String = "phone", for user: MockUser, in context: NSManagedObjectContext) -> MockUserClient? {
         let newClient = NSEntityDescription.insertNewObject(forEntityName: "UserClient", into: context) as! MockUserClient
 
         newClient.user = user
         newClient.identifier = NSString.createAlphanumerical() as String
-        newClient.label = label;
+        newClient.label = label
         newClient.type = type
         newClient.deviceClass = deviceClass
         newClient.time = Date()
 
-        var generatedPrekeys : [[String: Any]]?
-        var generatedLastPrekey : String?
+        var generatedPrekeys: [[String: Any]]?
+        var generatedLastPrekey: String?
         newClient.encryptionContext.perform { (session) in
-            generatedPrekeys = try? session.generatePrekeys(NSMakeRange(0, 5))
+            generatedPrekeys = try? session.generatePrekeys(NSRange(location: 0, length: 5))
             generatedLastPrekey = try? session.generateLastPrekey()
         }
-        
+
         guard let prekeys = generatedPrekeys, !prekeys.isEmpty,
             let lastPrekey = generatedLastPrekey
         else {
             return nil
         }
-        
+
         let mockPrekey = MockPreKey.insertNewKeys(withPayload: prekeys.map { $0["prekey"] as! String }, context: context)
         newClient.prekeys = Set(mockPrekey)
-        
+
         let mockLastPrekey = MockPreKey.insertNewKey(withPrekey: lastPrekey, for: newClient, in: context)
         mockLastPrekey.identifier = Int(CBOX_LAST_PREKEY_ID)
-        newClient.lastPrekey = mockLastPrekey;
-        return newClient;
+        newClient.lastPrekey = mockLastPrekey
+        return newClient
     }
-    
+
     /// JSON representation
     public var transportData: ZMTransportData {
-        
-        var data = [String:Any]()
+
+        var data = [String: Any]()
         data["id"] = self.identifier
         if self.label != nil {
             data["label"] = self.label
@@ -199,8 +195,8 @@ extension MockUserClient {
         }
         data["address"] = self.address
         data["location"] = [
-            "lat" : self.locationLatitude,
-            "lon" : self.locationLongitude
+            "lat": self.locationLatitude,
+            "lon": self.locationLongitude
         ]
         return data as NSDictionary
     }
@@ -209,7 +205,7 @@ extension MockUserClient {
 // MARK: - Encryption and sessions
 @objc extension MockUserClient {
 
-    @objc public static var mockEncryptionSessionDirectory: URL {
+    public static var mockEncryptionSessionDirectory: URL {
         return FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!.appendingPathComponent("mocktransport-encryptionDirectory")
     }
 
@@ -224,7 +220,7 @@ extension MockUserClient {
     fileprivate var encryptionContext: EncryptionContext {
         return MockUserClient.encryptionContext(for: user, clientId: identifier)
     }
-    
+
     /// Make sure that there is a session established between this client and the given client
     /// If needed, it will use the last prekey to create a session
     /// - returns: false if it was not possible to establish a session
@@ -241,7 +237,7 @@ extension MockUserClient {
         }
         return hasSession
     }
-    
+
     /// Encrypt data from a client to a client. If there is no session between the two clients, it will create
     /// one using the last prekey
     public static func encrypted(data: Data, from: MockUserClient, to: MockUserClient) -> Data {
@@ -252,7 +248,7 @@ extension MockUserClient {
         }
         return encryptedData!
     }
-    
+
     /// Decrypt a message (possibly establishing a session, if there is no session) from a client to a client
     public static func decryptMessage(data: Data, from: MockUserClient, to: MockUserClient) -> Data {
         var decryptedData: Data?
@@ -265,7 +261,7 @@ extension MockUserClient {
         }
         return decryptedData ?? Data()
     }
-    
+
     /// Returns whether there is a encryption session between self and the give client
     public func hasSession(with client: MockUserClient) -> Bool {
         guard let identifier = client.sessionIdentifier else { return false }
@@ -279,4 +275,3 @@ extension MockUserClient {
 
 /// Allowed client types
 private let validClientTypes = Set(["temporary", "permanent", "legalhold"])
-

@@ -24,7 +24,7 @@ class MockServicesTests: MockTransportSessionTests {
         // given
         let teamID = UUID()
         let service1 = sut.insertService(name: "Normal Service", identifier: UUID().transportString(), provider: UUID().transportString())
-        let _ = sut.insertService(name: "Other Service", identifier: UUID().transportString(), provider: UUID().transportString())
+        _ = sut.insertService(name: "Other Service", identifier: UUID().transportString(), provider: UUID().transportString())
 
         // when
 
@@ -73,7 +73,7 @@ class MockServicesTests: MockTransportSessionTests {
 
     func testThatItCanAddServiceToTheConversation() {
         // given
-        let _ = sut.insertSelfUser(withName: "Antonio")
+        _ = sut.insertSelfUser(withName: "Antonio")
         let service = sut.insertService(name: "Normal Service", identifier: UUID().transportString(), provider: UUID().transportString())
 
         let conversation = sut.insertConversation(withCreator: sut.selfUser, otherUsers: [], type: .group)
@@ -98,18 +98,18 @@ class MockServicesTests: MockTransportSessionTests {
         XCTAssertEqual(serviceUser.serviceIdentifier, service.identifier)
         XCTAssertEqual(serviceUser.providerIdentifier, service.provider)
     }
-    
+
     func testThatItCanFetchServiceById() {
         // given
         let serviceId = UUID().transportString()
         let providerId = UUID().transportString()
-        let _ = sut.insertService(name: "Normal Service",
+        _ = sut.insertService(name: "Normal Service",
                                   identifier: serviceId,
                                   provider: providerId)
         // when
         let request = ZMTransportRequest(getFromPath: "/providers/\(providerId)/services/\(serviceId)", apiVersion: APIVersion.v0.rawValue)
         let response = sut.processServicesProvidersRequest(request)
-        
+
         // then
         XCTAssertEqual(response.httpStatus, 200)
         XCTAssertNotNil(response.payload)
@@ -118,7 +118,7 @@ class MockServicesTests: MockTransportSessionTests {
         XCTAssertEqual(payload["id"], serviceId)
         XCTAssertEqual(payload["provider"], providerId)
     }
-    
+
     func testThatItCanFetchProviderById() {
         // given
         let serviceId = UUID().transportString()
@@ -126,7 +126,7 @@ class MockServicesTests: MockTransportSessionTests {
         let service = sut.insertService(name: "Normal Service",
                                   identifier: serviceId,
                                   provider: providerId)
-        
+
         service.providerName = "Provider"
         service.providerEmail = "provider@provider.org"
         service.providerDescription = "Testing Provider Description"
@@ -134,7 +134,7 @@ class MockServicesTests: MockTransportSessionTests {
         // when
         let request = ZMTransportRequest(getFromPath: "/providers/\(providerId)", apiVersion: APIVersion.v0.rawValue)
         let response = sut.processServicesProvidersRequest(request)
-        
+
         // then
         XCTAssertEqual(response.httpStatus, 200)
         XCTAssertNotNil(response.payload)
@@ -143,29 +143,29 @@ class MockServicesTests: MockTransportSessionTests {
         XCTAssertEqual(payload["id"], providerId)
         XCTAssertEqual(payload["email"], "provider@provider.org")
     }
-    
+
     func testThatItCanDeleteBotFromConversation() {
         // given
-        let _ = sut.insertSelfUser(withName: "Antonio")
+        _ = sut.insertSelfUser(withName: "Antonio")
         let service = sut.insertService(name: "Normal Service", identifier: UUID().transportString(), provider: UUID().transportString())
         let conversation = sut.insertConversation(withCreator: sut.selfUser, otherUsers: [], type: .group)
-        
+
         XCTAssertEqual(conversation.activeUsers.count, 1)
         let payload = ["service": service.identifier,
                        "provider": service.provider]
-        let _ = sut.processServiceRequest(ZMTransportRequest(path: "/conversations/\(conversation.identifier)/bots", method: .methodPOST, payload: payload as ZMTransportData, apiVersion: APIVersion.v0.rawValue))
-        
+        _ = sut.processServiceRequest(ZMTransportRequest(path: "/conversations/\(conversation.identifier)/bots", method: .methodPOST, payload: payload as ZMTransportData, apiVersion: APIVersion.v0.rawValue))
+
         let predicate = NSPredicate(format: "%K == %@", #keyPath(MockUser.serviceIdentifier), service.identifier)
-        
+
         guard let botUser = conversation.activeUsers.filtered(using: predicate).firstObject as? MockUser else {
             XCTFail("User is not created")
             return
         }
-        
+
         // when
         let request = ZMTransportRequest(path: "/conversations/\(conversation.identifier)/bots/\(botUser.identifier)", method: .methodDELETE, payload: nil, apiVersion: APIVersion.v0.rawValue)
         let response = sut.processDeleteBotRequest(request)
-        
+
         // then
         XCTAssertEqual(response.httpStatus, 200)
         XCTAssertEqual(conversation.activeUsers.count, 1)

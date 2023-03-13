@@ -22,9 +22,9 @@ class MockTransportPushTokenTests_Swift: MockTransportSessionTests {
 
     func payload(token: String) -> NSDictionary {
         return [
-            "app" : "some.app",
-            "token" : token,
-            "transport" : "APNS"
+            "app": "some.app",
+            "token": token,
+            "transport": "APNS"
             ] as NSDictionary
     }
 
@@ -34,7 +34,7 @@ class MockTransportPushTokenTests_Swift: MockTransportSessionTests {
         _ = response(forPayload: payload(token: token), path: "/push/tokens", method: .methodPOST, apiVersion: .v0)
 
         // when
-        let result = response(forPayload: nil, path:"/push/tokens/\(token)", method: .methodDELETE, apiVersion: .v0)
+        let result = response(forPayload: nil, path: "/push/tokens/\(token)", method: .methodDELETE, apiVersion: .v0)
 
         // then
         XCTAssertEqual(result?.httpStatus, 204)
@@ -45,7 +45,7 @@ class MockTransportPushTokenTests_Swift: MockTransportSessionTests {
         let token = "abcdef"
 
         // when
-        let result = response(forPayload: nil, path:"/push/tokens/\(token)", method: .methodDELETE, apiVersion: .v0)
+        let result = response(forPayload: nil, path: "/push/tokens/\(token)", method: .methodDELETE, apiVersion: .v0)
 
         // then
         XCTAssertEqual(result?.httpStatus, 404)
@@ -59,8 +59,8 @@ class MockTransportPushTokenTests_Swift: MockTransportSessionTests {
         _ = response(forPayload: payload(token: token2), path: "/push/tokens", method: .methodPOST, apiVersion: .v0)
 
         // when
-        let result1 = response(forPayload: nil, path:"/push/tokens/\(token1)", method: .methodDELETE, apiVersion: .v0)
-        let result2 = response(forPayload: nil, path:"/push/tokens/\(token2)", method: .methodDELETE, apiVersion: .v0)
+        let result1 = response(forPayload: nil, path: "/push/tokens/\(token1)", method: .methodDELETE, apiVersion: .v0)
+        let result2 = response(forPayload: nil, path: "/push/tokens/\(token2)", method: .methodDELETE, apiVersion: .v0)
 
         // then
         XCTAssertEqual(result1?.httpStatus, 204)
@@ -79,7 +79,7 @@ class MockTransportPushTokenTests_Swift: MockTransportSessionTests {
 
         // then
         XCTAssertEqual(result?.httpStatus, 200)
-        guard let payload = result?.payload?.asDictionary() as? [String : NSArray] else { XCTFail(); return }
+        guard let payload = result?.payload?.asDictionary() as? [String: NSArray] else { XCTFail(); return }
         XCTAssertFalse(payload.isEmpty)
         guard let results = payload["tokens"] else { XCTFail(); return }
         XCTAssertTrue(results.contains(payload1))

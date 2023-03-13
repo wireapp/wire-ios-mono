@@ -16,7 +16,6 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 //
 
-
 import XCTest
 @testable import WireCryptobox
 
@@ -38,91 +37,91 @@ class EncryptionContextCachingTests: XCTestCase {
         // GIVEN
         let tempDir = createTempFolder()
         let mainContext = EncryptionContext(path: tempDir)
-        
+
         let expectation = self.expectation(description: "Encryption succeeded")
-        
+
         // WHEN
         mainContext.perform { sessionContext in
             try! sessionContext.createClientSession(hardcodedClientId, base64PreKeyString: hardcodedPrekey)
-            
+
             let encryptedDataNonCachedFirst  = try! sessionContext.encrypt(someTextToEncrypt.data(using: String.Encoding.utf8)!, for: hardcodedClientId)
             let encryptedDataNonCachedSecond = try! sessionContext.encrypt(someTextToEncrypt.data(using: String.Encoding.utf8)!, for: hardcodedClientId)
-            
+
             XCTAssertNotEqual(encryptedDataNonCachedFirst, encryptedDataNonCachedSecond)
-            
+
             expectation.fulfill()
         }
-        
+
         // THEN
         self.waitForExpectations(timeout: 0) { _ in }
     }
-    
+
     func testThatItCachesWhenRequested() {
         // GIVEN
         let tempDir = createTempFolder()
         let mainContext = EncryptionContext(path: tempDir)
-        
+
         let expectation = self.expectation(description: "Encryption succeeded")
-        
+
         // WHEN
         mainContext.perform { sessionContext in
             try! sessionContext.createClientSession(hardcodedClientId, base64PreKeyString: hardcodedPrekey)
-            
+
             let encryptedDataFirst  = try! sessionContext.encryptCaching(someTextToEncrypt.data(using: String.Encoding.utf8)!, for: hardcodedClientId)
             let encryptedDataSecond = try! sessionContext.encryptCaching(someTextToEncrypt.data(using: String.Encoding.utf8)!, for: hardcodedClientId)
-            
+
             XCTAssertEqual(encryptedDataFirst, encryptedDataSecond)
-            
+
             expectation.fulfill()
         }
-        
+
         // THEN
         self.waitForExpectations(timeout: 0) { _ in }
     }
-    
+
     func testThatCacheKeyDependsOnData() {
         // GIVEN
         let tempDir = createTempFolder()
         let mainContext = EncryptionContext(path: tempDir)
-        
+
         let expectation = self.expectation(description: "Encryption succeeded")
-        
+
         // WHEN
         mainContext.perform { sessionContext in
             try! sessionContext.createClientSession(hardcodedClientId, base64PreKeyString: hardcodedPrekey)
-            
+
             let encryptedDataFirst  = try! sessionContext.encryptCaching(someTextToEncrypt.data(using: String.Encoding.utf8)!, for: hardcodedClientId)
             let encryptedDataSecond = try! sessionContext.encryptCaching(someTextToEncrypt.appending(someTextToEncrypt).data(using: String.Encoding.utf8)!, for: hardcodedClientId)
-            
+
             XCTAssertNotEqual(encryptedDataFirst, encryptedDataSecond)
-            
+
             expectation.fulfill()
         }
-        
+
         // THEN
         self.waitForExpectations(timeout: 0) { _ in }
     }
-    
+
     func testThatItFlushesTheCache() {
         // GIVEN
         let tempDir = createTempFolder()
         let mainContext = EncryptionContext(path: tempDir)
-        
+
         let expectation = self.expectation(description: "Encryption succeeded")
-        
+
         // WHEN
         mainContext.perform { sessionContext in
             try! sessionContext.createClientSession(hardcodedClientId, base64PreKeyString: hardcodedPrekey)
-            
+
             let encryptedDataFirst  = try! sessionContext.encryptCaching(someTextToEncrypt.data(using: String.Encoding.utf8)!, for: hardcodedClientId)
             sessionContext.purgeEncryptedPayloadCache()
             let encryptedDataSecond = try! sessionContext.encryptCaching(someTextToEncrypt.data(using: String.Encoding.utf8)!, for: hardcodedClientId)
-            
+
             XCTAssertNotEqual(encryptedDataFirst, encryptedDataSecond)
-            
+
             expectation.fulfill()
         }
-        
+
         // THEN
         self.waitForExpectations(timeout: 0) { _ in }
     }

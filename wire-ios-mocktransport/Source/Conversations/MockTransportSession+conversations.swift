@@ -28,9 +28,9 @@ extension MockTransportSession {
         let conversations = managedObjectContext.executeFetchRequestOrAssert(request) as? [MockConversation]
         return conversations?.first
     }
-    
+
     @objc(processReceiptModeUpdateForConversation:payload:apiVersion:)
-    public func processReceiptModeUpdate(for conversationId: String, payload: [String:  AnyHashable], apiVersion: APIVersion) -> ZMTransportResponse {
+    public func processReceiptModeUpdate(for conversationId: String, payload: [String: AnyHashable], apiVersion: APIVersion) -> ZMTransportResponse {
         guard let conversation = fetchConversation(with: conversationId) else {
             return ZMTransportResponse(payload: nil, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
@@ -40,21 +40,21 @@ extension MockTransportSession {
         guard receiptMode != conversation.receiptMode?.intValue else {
             return ZMTransportResponse(payload: nil, httpStatus: 204, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
-        
+
         conversation.receiptMode = NSNumber(value: receiptMode)
-        
+
         let responsePayload = [
-            "conversation" : conversation.identifier,
-            "type" : "conversation.receipt-mode-update",
-            "time" : NSDate().transportString(),
-            "from" : selfUser.identifier,
-            "data" : ["receipt_mode": receiptMode]] as ZMTransportData
-        
+            "conversation": conversation.identifier,
+            "type": "conversation.receipt-mode-update",
+            "time": NSDate().transportString(),
+            "from": selfUser.identifier,
+            "data": ["receipt_mode": receiptMode]] as ZMTransportData
+
         return ZMTransportResponse(payload: responsePayload, httpStatus: 200, transportSessionError: nil, apiVersion: apiVersion.rawValue)
     }
 
     @objc(processAccessModeUpdateForConversation:payload:apiVersion:)
-    public func processAccessModeUpdate(for conversationId: String, payload: [String : AnyHashable], apiVersion: APIVersion) -> ZMTransportResponse {
+    public func processAccessModeUpdate(for conversationId: String, payload: [String: AnyHashable], apiVersion: APIVersion) -> ZMTransportResponse {
         guard let conversation = fetchConversation(with: conversationId) else {
             return ZMTransportResponse(payload: nil, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
@@ -75,61 +75,61 @@ extension MockTransportSession {
         conversation.accessMode = access
 
         let responsePayload = [
-            "conversation" : conversation.identifier,
-            "type" : "conversation.access-update",
-            "time" : NSDate().transportString(),
-            "from" : selfUser.identifier,
-            "data" : [
-                "access_role" : conversation.accessRole,
-                "access_role_v2" : conversation.accessRoleV2,
-                "access" : conversation.accessMode
+            "conversation": conversation.identifier,
+            "type": "conversation.access-update",
+            "time": NSDate().transportString(),
+            "from": selfUser.identifier,
+            "data": [
+                "access_role": conversation.accessRole,
+                "access_role_v2": conversation.accessRoleV2,
+                "access": conversation.accessMode
             ]
         ] as ZMTransportData
         return ZMTransportResponse(payload: responsePayload, httpStatus: 200, transportSessionError: nil, apiVersion: apiVersion.rawValue)
     }
-    
+
     @objc(processFetchLinkForConversation:payload:apiVersion:)
     public func processFetchLink(for conversationId: String, payload: [String: AnyHashable], apiVersion: APIVersion) -> ZMTransportResponse {
         guard let conversation = fetchConversation(with: conversationId) else {
             return ZMTransportResponse(payload: nil, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
-        
+
         guard Set(conversation.accessMode) == Set(["invite", "code"]) else {
             return ZMTransportResponse(payload: ["label": "invalid-op"] as ZMTransportData, httpStatus: 403, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
-        
+
         guard let link = conversation.link else {
             return ZMTransportResponse(payload: ["label": "no-conversation-code"] as ZMTransportData, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
-        
+
         return ZMTransportResponse(payload: ["uri": link,
                                              "key": "test-key",
                                              "code": "test-code"] as ZMTransportData, httpStatus: 200, transportSessionError: nil, apiVersion: apiVersion.rawValue)
     }
-    
+
     @objc(processFetchRolesForConversation:payload:apiVersion:)
     public func processFetchRoles(for conversationId: String, payload: [String: AnyHashable], apiVersion: APIVersion) -> ZMTransportResponse {
         guard let conversation = fetchConversation(with: conversationId) else {
             return ZMTransportResponse(payload: nil, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
-        
+
         let roles = conversation.team?.roles ?? conversation.nonTeamRoles!
-        let payload: [String : Any] = [
-            "conversation_roles" : roles.map { $0.payload }
+        let payload: [String: Any] = [
+            "conversation_roles": roles.map { $0.payload }
         ]
         return ZMTransportResponse(payload: payload as ZMTransportData, httpStatus: 200, transportSessionError: nil, apiVersion: apiVersion.rawValue)
     }
-    
+
     @objc(processCreateLinkForConversation:payload:apiVersion:)
     public func processCreateLink(for conversationId: String, payload: [String: AnyHashable], apiVersion: APIVersion) -> ZMTransportResponse {
         guard let conversation = fetchConversation(with: conversationId) else {
             return ZMTransportResponse(payload: nil, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
-        
+
         guard Set(conversation.accessMode) == Set(["invite", "code"]) else {
             return ZMTransportResponse(payload: ["label": "invalid-op"] as ZMTransportData, httpStatus: 403, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
-        
+
         // link already exists
         if let link = conversation.link {
             return ZMTransportResponse(payload: ["uri": link,
@@ -139,35 +139,35 @@ extension MockTransportSession {
         // new link must be created
         else {
             let link = "https://wire-website.com/test-link"
-            
+
             conversation.link = link
-            
+
             let payload = [
-                    "conversation" : conversationId,
-                    "data" : [
-                        "uri" : link,
-                        "key" : "test-key",
-                        "code" : "test-code"
+                    "conversation": conversationId,
+                    "data": [
+                        "uri": link,
+                        "key": "test-key",
+                        "code": "test-code"
                     ],
-                    "type" : "conversation.code-update",
-                    "time" : NSDate().transportString(),
-                    "from" : selfUser.identifier
+                    "type": "conversation.code-update",
+                    "time": NSDate().transportString(),
+                    "from": selfUser.identifier
             ] as ZMTransportData
             return ZMTransportResponse(payload: payload, httpStatus: 201, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
-        
+
     }
-    
+
     @objc(processDeleteLinkForConversation:payload:apiVersion:)
     public func processDeleteLink(for conversationId: String, payload: [String: AnyHashable], apiVersion: APIVersion) -> ZMTransportResponse {
         guard let conversation = fetchConversation(with: conversationId) else {
             return ZMTransportResponse(payload: nil, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
-        
+
         guard Set(conversation.accessMode) == Set(["invite", "code"]) else {
             return ZMTransportResponse(payload: ["label": "invalid-op"] as ZMTransportData, httpStatus: 403, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
-        
+
         // link already exists
         if let _ = conversation.link {
             conversation.link = nil
@@ -202,7 +202,7 @@ extension MockTransportSession {
     @objc(processJoinConversationWithPayload:apiVersion:)
     public func processJoinConversation(with payload: [String: AnyHashable], apiVersion: APIVersion) -> ZMTransportResponse {
         guard let code = payload["code"] as? String else {
-            let payload = ["label" : "no-conversation-code"] as ZMTransportData
+            let payload = ["label": "no-conversation-code"] as ZMTransportData
             return ZMTransportResponse(payload: payload, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
 
@@ -215,11 +215,11 @@ extension MockTransportSession {
             let conversation = MockConversation.insert(into: managedObjectContext, creator: creator, otherUsers: [], type: .group)
 
             let responsePayload = [
-                "conversation" : conversation.identifier,
-                "type" : "conversation.member-join",
-                "time" : NSDate().transportString(),
+                "conversation": conversation.identifier,
+                "type": "conversation.member-join",
+                "time": NSDate().transportString(),
                 "data": [
-                    "users" : [
+                    "users": [
                         [
                             "conversation_role": "wire_member",
                             "id": selfUser.identifier
@@ -229,15 +229,14 @@ extension MockTransportSession {
                         selfUser.identifier
                     ]
                 ],
-                "from" : selfUser.identifier] as ZMTransportData
+                "from": selfUser.identifier] as ZMTransportData
             return ZMTransportResponse(payload: responsePayload, httpStatus: 200, transportSessionError: nil, apiVersion: apiVersion.rawValue)
 
         default:
-            let payload = ["label" : "no-conversation-code"] as ZMTransportData
+            let payload = ["label": "no-conversation-code"] as ZMTransportData
             return ZMTransportResponse(payload: payload, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
     }
-
 
     /// Returns a response for the GET "/conversations/join" request
     /// - Parameter query: request query
@@ -248,7 +247,7 @@ extension MockTransportSession {
     @objc(processFetchConversationIdAndNameWith:apiVersion:)
     public func processFetchConversationIdAndName(with query: [String: AnyHashable], apiVersion: APIVersion) -> ZMTransportResponse {
         guard let code = query["code"] as? String else {
-            let payload = ["label" : "no-conversation-code"] as ZMTransportData
+            let payload = ["label": "no-conversation-code"] as ZMTransportData
             return ZMTransportResponse(payload: payload, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
 
@@ -256,18 +255,18 @@ extension MockTransportSession {
         case "existing-conversation-code":
             let conversation = fetchConversation(selfUserIdentifier: selfUser.identifier)
             let responsePayload = [
-                "id" : conversation!.identifier,
-                "name" : "Test"] as ZMTransportData
+                "id": conversation!.identifier,
+                "name": "Test"] as ZMTransportData
             return ZMTransportResponse(payload: responsePayload, httpStatus: 200, transportSessionError: nil, apiVersion: apiVersion.rawValue)
 
         case "test-code":
             let responsePayload = [
-                "id" : UUID.create().transportString(),
-                "name" : "Test"] as ZMTransportData
+                "id": UUID.create().transportString(),
+                "name": "Test"] as ZMTransportData
             return ZMTransportResponse(payload: responsePayload, httpStatus: 200, transportSessionError: nil, apiVersion: apiVersion.rawValue)
 
         default:
-            let payload = ["label" : "no-conversation-code"] as ZMTransportData
+            let payload = ["label": "no-conversation-code"] as ZMTransportData
             return ZMTransportResponse(payload: payload, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
     }
@@ -283,21 +282,21 @@ extension MockTransportSession {
             let senderClient = otrMessageSender(fromClientId: otrMetaData.sender) else {
                 return ZMTransportResponse(payload: nil, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
-        
+
         var onlyForUser = query["report_missing"] as? String
         if otrMetaData.reportMissing.count > 0, let userId = otrMetaData.reportMissing.first {
             onlyForUser = UUID(data: userId.uuid)?.transportString()
         }
-        
+
         let missedClients = self.missedClients(fromRecipients: otrMetaData.recipients, conversation: conversation, sender: senderClient, onlyForUserId: onlyForUser)
         let deletedClients = self.deletedClients(fromRecipients: otrMetaData.recipients, conversation: conversation)
-        
+
         let payload: [String: Any] = [
             "missing": missedClients,
             "deleted": deletedClients,
             "time": Date().transportString()
         ]
-        
+
         var statusCode = 412
         if missedClients.isEmpty {
             statusCode = 201
@@ -311,7 +310,7 @@ extension MockTransportSession {
                     return event
                 })
         }
-        
+
         return ZMTransportResponse(payload: payload as ZMTransportData, httpStatus: statusCode, transportSessionError: nil, apiVersion: apiVersion.rawValue)
     }
 

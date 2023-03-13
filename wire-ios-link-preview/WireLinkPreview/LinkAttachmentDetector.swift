@@ -76,7 +76,7 @@ public final class LinkAttachmentDetector: NSObject, LinkAttachmentDetectorType 
         super.init()
     }
 
-    public func downloadLinkAttachments(inText text: String, excluding excludedRanges: [NSRange] = [], completion : @escaping ([LinkAttachment]) -> Void) {
+    public func downloadLinkAttachments(inText text: String, excluding excludedRanges: [NSRange] = [], completion: @escaping ([LinkAttachment]) -> Void) {
         guard let (url, (type, range)) = linkDetector?.detectLinkAttachments(in: text, excluding: excludedRanges).first else { return completion([]) }
 
         previewDownloader.requestOpenGraphData(fromURL: url) { openGraphData in

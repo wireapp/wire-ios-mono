@@ -19,10 +19,10 @@
 import Foundation
 
 extension MockTransportSessionTests {
-    
+
     func response(forAssetData assetData: Data, contentType: String, path: String, apiVersion: APIVersion) -> ZMTransportResponse? {
         let expectation = self.expectation(description: "Got an asset response")
-        
+
         var response: ZMTransportResponse?
         let result = sut.mockedTransportSession().attemptToEnqueueSyncRequest {
             let request = ZMTransportRequest.multipartRequest(withPath: path, imageData: assetData, metaData: [:], mediaContentType: contentType, apiVersion: APIVersion.v0.rawValue)
@@ -33,19 +33,19 @@ extension MockTransportSessionTests {
             request?.add(completion)
             return request
         }
-        
+
         XCTAssertTrue(result.didHaveLessRequestThanMax)
         XCTAssertTrue(result.didGenerateNonNullRequest)
         XCTAssertTrue(waitForCustomExpectations(withTimeout: 0.5))
         return response
     }
-    
-    func assertExpectedPayload(_ expectedPayload: [String : Any], in response:  ZMTransportResponse, file: StaticString = #file, line: UInt = #line) {
-        let keys = Array<String>(expectedPayload.keys)
-        
+
+    func assertExpectedPayload(_ expectedPayload: [String: Any], in response: ZMTransportResponse, file: StaticString = #file, line: UInt = #line) {
+        let keys = [String](expectedPayload.keys)
+
         for key in keys {
             let payload = response.payload?.asDictionary()?[key] as? [String: Any] ?? [:]
-            XCTAssertTrue(NSDictionary(dictionary: payload).isEqual(to: expectedPayload[key]! as! [String : Any]), "\(key) clients: \n\(payload)\n doesn't match expected payload:\n \(expectedPayload)", file: file, line: line)
+            XCTAssertTrue(NSDictionary(dictionary: payload).isEqual(to: expectedPayload[key]! as! [String: Any]), "\(key) clients: \n\(payload)\n doesn't match expected payload:\n \(expectedPayload)", file: file, line: line)
         }
     }
 }

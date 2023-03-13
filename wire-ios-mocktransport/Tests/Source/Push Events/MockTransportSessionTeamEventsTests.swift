@@ -20,28 +20,27 @@ import Foundation
 import XCTest
 @testable import WireMockTransport
 
-class MockTransportSessionTeamEventsTests : MockTransportSessionTests {
-    
-    func check(event: TestPushChannelEvent?, hasType type: ZMUpdateEventType, team: MockTeam, data: [String : String] = [:], file: StaticString = #file, line: UInt = #line) {
+class MockTransportSessionTeamEventsTests: MockTransportSessionTests {
+
+    func check(event: TestPushChannelEvent?, hasType type: ZMUpdateEventType, team: MockTeam, data: [String: String] = [:], file: StaticString = #file, line: UInt = #line) {
         check(event: event, hasType: type, teamIdentifier: team.identifier, data: data, file: file, line: line)
     }
-    
-    func check(event: TestPushChannelEvent?, hasType type: ZMUpdateEventType, teamIdentifier: String, data: [String : String?] = [:], file: StaticString = #file, line: UInt = #line) {
+
+    func check(event: TestPushChannelEvent?, hasType type: ZMUpdateEventType, teamIdentifier: String, data: [String: String?] = [:], file: StaticString = #file, line: UInt = #line) {
         guard let event = event else { XCTFail("Should have event", file: file, line: line); return }
-        
-        
+
         XCTAssertEqual(event.type, type, "Wrong type \(String(describing: ZMUpdateEvent.eventTypeString(for: type)))", file: file, line: line)
-        
-        guard let payload = event.payload as? [String : Any] else { XCTFail("Event should have payload", file: file, line: line); return }
-        
+
+        guard let payload = event.payload as? [String: Any] else { XCTFail("Event should have payload", file: file, line: line); return }
+
         XCTAssertEqual(payload["team"] as? String, teamIdentifier, "Wrong team identifier", file: file, line: line)
         guard let date = (payload as NSDictionary).optionalDate(forKey: "time") else { XCTFail("Event should have time", file: file, line: line); return }
         XCTAssertLessThan(date, Date(), "Event date should be in the past", file: file, line: line)
-        
+
         guard !data.isEmpty else {
             return
         }
-        guard let receivedData = payload["data"] as? [String : String?] else { XCTFail("Event payload should have data", file: file, line: line); return }
+        guard let receivedData = payload["data"] as? [String: String?] else { XCTFail("Event payload should have data", file: file, line: line); return }
 
         for (key, value) in data {
             guard let dataValue = receivedData[key] else {
@@ -55,12 +54,12 @@ class MockTransportSessionTeamEventsTests : MockTransportSessionTests {
 
 // MARK: - Team events
 extension MockTransportSessionTeamEventsTests {
-    
+
     func testThatItCreatesEventsForDeletedTeams() {
         // Given
         var team: MockTeam!
         var teamIdentifier: String!
-        
+
         sut.performRemoteChanges { session in
             let selfUser = session.insertSelfUser(withName: "Am I")
             team = session.insertTeam(withName: "some", isBound: true, users: [selfUser])
@@ -74,52 +73,52 @@ extension MockTransportSessionTeamEventsTests {
             session.delete(team)
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
-        
+
         // Then
         let events = pushChannelReceivedEvents as! [TestPushChannelEvent]
         XCTAssertEqual(events.count, 1)
-        
+
         check(event: events.first, hasType: .teamDelete, teamIdentifier: teamIdentifier)
     }
-    
+
     func testThatItCreatesEventsForUpdatedTeams() {
         // Given
         var team: MockTeam!
-        
+
         sut.performRemoteChanges { session in
             let selfUser = session.insertSelfUser(withName: "Am I")
             team = session.insertTeam(withName: "some", isBound: true, users: [selfUser])
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
         createAndOpenPushChannelAndCreateSelfUser(false)
-        
+
         // When
         let newName = "other"
         let assetKey = "123-082"
         let assetId = "541-992"
-        sut.performRemoteChanges { session in
+        sut.performRemoteChanges { _ in
             team.name = newName
             team.pictureAssetId = assetId
             team.pictureAssetKey = assetKey
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
-        
+
         // Then
         let events = pushChannelReceivedEvents as! [TestPushChannelEvent]
         XCTAssertEqual(events.count, 1)
-        
+
         let updateData = [
-            "name" : newName,
-            "icon" : assetId,
-            "icon_key" : assetKey
+            "name": newName,
+            "icon": assetId,
+            "icon_key": assetKey
         ]
         check(event: events.first, hasType: .teamUpdate, team: team, data: updateData)
     }
-    
+
     func testThatItCreatesEventsForUpdatedTeamsAndHasOnlyChangedData() {
         // Given
         var team: MockTeam!
-        
+
         sut.performRemoteChanges { session in
             let selfUser = session.insertSelfUser(withName: "Am I")
             team = session.insertTeam(withName: "some", isBound: true, users: [selfUser])
@@ -128,20 +127,20 @@ extension MockTransportSessionTeamEventsTests {
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
         createAndOpenPushChannelAndCreateSelfUser(false)
-        
+
         // When
         let newName = "other"
-        sut.performRemoteChanges { session in
+        sut.performRemoteChanges { _ in
             team.name = newName
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
-        
+
         // Then
         let events = pushChannelReceivedEvents as! [TestPushChannelEvent]
         XCTAssertEqual(events.count, 1)
-        
+
         let updateData = [
-            "name" : newName,
+            "name": newName
         ]
         check(event: events.first, hasType: .teamUpdate, team: team, data: updateData)
     }
@@ -150,18 +149,18 @@ extension MockTransportSessionTeamEventsTests {
 
 // MARK: - Members events
 extension MockTransportSessionTeamEventsTests {
-    
+
     func testThatItCreatesEventWhenMemberJoinsTheTeam() {
         // Given
         var team: MockTeam!
-        
+
         sut.performRemoteChanges { session in
             let selfUser = session.insertSelfUser(withName: "Am I")
             team = session.insertTeam(withName: "some", isBound: true, users: [selfUser])
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
         createAndOpenPushChannelAndCreateSelfUser(false)
-        
+
         // When
         var newUser: MockUser!
         sut.performRemoteChanges { session in
@@ -169,22 +168,22 @@ extension MockTransportSessionTeamEventsTests {
             _ = session.insertMember(with: newUser, in: team)
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
-        
+
         // Then
         let events = pushChannelReceivedEvents as! [TestPushChannelEvent]
         XCTAssertEqual(events.count, 1)
-        
+
         let updateData = [
-            "user" : newUser.identifier,
+            "user": newUser.identifier
             ]
         check(event: events.first, hasType: .teamMemberJoin, team: team, data: updateData)
     }
-    
+
     func testThatItCreatesEventWhenMemberIsRemovedFromTeam() {
         // Given
         var team: MockTeam!
         var user: MockUser!
-        
+
         sut.performRemoteChanges { session in
             let selfUser = session.insertSelfUser(withName: "Am I")
             team = session.insertTeam(withName: "some", isBound: true, users: [selfUser])
@@ -193,47 +192,47 @@ extension MockTransportSessionTeamEventsTests {
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
         createAndOpenPushChannelAndCreateSelfUser(false)
-        
+
         // When
         sut.performRemoteChanges { session in
             session.removeMember(with: user, from: team)
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
-        
+
         // Then
         let events = pushChannelReceivedEvents as! [TestPushChannelEvent]
         XCTAssertEqual(events.count, 1)
-        
+
         let updateData = [
-            "user" : user.identifier,
+            "user": user.identifier
             ]
         check(event: events.first, hasType: .teamMemberLeave, team: team, data: updateData)
     }
-    
+
     func testThatItCreatesEventWhenSelfMemberIsRemovedFromTeam() {
         // Given
         var team: MockTeam!
         var selfUser: MockUser!
-        
+
         sut.performRemoteChanges { session in
             selfUser = session.insertSelfUser(withName: "Am I")
             team = session.insertTeam(withName: "some", isBound: true, users: [selfUser])
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
         createAndOpenPushChannelAndCreateSelfUser(false)
-        
+
         // When
         sut.performRemoteChanges { session in
             session.removeMember(with: selfUser, from: team)
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
-        
+
         // Then
         let events = pushChannelReceivedEvents as! [TestPushChannelEvent]
         XCTAssertEqual(events.count, 1)
-        
+
         let updateData = [
-            "user" : selfUser.identifier,
+            "user": selfUser.identifier
             ]
         check(event: events.first, hasType: .teamMemberLeave, team: team, data: updateData)
     }
@@ -245,7 +244,7 @@ extension MockTransportSessionTeamEventsTests {
         // Given
         var team: MockTeam!
         var user: MockUser!
-        
+
         sut.performRemoteChanges { session in
             let selfUser = session.insertSelfUser(withName: "Am I")
             team = session.insertTeam(withName: "some", isBound: true, users: [selfUser])
@@ -253,7 +252,7 @@ extension MockTransportSessionTeamEventsTests {
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
         createAndOpenPushChannelAndCreateSelfUser(false)
-        
+
         // When
         var conversation: MockConversation!
         sut.performRemoteChanges { session in
@@ -261,13 +260,13 @@ extension MockTransportSessionTeamEventsTests {
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
         XCTAssertEqual(conversation.team, team)
-        
+
         // Then
         let events = pushChannelReceivedEvents as! [TestPushChannelEvent]
         XCTAssertEqual(events.count, 1)
-        
+
         let updateData = [
-            "conv" : conversation.identifier,
+            "conv": conversation.identifier
             ]
         check(event: events.first, hasType: .teamConversationCreate, team: team, data: updateData)
     }
@@ -289,54 +288,54 @@ extension MockTransportSessionTeamEventsTests {
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
         XCTAssertEqual(conversation.team, team)
         createAndOpenPushChannelAndCreateSelfUser(false)
-        
+
         // When
         sut.performRemoteChanges { session in
             session.delete(conversation)
         }
         XCTAssert(waitForAllGroupsToBeEmpty(withTimeout: 0.5))
-        
+
         // Then
         let events = pushChannelReceivedEvents as! [TestPushChannelEvent]
         XCTAssertEqual(events.count, 1)
-        
+
         let updateData = [
-            "conv" : conversationIdentifier!,
+            "conv": conversationIdentifier!
             ]
         check(event: events.first, hasType: .teamConversationDelete, team: team, data: updateData)
     }
-    
+
     func testThatItDoesNotSendEventsFromATeamThatYouAreNotAMemberOf() {
         // Given
         createAndOpenPushChannel()
-        
+
         // When
         sut.performRemoteChanges { session in
             let user1 = session.insertUser(withName: "one")
             let team = session.insertTeam(withName: "some", isBound: true, users: [user1])
-            
+
             let user2 = session.insertUser(withName: "some user")
             _ = session.insertTeamConversation(to: team, with: [user1, user2], creator: user1)
         }
-        
+
         // Then
         let events = pushChannelReceivedEvents as! [TestPushChannelEvent]
         XCTAssertEqual(events.count, 0)
     }
-    
+
     func testThatItDoesSendConversationEventsInATeamConversationWhereYouAreGuest() {
         // Given
         createAndOpenPushChannel()
-        
+
         // When
         sut.performRemoteChanges { session in
             let user1 = session.insertUser(withName: "one")
             let team = session.insertTeam(withName: "some", isBound: true, users: [user1])
-            
+
             let user2 = session.insertUser(withName: "some user")
             _ = session.insertTeamConversation(to: team, with: [user1, user2, self.sut.selfUser], creator: user1)
         }
-        
+
         // Then
         let events = pushChannelReceivedEvents as! [TestPushChannelEvent]
         XCTAssertEqual(events.count, 1)

@@ -20,18 +20,18 @@ import Foundation
 @testable import WireMockTransport
 
 class MockUserTests: MockTransportSessionTests {
-    
+
     var team: MockTeam!
     var selfUser: MockUser!
     var conversation: MockConversation!
-    
+
     override func setUp() {
         super.setUp()
         sut.performRemoteChanges { session in
             self.selfUser = session.insertSelfUser(withName: "me")
             self.team = session.insertTeam(withName: "A Team", isBound: true)
             self.conversation = session.insertTeamConversation(to: self.team, with: [session.insertUser(withName: "some")], creator: self.selfUser)
-            
+
         }
         XCTAssert(self.waitForAllGroupsToBeEmpty(withTimeout: 0.5))
     }
@@ -39,21 +39,21 @@ class MockUserTests: MockTransportSessionTests {
     func testImageAccessorsReturnsCorrectImages() {
         // GIVEN
         let user = sut.insertUser(withName: "some")
-        
+
         // WHEN
         let pictures = sut.addProfilePicture(to: user)
-        
+
         // THEN
         XCTAssertEqual(user.mediumImage, pictures["medium"])
         XCTAssertEqual(user.smallProfileImage, pictures["smallProfile"])
         XCTAssertEqual(user.mediumImageIdentifier, pictures["medium"]?.identifier)
         XCTAssertEqual(user.smallProfileImageIdentifier, pictures["smallProfile"]?.identifier)
     }
-    
+
     func testThatProfileImageV3IsSetCorrectly() {
         // GIVEN
         let user = sut.insertUser(withName: "some")
-        
+
         // WHEN
         let pictures = sut.addV3ProfilePicture(to: user)
 

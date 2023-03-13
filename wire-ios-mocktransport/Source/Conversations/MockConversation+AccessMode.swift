@@ -56,7 +56,6 @@ public enum MockConversationAccessRoleV2: String {
 
 }
 
-
 public struct MockConversationAccessMode: OptionSet {
     public let rawValue: Int
 
@@ -84,7 +83,6 @@ public struct MockConversationAccessMode: OptionSet {
     public var stringValue: [String] {
         return MockConversationAccessMode.stringValues.compactMap { self.contains($0) ? $1 : nil }
     }
-
 
     public static func value(forAllowGuests allowGuests: Bool) -> MockConversationAccessMode {
         return allowGuests ? .allowGuests : .teamOnly

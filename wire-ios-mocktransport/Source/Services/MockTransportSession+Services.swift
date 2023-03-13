@@ -20,21 +20,21 @@ import Foundation
 
 extension MockTransportSession {
 
-    func fetchWhitelistedServicesForTeam(with identifier: String?, query: [String : Any], apiVersion: APIVersion) -> ZMTransportResponse? {
-        var predicate: NSPredicate? = nil
+    func fetchWhitelistedServicesForTeam(with identifier: String?, query: [String: Any], apiVersion: APIVersion) -> ZMTransportResponse? {
+        var predicate: NSPredicate?
         if let prefix = query["prefix"] as? String {
             predicate = NSPredicate(format: "%K beginswith[c] %@", #keyPath(MockService.name), prefix)
         }
 
         let services: [MockService] = MockService.fetchAll(in: managedObjectContext, withPredicate: predicate)
 
-        let payload: [String : Any] = [
-            "services" : services.map { $0.payload },
-            "has_more" : false
+        let payload: [String: Any] = [
+            "services": services.map { $0.payload },
+            "has_more": false
         ]
         return ZMTransportResponse(payload: payload as ZMTransportData, httpStatus: 200, transportSessionError: nil, apiVersion: apiVersion.rawValue)
     }
-    
+
     @objc(processServicesProvidersRequest:)
     public func processServicesProvidersRequest(_ request: ZMTransportRequest) -> ZMTransportResponse {
         guard
@@ -43,53 +43,50 @@ extension MockTransportSession {
         else {
             return ZMTransportResponse(payload: nil, httpStatus: 400, transportSessionError: nil, apiVersion: request.apiVersion)
         }
-        
+
         if let serviceId = request.RESTComponents(index: 3) {
             return self.processServiceByIdRequest(provider: providerId, service: serviceId, apiVersion: apiVersion)
-        }
-        else {
+        } else {
             return self.processProviderByIdRequest(provider: providerId, apiVersion: apiVersion)
         }
     }
-    
+
     func processServiceByIdRequest(provider: String, service: String, apiVersion: APIVersion) -> ZMTransportResponse {
-        
+
         let predicate = NSPredicate(format: "%K = %@ AND %K = %@",
                                     #keyPath(MockService.identifier), service,
                                     #keyPath(MockService.provider), provider)
-        
+
         let services: [MockService] = MockService.fetchAll(in: managedObjectContext, withPredicate: predicate)
-        
+
         if let service = services.last {
             let payload = service.payload
             return ZMTransportResponse(payload: payload as ZMTransportData, httpStatus: 200, transportSessionError: nil, apiVersion: apiVersion.rawValue)
-        }
-        else {
+        } else {
             return ZMTransportResponse(payload: nil, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
     }
-    
+
     func processProviderByIdRequest(provider: String, apiVersion: APIVersion) -> ZMTransportResponse {
 
         let predicate = NSPredicate(format: "%K = %@",
                                     #keyPath(MockService.provider), provider)
-        
+
         let services: [MockService] = MockService.fetchAll(in: managedObjectContext, withPredicate: predicate)
-        
+
         if let service = services.last {
             let payload = ["id": service.provider,
                            "name": service.providerName,
                            "email": service.providerEmail,
                            "url": service.providerURL,
                            "description": service.providerDescription]
-            
+
             return ZMTransportResponse(payload: payload as ZMTransportData, httpStatus: 200, transportSessionError: nil, apiVersion: apiVersion.rawValue)
-        }
-        else {
+        } else {
             return ZMTransportResponse(payload: nil, httpStatus: 404, transportSessionError: nil, apiVersion: apiVersion.rawValue)
         }
     }
-    
+
     @objc(processServiceRequest:)
     public func processServiceRequest(_ request: ZMTransportRequest) -> ZMTransportResponse {
         guard let payload = request.payload as? [String: Any?],
@@ -98,18 +95,18 @@ extension MockTransportSession {
               let conversationId = request.RESTComponents(index: 1) else {
                   return ZMTransportResponse(payload: nil, httpStatus: 400, transportSessionError: nil, apiVersion: request.apiVersion)
         }
-        
+
         // Fetch conversation
         guard let conversation = MockConversation.existingConversation(with: conversationId, managedObjectContext: managedObjectContext) else {
             return ZMTransportResponse(payload: nil, httpStatus: 404, transportSessionError: nil, apiVersion: request.apiVersion)
         }
-        
+
         guard let service = MockService.existingService(with: serviceId, provider: providerId, managedObjectContext: managedObjectContext) else {
             return ZMTransportResponse(payload: nil, httpStatus: 404, transportSessionError: nil, apiVersion: request.apiVersion)
         }
-        
+
         var newServiceUser: MockUser!
-        
+
         self.performRemoteChanges { change in
             newServiceUser = change.insertUser(withName: service.name)
             change.addV3ProfilePicture(to: newServiceUser)
@@ -117,9 +114,9 @@ extension MockTransportSession {
             newServiceUser.serviceIdentifier = service.identifier
             newServiceUser.providerIdentifier = service.provider
         }
-        
+
         conversation.addUsers(by: selfUser, addedUsers: [newServiceUser!])
-        
+
         let responsePayload: [String: Any?] = [
             "id": newServiceUser.identifier,
             "client": (newServiceUser.clients.anyObject() as! MockUserClient).identifier!,
@@ -138,10 +135,9 @@ extension MockTransportSession {
                 "id": newServiceUser.serviceIdentifier
             ]
         ]
-        
+
         return ZMTransportResponse(payload: responsePayload as ZMTransportData, httpStatus: 201, transportSessionError: nil, apiVersion: request.apiVersion)
     }
-    
 
     @objc(processDeleteBotRequest:)
     public func processDeleteBotRequest(_ request: ZMTransportRequest) -> ZMTransportResponse {
@@ -149,22 +145,22 @@ extension MockTransportSession {
               let botId = request.RESTComponents(index: 3) else {
                 return ZMTransportResponse(payload: nil, httpStatus: 400, transportSessionError: nil, apiVersion: request.apiVersion)
         }
-        
+
         // Fetch conversation
         guard let conversation = MockConversation.existingConversation(with: conversationId, managedObjectContext: managedObjectContext) else {
             return ZMTransportResponse(payload: nil, httpStatus: 404, transportSessionError: nil, apiVersion: request.apiVersion)
         }
-        
+
         let predicate = NSPredicate(format: "%K == %@", #keyPath(MockConversation.identifier), botId)
-        
+
         guard let botUser = conversation.activeUsers.filtered(using: predicate).firstObject as? MockUser else {
             return ZMTransportResponse(payload: nil, httpStatus: 404, transportSessionError: nil, apiVersion: request.apiVersion)
         }
-        
-        self.performRemoteChanges { change in
+
+        self.performRemoteChanges { _ in
             conversation.removeUsers(by: self.selfUser, removedUser: botUser)
         }
-        
+
         return ZMTransportResponse(payload: nil, httpStatus: 200, transportSessionError: nil, apiVersion: request.apiVersion)
     }
 

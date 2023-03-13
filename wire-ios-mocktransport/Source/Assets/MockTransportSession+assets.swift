@@ -39,7 +39,7 @@ extension MockTransportSession {
         guard
             multipart.count == 2,
             let jsonObject = multipart.first,
-            let json = (try? JSONSerialization.jsonObject(with: jsonObject.data, options: .allowFragments)) as? [String: Any] ,
+            let json = (try? JSONSerialization.jsonObject(with: jsonObject.data, options: .allowFragments)) as? [String: Any],
             let imageData = multipart.last,
             let mimeType = imageData.contentType
         else {

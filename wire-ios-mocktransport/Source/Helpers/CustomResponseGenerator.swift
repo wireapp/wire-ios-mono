@@ -16,16 +16,15 @@
 // along with this program. If not, see http://www.gnu.org/licenses/.
 // 
 
-
 import Foundation
 
-@objcMembers public class ResponseGenerator : NSObject {
-    
+@objcMembers public class ResponseGenerator: NSObject {
+
     /// When defining a custom response generator, you can return this object and it will
     /// prevent the request from being completed - it will be in a suspended state until
     /// `completeAllBlockedRequests` is called.
-    static public let ResponseNotCompleted : ZMTransportResponse = ZMTransportResponse(
-        payload: ["label":"This will prevent the response from being completed. The completion handler won't be called at all."] as ZMTransportData,
+    static public let ResponseNotCompleted: ZMTransportResponse = ZMTransportResponse(
+        payload: ["label": "This will prevent the response from being completed. The completion handler won't be called at all."] as ZMTransportData,
         httpStatus: 500,
         transportSessionError: nil,
         apiVersion: 0

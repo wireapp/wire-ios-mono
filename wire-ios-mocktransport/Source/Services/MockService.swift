@@ -18,7 +18,6 @@
 
 import Foundation
 
-
 @objcMembers public final class MockService: NSManagedObject, EntityNamedProtocol {
 
     @NSManaged public var identifier: String
@@ -36,7 +35,7 @@ import Foundation
     @NSManaged public var providerName: String?
     @NSManaged public var providerEmail: String?
     @NSManaged public var providerDescription: String?
-    
+
     override public func awakeFromInsert() {
         if accentID == 0 {
             accentID = 2
@@ -49,29 +48,28 @@ import Foundation
         // Fetch service
         let predicate = NSPredicate(format: "%K == %@ AND %K == %@", #keyPath(MockService.identifier), identifier, #keyPath(MockService.provider), provider)
         let result: [MockService] = MockService.fetchAll(in: managedObjectContext, withPredicate: predicate)
-        
+
         return result.first
     }
-    
-    var payloadValues: [String : Any?] {
+
+    var payloadValues: [String: Any?] {
         return [
             "id": identifier,
-            "name" : name,
-            "handle" : handle,
-            "accent_id" : accentID,
-            "provider" : provider,
-            "summary" : summary ?? "",
-            "tag" : tag ?? "",
-            "assets" : (self.assets ?? Set()).map {
+            "name": name,
+            "handle": handle,
+            "accent_id": accentID,
+            "provider": provider,
+            "summary": summary ?? "",
+            "tag": tag ?? "",
+            "assets": (self.assets ?? Set()).map {
                 return ["type": "image",
                         "size": "preview",
                         "key": $0.identifier] as [String: String]
             }
         ]
     }
-    
+
     var payload: ZMTransportData {
         return payloadValues as NSDictionary
     }
 }
-
