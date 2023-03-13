@@ -45,4 +45,9 @@ class MockProteusProvider: ProteusProviding {
             return try keyStoreBlock(mockKeyStore)
         }
     }
+
+    var mockCanPerform = true
+    var canPerform: Bool {
+        return mockCanPerform
+    }
 }

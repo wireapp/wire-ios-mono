@@ -547,15 +547,16 @@ public extension UserClient {
 
 extension UserClient {
 
-    private func remoteFingerprint() -> Data? {
+    func remoteFingerprint(_ proteusProvider: ProteusProviding? = nil) -> Data? {
         guard
-            let proteusProvider = managedObjectContext?.proteusProvider,
+            let proteusProvider = proteusProvider ?? managedObjectContext?.proteusProvider,
+            proteusProvider.canPerform,
             let sessionID = proteusSessionID
         else {
             return nil
         }
 
-        var fingerprintData: Data? = nil
+        var fingerprintData: Data?
 
         proteusProvider.perform(
             withProteusService: { proteusService in
@@ -581,7 +582,7 @@ extension UserClient {
             return nil
         }
 
-        var fingerprintData: Data? = nil
+        var fingerprintData: Data?
 
         proteusProvider.perform(
             withProteusService: { proteusService in

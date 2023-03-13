@@ -47,4 +47,8 @@ class MockProteusProvider: ProteusProviding {
         }
     }
 
+    var mockCanPerform = true
+    var canPerform: Bool {
+        return mockCanPerform
+    }
 }

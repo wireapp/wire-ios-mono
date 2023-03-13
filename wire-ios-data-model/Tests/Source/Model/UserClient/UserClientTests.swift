@@ -1247,7 +1247,7 @@ extension UserClientTests {
 
 extension UserClientTests {
 
-    func test_GivenDeveloperFlagproteusViaCoreCryptoEnabled_itUsesCoreKrypto() {
+    func test_GivenDeveloperFlagProteusViaCoreCryptoEnabled_ItUsesCoreKrypto() {
         // GIVEN
         let context = self.syncMOC
         var mockMethodCalled = false
@@ -1282,7 +1282,7 @@ extension UserClientTests {
         }
     }
 
-    func test_GivenDeveloperFlagproteusViaCoreCryptoDisabled_itUsesCryptoBox() {
+    func test_GivenDeveloperFlagProteusViaCoreCryptoDisabled_ItUsesCryptoBox() {
         // GIVEN
         let context = self.syncMOC
         var resultOfMethod = false
@@ -1324,7 +1324,7 @@ extension UserClientTests {
         }
     }
 
-    func test_itLoadsLocalFingerprintForSelfClient_proteusViaCoreCryptoFlagEnabled() {
+    func test_itLoadsLocalFingerprintForSelfClient_ProteusViaCoreCryptoFlagEnabled() {
 
         // GIVEN
         var proteusViaCoreCrypto = DeveloperFlag.proteusViaCoreCrypto
@@ -1360,7 +1360,38 @@ extension UserClientTests {
         proteusViaCoreCrypto.isOn = false
     }
 
-    func test_itLoadsRemoteFingerprintForOtherClient_proteusViaCoreCryptoFlagEnabled() {
+    func test_itDoesntLoadRemoteFingerprint_IfProteusProviderCantPerform_ProteusViaCoreCryptoFlagEnabled() {
+        // GIVEN
+        var proteusViaCoreCrypto = DeveloperFlag.proteusViaCoreCrypto
+        proteusViaCoreCrypto.isOn = true
+
+        let mockProteusService = MockProteusServiceInterface()
+        mockProteusService.remoteFingerprintForSession_MockMethod = { _ in return "" }
+
+        let mockProvider = MockProteusProvider(
+            mockProteusService: mockProteusService,
+            mockKeyStore: spyForTests(),
+            useProteusService: true
+        )
+        mockProvider.mockCanPerform = false
+
+        syncMOC.performAndWait {
+            let user = createUser(in: syncMOC)
+            let sut = createClient(for: user, createSessionWithSelfUser: false, onMOC: syncMOC)
+            sut.fingerprint = .none
+
+            // WHEN
+            _ = sut.remoteFingerprint(mockProvider)
+
+            // THEN
+            XCTAssertTrue(mockProteusService.remoteFingerprintForSession_Invocations.isEmpty)
+        }
+
+        // Cleanup
+        proteusViaCoreCrypto.isOn = false
+    }
+
+    func test_itLoadsRemoteFingerprintForOtherClient_ProteusViaCoreCryptoFlagEnabled() {
         // GIVEN
         var proteusViaCoreCrypto = DeveloperFlag.proteusViaCoreCrypto
         proteusViaCoreCrypto.isOn = true
