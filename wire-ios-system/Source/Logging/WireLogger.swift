@@ -29,7 +29,7 @@ public struct WireLogger: LoggerProtocol {
   }
 
   public func debug(
-    _ message: String,
+    _ message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
     guard shouldLogMessage(message) else { return }
@@ -37,7 +37,7 @@ public struct WireLogger: LoggerProtocol {
   }
 
   public func info(
-    _ message: String,
+    _ message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
     guard shouldLogMessage(message) else { return }
@@ -45,7 +45,7 @@ public struct WireLogger: LoggerProtocol {
   }
 
   public func notice(
-    _ message: String,
+    _ message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
     guard shouldLogMessage(message) else { return }
@@ -53,7 +53,7 @@ public struct WireLogger: LoggerProtocol {
   }
 
   public func warn(
-    _ message: String,
+    _ message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
     guard shouldLogMessage(message) else { return }
@@ -61,7 +61,7 @@ public struct WireLogger: LoggerProtocol {
   }
 
   public func error(
-    _ message: String,
+    _ message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
     guard shouldLogMessage(message) else { return }
@@ -69,20 +69,20 @@ public struct WireLogger: LoggerProtocol {
   }
 
   public func critical(
-    _ message: String,
+    _ message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
     guard shouldLogMessage(message) else { return }
     log(level: .critical, message: message, attributes: attributes)
   }
 
-  private func shouldLogMessage(_ message: String) -> Bool {
-    return Self.provider != nil && !message.isEmpty
+  private func shouldLogMessage(_ message: LogConvertible) -> Bool {
+    return Self.provider != nil && !message.logDescription.isEmpty
   }
 
   private func log(
     level: LogLevel,
-    message: String,
+    message: LogConvertible,
     attributes: LogAttributes? = nil
   ) {
     var attributes = attributes ?? .init()
@@ -129,12 +129,26 @@ public typealias LogAttributes = [String: Encodable]
 
 public protocol LoggerProtocol {
 
-  func debug(_ message: String, attributes: LogAttributes?)
-  func info(_ message: String, attributes: LogAttributes?)
-  func notice(_ message: String, attributes: LogAttributes?)
-  func warn(_ message: String, attributes: LogAttributes?)
-  func error(_ message: String, attributes: LogAttributes?)
-  func critical(_ message: String, attributes: LogAttributes?)
+  func debug(_ message: LogConvertible, attributes: LogAttributes?)
+  func info(_ message: LogConvertible, attributes: LogAttributes?)
+  func notice(_ message: LogConvertible, attributes: LogAttributes?)
+  func warn(_ message: LogConvertible, attributes: LogAttributes?)
+  func error(_ message: LogConvertible, attributes: LogAttributes?)
+  func critical(_ message: LogConvertible, attributes: LogAttributes?)
+
+}
+
+public protocol LogConvertible {
+
+  var logDescription: String { get }
+
+}
+
+extension String: LogConvertible {
+
+  public var logDescription: String {
+    return self
+  }
 
 }
 
