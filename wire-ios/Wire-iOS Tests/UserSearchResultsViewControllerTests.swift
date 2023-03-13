@@ -21,14 +21,15 @@ import XCTest
 
 final class UserSearchResultsViewControllerTests: ZMSnapshotTestCase {
 
+    // MARK: - Properties
     var sut: UserSearchResultsViewController!
     var serviceUser: MockServiceUserType!
     var selfUser: MockUserType!
     var otherUser: MockUserType!
 
+    // MARK: setUp
     override func setUp() {
         super.setUp()
-
         // self user should be a team member and other participants should be guests, in order to show guest icon in the user cells
         SelfUser.setupMockSelfUser(inTeam: UUID())
         selfUser = (SelfUser.current as! MockUserType)
@@ -37,44 +38,22 @@ final class UserSearchResultsViewControllerTests: ZMSnapshotTestCase {
         serviceUser = MockServiceUserType.createServiceUser(name: "ServiceUser")
 
         XCTAssert(SelfUser.current.isTeamMember, "selfUser should be a team member to generate snapshots with guest icon")
-
     }
 
-    func createSUT() {
-        sut = UserSearchResultsViewController(nibName: nil, bundle: nil)
-
-        sut.view.backgroundColor = .black
-    }
-
+    // MARK: - tearDown
     override func tearDown() {
         sut = nil
-
         selfUser = nil
         otherUser = nil
         serviceUser = nil
-
         resetColorScheme()
-
         super.tearDown()
     }
 
-    // UI Tests
-
-    func testThatShowsResultsInConversationWithEmptyQuery() {
-        createSUT()
-        sut.users = [selfUser, otherUser].searchForMentions(withQuery: "")
-        verify(matching: sut)
-    }
-
-    func testThatShowsResultsInConversationWithQuery() {
-        let createSut: () -> UIViewController = {
-            self.createSUT()
-            self.sut.users = [self.selfUser, self.otherUser].searchForMentions(withQuery: "u")
-
-            return self.sut
-        }
-
-        verifyInAllColorSchemes(createSut: createSut)
+    // MARK: - Helper methods
+    func createSUT() {
+        sut = UserSearchResultsViewController(nibName: nil, bundle: nil)
+        sut.view.backgroundColor = SemanticColors.View.backgroundDefault
     }
 
     func mockSearchResultUsers(file: StaticString = #file, line: UInt = #line) -> [UserType] {
@@ -92,12 +71,31 @@ final class UserSearchResultsViewControllerTests: ZMSnapshotTestCase {
         return allUsers.searchForMentions(withQuery: "")
     }
 
+    // MARK: - Snapshot Tests
+    func testThatShowsResultsInConversationWithEmptyQuery() {
+        createSUT()
+        sut.users = [selfUser, otherUser].searchForMentions(withQuery: "")
+        verify(matching: sut)
+    }
+
+    func testThatShowsResultsInConversationWithQuery() {
+        let createSut: () -> UIViewController = {
+            self.createSUT()
+            self.sut.users = [self.selfUser, self.otherUser].searchForMentions(withQuery: "u")
+
+            return self.sut
+        }
+
+        verifyInAllColorSchemes(createSut: createSut)
+    }
+
     func testThatItOverflowsWithTooManyUsers_darkMode() {
+        // TODO: [AGIS] Remove that when we get rid of ColorSchemeVariant from UserCell
         ColorScheme.default.variant = .dark
         createSUT()
         sut.overrideUserInterfaceStyle = .dark
-
         sut.users = mockSearchResultUsers()
+
         verify(matching: sut)
     }
 
