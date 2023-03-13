@@ -319,7 +319,7 @@ final class ConversationSystemMessageCellDescription {
             let decryptionCell = ConversationCannotDecryptSystemMessageCellDescription(message: message, data: systemMessageData, sender: sender)
             return [AnyConversationMessageCellDescription(decryptionCell)]
 
-        case .newClient, .usingNewDevice, .reactivatedDevice:
+        case .newClient:
             let newClientCell = ConversationNewDeviceSystemMessageCellDescription(message: message, systemMessageData: systemMessageData, conversation: conversation as! ZMConversation)
             return [AnyConversationMessageCellDescription(newClientCell)]
 
@@ -929,10 +929,6 @@ final class ConversationNewDeviceSystemMessageCellDescription: ConversationMessa
 
         if !systemMessage.addedUserTypes.isEmpty {
             return configureForAddedUsers(in: conversation, attributes: textAttributes)
-        } else if systemMessage.systemMessageType == .reactivatedDevice {
-            return configureForReactivatedSelfClient(SelfUser.current, link: View.userClientURL)
-        } else if let user = users.first, user.isSelfUser && systemMessage.systemMessageType == .usingNewDevice {
-            return configureForNewCurrentDeviceOfSelfUser(user, link: View.userClientURL)
         } else if users.count == 1, let user = users.first, user.isSelfUser {
             return configureForNewClientOfSelfUser(user, clients: clients, link: View.userClientURL)
         } else {
@@ -946,12 +942,6 @@ final class ConversationNewDeviceSystemMessageCellDescription: ConversationMessa
 
     private static var exclamationMarkIcon: UIImage {
         return StyleKitIcon.exclamationMark.makeImage(size: 16, color: SemanticColors.LegacyColors.vividRed)
-    }
-
-    private static func configureForReactivatedSelfClient(_ selfUser: UserType, link: URL) -> View.Configuration {
-        let string = "content.system.reactivated_device".localized(args: link.absoluteString)
-        let attributedText = NSAttributedString.markdown(from: string, style: .systemMessage)
-        return View.Configuration(attributedText: attributedText, icon: exclamationMarkIcon, linkTarget: .user(selfUser))
     }
 
     private static func configureForNewClientOfSelfUser(_ selfUser: UserType, clients: [UserClientType], link: URL) -> View.Configuration {

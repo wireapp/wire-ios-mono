@@ -144,12 +144,10 @@ class ZMMessageTests_ShouldGenerateUnreadCount: BaseZMClientMessageTests {
                                                                              .newClient,
                                                                              .performedCall,
                                                                              .potentialGap,
-                                                                             .reactivatedDevice,
                                                                              .readReceiptsDisabled,
                                                                              .readReceiptsEnabled,
                                                                              .readReceiptsOn,
-                                                                             .teamMemberLeave,
-                                                                             .usingNewDevice]
+                                                                             .teamMemberLeave]
 
         for systemMessageType in nonUnreadCountGeneratingSystemMessages {
             // given

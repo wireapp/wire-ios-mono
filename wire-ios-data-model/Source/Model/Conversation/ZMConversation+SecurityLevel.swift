@@ -472,35 +472,6 @@ extension ZMConversation {
 
 }
 
-// MARK: - HotFix
-extension ZMConversation {
-
-    /// Replaces the first NewClient systemMessage for the selfClient with a UsingNewDevice system message
-    @objc public func replaceNewClientMessageIfNeededWithNewDeviceMesssage() {
-
-        let selfUser = ZMUser.selfUser(in: self.managedObjectContext!)
-        guard let selfClient = selfUser.selfClient() else { return }
-
-        NSOrderedSet(array: lastMessages()).enumerateObjects { (msg, idx, stop) in
-            guard idx <= 2 else {
-                stop.initialize(to: true)
-                return
-            }
-
-            guard let systemMessage = msg as? ZMSystemMessage,
-                systemMessage.systemMessageType == .newClient,
-                systemMessage.sender == selfUser else {
-                    return
-            }
-
-            if systemMessage.clients.contains(selfClient) {
-                systemMessage.systemMessageType = .usingNewDevice
-                stop.initialize(to: true)
-            }
-        }
-    }
-}
-
 // MARK: - Appending system messages
 extension ZMConversation {
 

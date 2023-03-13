@@ -783,35 +783,6 @@ class ZMConversationTests_SecurityLevel: ZMConversationTestsBase {
         }
     }
 
-    // MARK: - Hotfix
-
-    func testThatItUpdatesFirstNewClientSystemMessage() {
-        // given
-        self.createSelfClient()
-        self.uiMOC.refreshAllObjects()
-
-        let selfUser = ZMUser.selfUser(in: self.uiMOC)
-        let selfClient = selfUser.selfClient()
-        let systemMessageClients = Set(arrayLiteral: selfClient)
-        XCTAssertNotNil(selfClient)
-
-        let conv = ZMConversation.insertNewObject(in: self.uiMOC)
-        conv.conversationType = .oneOnOne
-
-        let systemMessage = ZMSystemMessage(nonce: UUID.create(), managedObjectContext: self.uiMOC)
-        systemMessage.visibleInConversation = conv
-        systemMessage.systemMessageType = .newClient
-        systemMessage.sender = selfUser
-        systemMessage.clients = systemMessageClients
-        systemMessage.serverTimestamp = Date()
-
-        // when
-        conv.replaceNewClientMessageIfNeededWithNewDeviceMesssage()
-
-        // then
-        XCTAssertEqual(systemMessage.systemMessageType, .usingNewDevice)
-    }
-
     // MARK: - Add/Remove participants
 
     func simulateAdding(users: Set<ZMUser>, conversation: ZMConversation, by actionUser: ZMUser) -> ZMSystemMessage {

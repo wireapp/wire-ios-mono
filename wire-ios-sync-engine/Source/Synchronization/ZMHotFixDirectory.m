@@ -75,11 +75,6 @@ static NSString* ZMLogTag ZM_UNUSED = @"HotFix";
                          [ZMHotFixDirectory insertNewConversationSystemMessage:context];
                      }],
                     [ZMHotFixPatch
-                     patchWithVersion:@"45.1"
-                     patchCode:^(NSManagedObjectContext *context) {
-                         [ZMHotFixDirectory updateSystemMessages:context];
-                     }],
-                    [ZMHotFixPatch
                      patchWithVersion:@"54.0.1"
                      patchCode:^(NSManagedObjectContext *context) {
                          [ZMHotFixDirectory removeDeliveryReceiptsForDeletedMessages:context];

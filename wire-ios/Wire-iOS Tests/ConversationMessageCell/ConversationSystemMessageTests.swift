@@ -204,19 +204,6 @@ final class ConversationSystemMessageTests: XCTestCase {
         verify(message: message)
     }
 
-    func testUsingNewDevice() {
-        let message = MockMessageFactory.systemMessage(with: .usingNewDevice, users: 1, clients: 1)!
-        message.backingSystemMessageData?.userTypes = Set<AnyHashable>([MockUserType.createSelfUser(name: "")])
-
-        verify(message: message)
-    }
-
-    func testReactivatedDevice() {
-        let message = MockMessageFactory.systemMessage(with: .reactivatedDevice)!
-
-        verify(message: message)
-    }
-
     // MARK: - read receipt
 
     func testReadReceiptIsOn() {

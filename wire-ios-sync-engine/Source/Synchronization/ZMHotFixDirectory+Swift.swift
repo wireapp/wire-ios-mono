@@ -117,18 +117,6 @@ import Foundation
         }
     }
 
-    public static func updateSystemMessages(_ context: NSManagedObjectContext) {
-        let fetchRequest = ZMConversation.sortedFetchRequest()
-
-        guard let conversations = context.fetchOrAssert(request: fetchRequest) as? [ZMConversation] else { return }
-        let filteredConversations =  conversations.filter { $0.conversationType == .oneOnOne || $0.conversationType == .group }
-
-        // update "you are using this device" message
-        filteredConversations.forEach {
-            $0.replaceNewClientMessageIfNeededWithNewDeviceMesssage()
-        }
-    }
-
     public static func purgePINCachesInHostBundle() {
         let fileManager = FileManager.default
         guard let cachesDirectory = try? fileManager.url(for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: false) else { return }
