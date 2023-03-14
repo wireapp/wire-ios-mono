@@ -57,7 +57,7 @@ extension MessagingTestBase {
     }
 
     func responseFailure(code: Int, label: Payload.ResponseFailure.Label, message: String = "", apiVersion: APIVersion) -> ZMTransportResponse {
-        let responseFailure = Payload.ResponseFailure(code: code, label: label, message: message)
+        let responseFailure = Payload.ResponseFailure(code: code, label: label, message: message, data: nil)
         let payloadData = responseFailure.payloadData()!
         let payloadString = String(bytes: payloadData, encoding: .utf8)!
         let response = ZMTransportResponse(payload: payloadString as ZMTransportData,

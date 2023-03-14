@@ -43,7 +43,7 @@ NSString * const DeliveredKey = @"delivered";
 - (NSSet *)ignoredKeys;
 {
     NSSet *keys = [super ignoredKeys];
-    return [keys setByAddingObjectsFromArray:@[DeliveredKey, ZMMessageIsExpiredKey]];
+    return [keys setByAddingObjectsFromArray:@[DeliveredKey, ZMMessageIsExpiredKey, ZMMessageExpirationReasonCodeKey]];
 }
 
 - (void)missesRecipient:(UserClient *)recipient

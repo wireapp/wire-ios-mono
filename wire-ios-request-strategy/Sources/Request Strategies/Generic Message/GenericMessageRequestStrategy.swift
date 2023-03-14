@@ -31,6 +31,7 @@ import Foundation
     public var completionHandler: ((_ response: ZMTransportResponse) -> Void)?
     public var isExpired: Bool = false
     public var expirationDate: Date?
+    public var expirationReasonCode: NSNumber?
 
     private let targetRecipients: Recipients
 

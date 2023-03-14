@@ -32,6 +32,12 @@ public enum ZMDeliveryState: UInt {
 }
 
 @objc
+public enum FailedToSendReason: Int {
+    case unknown
+    case federationRemoteError
+}
+
+@objc
 public protocol ReadReceipt {
 
     @available(*, deprecated, message: "Use `userType` instead")
@@ -68,6 +74,9 @@ public protocol ZMConversationMessage: NSObjectProtocol {
     /// messages sent from this device. In any other case, it will be
     /// ZMDeliveryStateDelivered
     var deliveryState: ZMDeliveryState { get }
+
+    /// Reason why the message has not been sent
+    var failedToSendReason: FailedToSendReason { get }
 
     /// True if the message has been successfully sent to the server
     var isSent: Bool { get }
@@ -317,6 +326,10 @@ extension ZMMessage {
 
     @objc public var isSent: Bool {
         return true
+    }
+
+    @objc public var failedToSendReason: FailedToSendReason {
+        return .unknown
     }
 
     @objc public var deliveryState: ZMDeliveryState {

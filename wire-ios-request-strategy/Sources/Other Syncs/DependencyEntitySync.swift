@@ -23,6 +23,7 @@ import Foundation
     @objc var isExpired: Bool { get }
     @objc func expire()
     @objc var expirationDate: Date? { get }
+    @objc var expirationReasonCode: NSNumber? { get set }
 }
 
 public enum EntitySyncError: Error {

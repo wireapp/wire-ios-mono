@@ -56,12 +56,21 @@
 
 - (void)testThatItReturnsADictionaryWithJSONDictionary
 {
-    
+    [[[_URLResponse expect] andReturnValue:[NSNumber numberWithInteger:533]] statusCode];
     id<ZMTransportData> parsed = [ZMTransportCodec interpretResponse:_URLResponse data:_validJson error:nil];
     XCTAssertEqualObjects(parsed, @{@"name" : @"boo"});
 }
 
--(void)testThatItReturnsNilFromANSURLResponseWithAErrorStatusCode
+- (void)testThatItReturnsADictionaryFromANSURLResponseWithAErrorStatusCode
+{
+    int status = 533;
+    [[[_URLResponse expect] andReturnValue:[NSNumber numberWithInteger:status]] statusCode];
+    id<ZMTransportData> parsed = [ZMTransportCodec interpretResponse:_URLResponse data:_validJson error:nil];
+    XCTAssertEqualObjects(parsed, @{@"name" : @"boo"});
+}
+
+/// Checking StatusCode is a legacy implementation. Currently, we are trying to parse the response despite the statusCode.
+-(void)legacy_testThatItReturnsNilFromANSURLResponseWithAErrorStatusCode
 {
 
     for (int status = 500; status <= 599; ++status) {
@@ -81,7 +90,8 @@
     XCTAssertNil(parsed);
 }
 
-- (void)testThatItReturnsNilIfItReceivesAnErrorObject
+/// Error checking is a legacy implementation. Currently, we are trying to parse the response despite the error.
+- (void)legacy_testThatItReturnsNilIfItReceivesAnErrorObject
 {
 
     NSError *actualError = [NSError errorWithDomain:@"Test" code:-1 userInfo:@{}];

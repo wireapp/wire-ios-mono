@@ -123,6 +123,8 @@ private class VerifyClientsParser: OTREntity {
 
     var expirationDate: Date?
 
+    var expirationReasonCode: NSNumber?
+
     func expire() {
         // no-op
     }

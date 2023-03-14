@@ -115,6 +115,21 @@ public class ProteusMessageSync<Message: ProteusMessage>: NSObject, EntityTransc
                 return payload?.updateClientsChanges(for: entity) ?? false
             }
 
+        case 533:
+            guard let payload = Payload.ResponseFailure(response, decoder: .defaultDecoder),
+                  let data = payload.data
+            else {
+                return false
+            }
+
+            switch data.type {
+            case .federation:
+                payload.updateExpirationReason(for: entity, with: .federationRemoteError)
+            case .unknown:
+                payload.updateExpirationReason(for: entity, with: .unknown)
+            }
+
+            return false
         default:
             let payload = Payload.ResponseFailure(response, decoder: .defaultDecoder)
             if payload?.label == .unknownClient {
